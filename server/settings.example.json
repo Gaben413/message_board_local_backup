@@ -1,0 +1,25 @@
+{
+    "settings":{
+        "boards":[
+            {
+                "board":"co",
+                "tags":["bcb", "bittersweet candy bowl"]
+            },
+            {
+                "board":"trash",
+                "tags":["bcb", "bittersweet candy bowl"]
+            }
+        ],
+        "downloads_dir_path": [
+            {
+                "os": "win32",
+                "dir": "C:/<user>/Documentos/"
+            },
+            {
+                "os": "linux",
+                "dir": "/home/<user>/"
+            }
+        ],
+        "download_dir_name":"4chan_Downloads/"
+    }
+}
