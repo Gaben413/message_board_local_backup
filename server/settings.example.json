@@ -3,11 +3,11 @@
         "boards":[
             {
                 "board":"co",
-                "tags":["bcb", "bittersweet candy bowl"]
+                "tags":["tag", "tag2"]
             },
             {
                 "board":"trash",
-                "tags":["bcb", "bittersweet candy bowl"]
+                "tags":["tag", "tag2"]
             }
         ],
         "downloads_dir_path": [
@@ -17,7 +17,7 @@
             },
             {
                 "os": "linux",
-                "dir": "/home/<user>/"
+                "dir": "~/"
             }
         ],
         "download_dir_name":"4chan_Downloads/"
