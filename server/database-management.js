@@ -15,14 +15,24 @@
 //Check if Thread already exists. Returns true or false. (Maybe simply call last function and check if it does return something)
 
 //Check all Posts in selected Thread. Returns Posts data.
-//Compare last Post on thread. Returns true or false. 
+//Compare last Post on thread. Returns true or false.
+
+//Get all Favourites
+//Get one specific Favourite
+//Get every thread with relation with favourite
 
 //      INSERT METHODS
 
 //Insert Thread data.
 //Insert Post data also insert reply relation into it's table, if there is one. Also check if Post number is already there, only post if it isn't.
+//Insert Favourite
 
 //      UPDATE METHODS
 
 //Update Thread table, change archived variable
 //Update favourites table
+//Update add Thread from the favourite
+//Update remove Thread from the favourite
+
+//      DELTE METHOD
+//Remove Favourites
