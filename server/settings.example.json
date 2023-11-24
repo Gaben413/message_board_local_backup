@@ -10,6 +10,7 @@
                 "tags":["tag", "tag2"]
             }
         ],
+        "check_days":[1],
         "intervals":{
             "post":5,
             "thread":300
