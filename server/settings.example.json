@@ -10,6 +10,10 @@
                 "tags":["tag", "tag2"]
             }
         ],
+        "intervals":{
+            "post":5,
+            "thread":300
+        },
         "downloads_dir_path": [
             {
                 "os": "win32",
