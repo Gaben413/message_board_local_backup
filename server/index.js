@@ -11,6 +11,20 @@ let thread_id = '';
 axios.get(url).then(res => {
     for (let i = 0; i < res.data.length; i++) {
         let threads = res.data[i]['threads']
+        /*
+        let unix = new Date().getTime();
+        thread_data= {
+            't_number': 1000001,
+            't_date': new Date(unix*1000),
+            't_archived': false,
+            't_tag': 'Page tag',
+            't_filename': 'filename',
+            't_size': 1234,
+            't_tim': unix,
+            't_replies': 5,
+            't_link': 'link'
+        }
+        */
 
         for (let e = 0; e < threads.length; e++) {
             if(check_data(threads[e]['sub'])){
