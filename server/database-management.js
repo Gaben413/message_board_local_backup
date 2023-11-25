@@ -84,7 +84,6 @@ async function InsertThreadData(thread_data){
 }
 
 //Insert Post data also insert reply relation into it's table, if there is one. Also check if Post number is already there, only post if it isn't.
-
 //Perhaps manage the the duplicate posts in the index.js itself, instead of the InsertPosts function
 async function InsertPosts(posts_data){
     pool.getConnection().then(conn => {
@@ -103,7 +102,7 @@ async function InsertPosts(posts_data){
                 console.log(row)
             }).catch(err => {
                 if(err.errno == 1062){
-                    console.log('Post already in')
+                    console.log('Post already registered')
                 }else{
                     console.log(err)
                 }
@@ -118,7 +117,55 @@ async function InsertPosts(posts_data){
     })
     
 }
+
+//Insert reply
+async function InsertReply(reply_data){
+    pool.getConnection().then(conn => {
+        reply_data.forEach(data => {
+            conn.query("INSERT INTO replies VALUES (?,?)", [data["og_post"], data["reply_post"]])
+            .then(row => {                
+                console.log(row)
+            }).catch(err => {
+                if(err.errno == 1062){
+                    console.log('Reply already registered')
+                }else{
+                    console.log(err)
+                }
+
+            })
+        })
+
+    }).catch(err => {
+        console.log(`Unable to connect: ${err}`)
+    }).finally(() => {
+        pool.end()
+    })
+}
+
 //Insert Favourite
+async function InsertFavourite(favourite_data, target_thread_id){
+    pool.getConnection().then(conn => {
+        conn.query("INSERT INTO favourite (d_date, f_name) VALUES (?,?)", [favourite_data['d_date'], favourite_data['f_name']])
+            .then(row => {    
+                console.log(row)
+                let insertedID = String(row['insertId']).split('')[0]
+
+                conn.query("INSERT INTO favourite_has_thread VALUES (?,?)", [insertedID, target_thread_id])
+                    .then(row => {
+                        console.log(row)
+                    }).catch(err => {
+                        console.log(err)
+                    })
+            }).catch(err => {
+                console.log(err)
+            })
+
+    }).catch(err => {
+        console.log(`Unable to connect: ${err}`)
+    }).finally(() => {
+        pool.end()
+    })
+}
 
 //      UPDATE METHODS
 
@@ -192,10 +239,40 @@ multiple_posts_data = [
     }
 ]
 
+reply_data_example = [
+    {
+        "og_post": 2000002,
+        "reply_post": 2000001
+    },
+    {
+        "og_post": 2000003,
+        "reply_post": 2000002
+    },
+    {
+        "og_post": 2000003,
+        "reply_post": 2000001
+    },
+    {
+        "og_post": 2000004,
+        "reply_post": 2000001
+    },
+    {
+        "og_post": 2000004,
+        "reply_post": 2000003
+    },
+]
+
+favourite_data_example = {
+    "d_date":`${date.getFullYear()}-${date.getMonth()}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`,
+    "f_name": "Favourite 1"
+}
+
 async function test() {
     //InsertThreadData(thread_data)
-    InsertPosts(multiple_posts_data)
+    //InsertPosts(multiple_posts_data)
     //console.log(await IsNewPost(2000004))
+    //InsertReply(reply_data_example)
+    InsertFavourite(favourite_data_example, 1000001)
 }
 
 test()
