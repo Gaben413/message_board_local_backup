@@ -27,13 +27,61 @@ pool.getConnection().then(conn => {
 //      SELECT METHODS
 
 //Check all Threads in DB. Returns Threads data.
+async function GetAllThreads(){
+    return new Promise((resolve, reject) => {
+        pool.getConnection().then(conn => {
+            conn.query("SELECT * FROM thread").then(rows => {
+                resolve(rows)
+            })
+        }).catch(err => {
+            console.log(`Unable to connect: ${err}`)
+        }).finally(() => {
+            pool.end()
+        })
+    })
+}
+
 //Check for specific Thread in DB. Returns Thread data.
+async function GetThread(thread_number){
+    return new Promise((resolve, reject) => {
+        pool.getConnection().then(conn => {
+            conn.query("SELECT * FROM thread WHERE t_number = ?", [thread_number]).then(row => {
+                if(row != undefined){
+                    //console.log(row[0])
+                    resolve(row[0])
+                } else {
+                    //console.log('is empty')
+                    resolve(false)
+                }
+            })
+        }).catch(err => {
+            console.log(`Unable to connect: ${err}`)
+        }).finally(() => {
+            pool.end()
+        })
+    })
+}
+
 //Check if Thread already exists. Returns true or false. (Maybe simply call last function and check if it does return something)
 
 //Check all Posts in selected Thread. Returns Posts data.
+async function GetAllPosts(thread_number){
+    pool.getConnection().then(conn => {
+        conn.query("SELECT * FROM post WHERE t_number = ?", [thread_number]).then(rows => {
+            console.log(rows)
+            console.log(`Response amount: ${rows.length}`)
+            return rows
+        })
+    }).catch(err => {
+        console.log(`Unable to connect: ${err}`)
+    }).finally(() => {
+        pool.end()
+    })
+}
+
 //Compare last Post on thread. Returns true or false.
 async function IsNewPost(input_id){
-    return new Promise((reseolve, reject) => {
+    return new Promise((resolve, reject) => {
         pool.getConnection().then(conn => {
             conn.query("SELECT * FROM post ORDER BY p_number DESC LIMIT 1;").then(row => {
                 console.log(`${input_id} | ${row[0]['p_number']}`)
@@ -43,7 +91,7 @@ async function IsNewPost(input_id){
                 else
                     result = true;
 
-                reseolve(result)
+                resolve(result)
             })
         }).catch(err => {
             console.log(`Unable to connect: ${err}`)
@@ -55,8 +103,60 @@ async function IsNewPost(input_id){
 }
 
 //Get all Favourites
+async function GetAllFavourites(){
+    return new Promise((resolve, reject) => {
+        pool.getConnection().then(conn => {
+            conn.query("SELECT * FROM favourite").then(rows => {
+                resolve(rows)
+            })
+        }).catch(err => {
+            console.log(`Unable to connect: ${err}`)
+        }).finally(() => {
+            pool.end()
+        })
+    })
+}
+
 //Get one specific Favourite
+async function GetFavourite(favourite_id){
+    return new Promise((resolve, reject) => {
+        pool.getConnection().then(conn => {
+            conn.query("SELECT * FROM favourite WHERE f_id = ?", [favourite_id]).then(row => {
+                console.log(row)
+                if(row != undefined){
+                    //console.log(row[0])
+                    resolve(row[0])
+                } else {
+                    //console.log('is empty')
+                    resolve(false)
+                }
+            })
+        }).catch(err => {
+            console.log(`Unable to connect: ${err}`)
+        }).finally(() => {
+            pool.end()
+        })
+    })
+}
+
 //Get every thread with relation with favourite
+async function GetAllFavourites(){
+    return new Promise((resolve, reject) => {
+        pool.getConnection().then(conn => {
+            conn.query(
+                "SELECT f.f_name, t.t_number, t.t_archived, t.t_tag, t.t_link FROM favourite as f"
+                + " INNER JOIN favourite_has_thread as fht ON f.f_id = fht.f_id"
+                + " INNER JOIN thread as t ON fht.t_number = t.t_number;"
+            ).then(rows => {
+                resolve(rows)
+            })
+        }).catch(err => {
+            console.log(`Unable to connect: ${err}`)
+        }).finally(() => {
+            pool.end()
+        })
+    })
+}
 
 //      INSERT METHODS
 
@@ -272,7 +372,14 @@ async function test() {
     //InsertPosts(multiple_posts_data)
     //console.log(await IsNewPost(2000004))
     //InsertReply(reply_data_example)
-    InsertFavourite(favourite_data_example, 1000001)
+    //InsertFavourite(favourite_data_example, 1000001)
+
+    //GetAllPosts(1000001)
+    //console.log(await GetThread(1000001))
+    //console.log(await GetAllThreads())
+    //console.log(await GetAllFavourites())
+    //console.log(await GetFavourite(5))
+    console.log(await GetAllFavourites())
 }
 
 test()
