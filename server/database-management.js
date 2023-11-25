@@ -6,7 +6,7 @@ const pool = mariadb.createPool({
     user: process.env.USER,
     password: process.env.PASSWORD,
     port: process.env.PORT,
-    database: process.env.DB
+    database: process.env.DB,
 });
 
 /*
@@ -33,10 +33,9 @@ async function GetAllThreads(){
             conn.query("SELECT * FROM thread").then(rows => {
                 resolve(rows)
             })
+        conn.end()
         }).catch(err => {
             console.log(`Unable to connect: ${err}`)
-        }).finally(() => {
-            pool.end()
         })
     })
 }
@@ -54,10 +53,9 @@ async function GetThread(thread_number){
                     resolve(false)
                 }
             })
+        conn.end()
         }).catch(err => {
             console.log(`Unable to connect: ${err}`)
-        }).finally(() => {
-            pool.end()
         })
     })
 }
@@ -72,10 +70,9 @@ async function GetAllPosts(thread_number){
             console.log(`Response amount: ${rows.length}`)
             return rows
         })
+        conn.end()
     }).catch(err => {
         console.log(`Unable to connect: ${err}`)
-    }).finally(() => {
-        pool.end()
     })
 }
 
@@ -93,10 +90,9 @@ async function IsNewPost(input_id){
 
                 resolve(result)
             })
+        conn.end()
         }).catch(err => {
             console.log(`Unable to connect: ${err}`)
-        }).finally(() => {
-            pool.end()
         })
     })
 
@@ -109,10 +105,9 @@ async function GetAllFavourites(){
             conn.query("SELECT * FROM favourite").then(rows => {
                 resolve(rows)
             })
+        conn.end()
         }).catch(err => {
             console.log(`Unable to connect: ${err}`)
-        }).finally(() => {
-            pool.end()
         })
     })
 }
@@ -131,10 +126,9 @@ async function GetFavourite(favourite_id){
                     resolve(false)
                 }
             })
+        conn.end()
         }).catch(err => {
             console.log(`Unable to connect: ${err}`)
-        }).finally(() => {
-            pool.end()
         })
     })
 }
@@ -150,10 +144,9 @@ async function GetAllFavourites(){
             ).then(rows => {
                 resolve(rows)
             })
+        conn.end()
         }).catch(err => {
             console.log(`Unable to connect: ${err}`)
-        }).finally(() => {
-            pool.end()
         })
     })
 }
@@ -176,10 +169,11 @@ async function InsertThreadData(thread_data){
         ]).then(row => {
             console.log(row)
         })
+
+        conn.end()
+
     }).catch(err => {
         console.log(`Unable to connect: ${err}`)
-    }).finally(() => {
-        pool.end()
     })
 }
 
@@ -209,11 +203,9 @@ async function InsertPosts(posts_data){
 
             })
         })
-
+        conn.end()
     }).catch(err => {
         console.log(`Unable to connect: ${err}`)
-    }).finally(() => {
-        pool.end()
     })
     
 }
@@ -235,10 +227,10 @@ async function InsertReply(reply_data){
             })
         })
 
+        conn.end()
+
     }).catch(err => {
         console.log(`Unable to connect: ${err}`)
-    }).finally(() => {
-        pool.end()
     })
 }
 
@@ -259,23 +251,81 @@ async function InsertFavourite(favourite_data, target_thread_id){
             }).catch(err => {
                 console.log(err)
             })
-
+        conn.end()
     }).catch(err => {
         console.log(`Unable to connect: ${err}`)
-    }).finally(() => {
-        pool.end()
     })
 }
 
 //      UPDATE METHODS
 
 //Update Thread table, change archived variable
-//Update favourites table
-//Update add Thread from the favourite
-//Update remove Thread from the favourite
+async function UpdateThread(is_archived, thread_id){
+    pool.getConnection().then(conn => {
+        conn.query("UPDATE thread SET t_archived = ? WHERE t_number = ?", [is_archived, thread_id])
+            .then(result => {
+                console.log(result)
+            }).catch(err => {
+                console.log(err)
+            })
+        conn.end()
+    }).catch(err => {
+        console.log(`Unable to connect: ${err}`)
+    })
+}
 
-//      DELTE METHOD
+//Update favourites table
+//For when add colors, probably add a toggle to change what type of query it will be
+async function UpdateFavourite(new_name, favourite_id){
+    pool.getConnection().then(conn => {
+        conn.query("UPDATE favourite SET f_name = ? WHERE f_id = ?", [new_name, favourite_id])
+            .then(result => {
+                console.log(result)
+            }).catch(err => {
+                console.log(err)
+            })
+        conn.end()
+    }).catch(err => {
+        console.log(`Unable to connect: ${err}`)
+    })
+}
+
+//      DELETE METHOD
 //Remove Favourites
+async function DeleteFavourite(favourite_id){
+    pool.getConnection().then(conn => {
+        conn.query("DELETE FROM favourite WHERE f_id = ?", [favourite_id])
+            .then(result => {
+                if(result.affectedRows != 0)
+                    console.log(result)
+                else
+                    console.log('Favourite ID not found')
+            }).catch(err => {
+                console.log(err)
+            })
+        conn.end()
+    }).catch(err => {
+        console.log(`Unable to connect: ${err}`)
+    })
+}
+
+//Remove Favourites relation
+async function DeleteFavouriteRelation(favourite_id, thread_id){
+    pool.getConnection().then(conn => {
+        conn.query("DELETE FROM favourite_has_thread WHERE f_id = ? AND t_number = ?", [favourite_id, thread_id])
+            .then(result => {
+                if(result.affectedRows != 0)
+                    console.log(result)
+                else
+                    console.log('Favourite ID not found')
+            }).catch(err => {
+                console.log(err)
+            })
+        conn.end()
+    }).catch(err => {
+        console.log(`Unable to connect: ${err}`)
+    })
+}
 
 //TEST
 let unix = new Date().getTime();
@@ -364,8 +414,10 @@ reply_data_example = [
 
 favourite_data_example = {
     "d_date":`${date.getFullYear()}-${date.getMonth()}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`,
-    "f_name": "Favourite 1"
+    "f_name": "Favourite 2"
 }
+
+const delay = ms => new Promise(res => setTimeout(res, ms));
 
 async function test() {
     //InsertThreadData(thread_data)
@@ -379,7 +431,18 @@ async function test() {
     //console.log(await GetAllThreads())
     //console.log(await GetAllFavourites())
     //console.log(await GetFavourite(5))
-    console.log(await GetAllFavourites())
+    //console.log(await GetAllFavourites())
+
+    //UpdateThread(false, 1000001)
+    //UpdateFavourite('What I love', 5)
+
+    //DeleteFavourite(8)
+    //DeleteFavouriteRelation(5, 1000001)
+
+    UpdateThread(true, 1000001)
+    await delay(12000)
+    UpdateThread(false, 1000001)
+
 }
 
 test()
