@@ -1,5 +1,17 @@
 const axios = require('axios');
 
+/*
+    Code logic (DRAFT):
+        - First check for new threads
+        - Then if new thread shows up, register new tab
+        - After thread is registered, download image
+        - After thread is register and image is downloaded, check for the Thread's posts
+        - Read through all of the posts and register them
+        - After they are registered, download posts images, if they are there
+        - After all is done, loop
+
+*/
+
 let board_name = 'co';
 
 let url = `https://a.4cdn.org/${board_name}/catalog.json`;

@@ -77,7 +77,7 @@ async function GetAllPosts(thread_number){
 }
 
 //Compare last Post on thread. Returns true or false.
-async function IsNewPost(input_id){
+async function IsPostNew(input_id){
     return new Promise((resolve, reject) => {
         pool.getConnection().then(conn => {
             conn.query("SELECT * FROM post ORDER BY p_number DESC LIMIT 1;").then(row => {
@@ -327,6 +327,7 @@ async function DeleteFavouriteRelation(favourite_id, thread_id){
     })
 }
 
+/*
 //TEST
 let unix = new Date().getTime();
 let date = new Date(unix);
@@ -417,12 +418,13 @@ favourite_data_example = {
     "f_name": "Favourite 2"
 }
 
+
 const delay = ms => new Promise(res => setTimeout(res, ms));
 
 async function test() {
     //InsertThreadData(thread_data)
     //InsertPosts(multiple_posts_data)
-    //console.log(await IsNewPost(2000004))
+    //console.log(await IsPostNew(2000004))
     //InsertReply(reply_data_example)
     //InsertFavourite(favourite_data_example, 1000001)
 
@@ -446,3 +448,20 @@ async function test() {
 }
 
 test()
+*/
+
+module.exports = {
+    GetAllThreads,
+    GetThread,
+    GetAllPosts,
+    IsPostNew,
+    GetAllFavourites,
+    GetFavourite,
+    InsertThreadData,
+    InsertPosts,
+    InsertFavourite,
+    UpdateThread,
+    UpdateFavourite,
+    DeleteFavourite,
+    DeleteFavouriteRelation
+}
