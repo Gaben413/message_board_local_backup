@@ -1,7 +1,14 @@
 CREATE TABLE Favourite(
   f_id INTEGER PRIMARY KEY AUTO_INCREMENT,
-  d_date TIMESTAMP,
+  f_date TIMESTAMP,
   f_name VARCHAR(100)
+);
+
+CREATE TABLE Image(
+  i_tim INT8 PRIMARY KEY,
+  i_filename VARCHAR(255),
+  i_format VARCHAR(10),
+  i_size INTEGER
 );
 
 CREATE TABLE Thread(
@@ -9,24 +16,22 @@ CREATE TABLE Thread(
   t_date TIMESTAMP NOT NULL,
   t_archived BOOL,
   t_tag VARCHAR(255),
-  t_filename VARCHAR(255),
-  t_size INTEGER,
-  t_tim INT8,
   t_replies INTEGER,
-  t_link VARCHAR(255) NOT NULL
+  t_link VARCHAR(255) NOT NULL,
+  i_tim INT8,
+  FOREIGN KEY (i_tim) REFERENCES Image(i_tim)
 );
 
 CREATE TABLE Post(
   p_number INTEGER PRIMARY KEY,
   p_date TIMESTAMP,
   p_name VARCHAR(100) DEFAULT('Anon'),
-  p_filename VARCHAR(255),
-  p_filesize INTEGER,
-  p_tim INT8,
   p_com TEXT,
   p_link VARCHAR(255),
   t_number INTEGER,
-  FOREIGN KEY (t_number) REFERENCES Thread(t_number)
+  i_tim INT8,
+  FOREIGN KEY (t_number) REFERENCES Thread(t_number),
+  FOREIGN KEY (i_tim) REFERENCES Image(i_tim)
 );
 
 CREATE TABLE replies(
