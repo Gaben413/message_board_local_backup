@@ -11,6 +11,7 @@
   "dependencies": {
     "axios": "^1.6.2",
     "dotenv": "^16.3.1",
-    "mariadb": "^3.2.2"
+    "mariadb": "^3.2.2",
+    "sequelizer": "^1.1.4"
   }
 }
