@@ -18,4 +18,5 @@ const sequelize = new Sequelize(process.env.DB, process.env.USER, process.env.PA
       }
 })();
 */
+
 module.exports = sequelize;

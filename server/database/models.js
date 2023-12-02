@@ -153,4 +153,4 @@ const favourite_has_thread = database.define('favourite_has_thread', {
     timestamps: false
 })
 
-module.exports = { Favourite, Image, Thread, Post, replies };
+module.exports = { Favourite, Image, Thread, Post, replies, favourite_has_thread };
