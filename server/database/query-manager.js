@@ -127,7 +127,9 @@ async function GetAllThreads(){
     return output;
 }
 
-//Add Thread to Favourite
+//Add Thread to Favourit
+/*
+//Favourites system will be on hold until proper association is integrated
 async function AddThreadToFavourite(thread_id, favourite_id){
     const {favourite_has_thread} = require('./models')
 
@@ -139,20 +141,7 @@ async function AddThreadToFavourite(thread_id, favourite_id){
     console.log(`Added Thread (${thread_id}) to favourite (${favourite_id})`)
 
 }
-
-async function GetAllThreadsInFavourites(id){
-    const {Favourite, Thread, favourite_has_thread} = require('./models')
-    const { QueryTypes } = require('sequelize');
-
-    const [results, meta] = await sequelize.query(
-        "SELECT * FROM favourites INNER JOIN favourite_has_threads ON 1 = 1", 
-        {
-            type:QueryTypes.SELECT
-        }
-    );
-
-    return results;
-}
+*/
 
 (async () => {
     try {
@@ -171,7 +160,7 @@ async function GetAllThreadsInFavourites(id){
         //console.log(await GetThread(12341243))
         //console.log(await GetAllThreads())
         //AddThreadToFavourite(12341243, 1)
-        console.log(await GetAllThreadsInFavourites(1))
+        //console.log(await GetAllThreadsInFavourites(1))
     }catch (error){
         console.error('Error has occured:', error)
     }
