@@ -73,6 +73,27 @@ async function AddImage(data){
     })
 }
 
+async function GetImage(id){
+    const {Image} = require('./models')
+
+    let output = await Image.findAll({
+        where: {
+            i_tim: id
+        },
+        raw:true
+    });
+
+    return output[0];
+}
+
+async function GetAllImages(){
+    const {Image} = require('./models')
+
+    let output = await Image.findAll({raw:true});
+
+    return output;
+}
+
 //Thread
 async function AddThread(data){
     const {Thread} = require('./models')
@@ -86,6 +107,8 @@ async function AddThread(data){
         t_link: data['t_link'],
         i_tim: data['i_tim']
     })
+
+    console.log(`Thread Data ahs been inserted: ${thread}`)
 }
 
 async function UpdateThread(update_data, id){
@@ -142,7 +165,7 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 
 }
 */
-
+/*
 (async () => {
     try {
         let date = new Date()
@@ -165,3 +188,6 @@ async function AddThreadToFavourite(thread_id, favourite_id){
         console.error('Error has occured:', error)
     }
 })();
+*/
+
+module.exports = {AddImage, AddThread, GetImage, GetThread, UpdateThread}
