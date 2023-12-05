@@ -124,7 +124,7 @@ async function GetPostData(input){
                 }
 
                 if(await GetPost(res.data['posts'][i]['no']) == undefined){
-                    console.log('Thread does not exist in DB')
+                    console.log('Post does not exist in DB')
                     let date = new Date(res.data['posts'][i]['time']*1000)
                     let formatedDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
                     await AddPost({
