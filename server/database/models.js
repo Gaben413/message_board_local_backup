@@ -64,6 +64,9 @@ const Thread = database.define('thread', {
     t_link: {
         type: DataTypes.STRING
     },
+    t_com: {
+        type: DataTypes.TEXT
+    },
     i_tim: {
         type: DataTypes.BIGINT,
         references: {
@@ -98,14 +101,26 @@ const Post = database.define('post', {
     p_link: {
         type: DataTypes.STRING
     },
+    p_com: {
+        type: DataTypes.TEXT
+    },
     p_tim:{
         type: DataTypes.BIGINT
+    },
+    t_number: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 140989504,
+        references: {
+            model: Thread,
+            key: 't_number',
+        }
     },
     i_tim: {
         type: DataTypes.BIGINT,
         references: {
             model: Image,
-            key: 'i_tim'
+            key: 'i_tim',
         }
     }
 },

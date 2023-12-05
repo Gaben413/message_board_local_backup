@@ -47,7 +47,7 @@ function fetch_thread(){
                         }
     
                         let date = new Date(threads[e]['time']*1000)
-                        let formatedDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+                        let formatedDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
                         //console.log(formatedDate)
     
                         if(await GetThread(threads[e]['no']) == undefined){
@@ -59,6 +59,7 @@ function fetch_thread(){
                                 "t_tag": threads[e]['tag'],
                                 "t_replies": threads[e]['replies'],
                                 "t_link": `https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}`,
+                                "t_com": threads[e]['com'],
                                 "i_tim": threads[e]['tim'],
                             })
                         }else{
@@ -127,7 +128,8 @@ async function GetPostData(input){
                 if(await GetPost(res.data['posts'][i]['no']) == undefined){
                     console.log('Post does not exist in DB')
                     let date = new Date(res.data['posts'][i]['time']*1000)
-                    let formatedDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+                    let formatedDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+                    console.log(`Formated Date: ${formatedDate}`)
                     await AddPost({
                         "p_number": res.data['posts'][i]['no'],
                         "p_date": formatedDate,
@@ -135,6 +137,7 @@ async function GetPostData(input){
                         "p_tag": res.data['posts'][i]['tag'],
                         "p_replies": res.data['posts'][i]['replies'],
                         "p_link": `https://i.4cdn.org/${board_name}/${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']}`,
+                        "p_com": res.data['posts'][i]['com'],
                         "p_tim": res.data['posts'][i]['tim'],
                         "i_tim": res.data['posts'][i]['tim'],
                     })

@@ -8,7 +8,7 @@ const sequelize = new Sequelize(process.env.DB, process.env.USER, process.env.PA
     port: process.env.PORT
 });
 
-
+/*
 (async () => {
     try {
         await sequelize.authenticate();
@@ -18,5 +18,5 @@ const sequelize = new Sequelize(process.env.DB, process.env.USER, process.env.PA
         console.error('Unable to connect to the database:', error);
       }
 })();
-
+*/
 module.exports = sequelize;

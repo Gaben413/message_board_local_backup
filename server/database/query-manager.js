@@ -1,6 +1,5 @@
-const { Sequelize } = require('sequelize');
-const sequelize = require('./database-manager');
-
+const { Sequelize, Op } = require('sequelize');
+//const sequelize = require('./database-manager');
 //Favourites
 async function AddFavourite(data){
     const {Favourite} = require('./models')
@@ -94,6 +93,37 @@ async function GetAllImages(){
     return output;
 }
 
+async function GetAllImagesFromThread(thread_id){
+    const {Image, Post} = require('./models')
+
+    let output_posts = await Post.findAll({
+        attributes:['i_tim'],
+        where: {
+            t_number: thread_id,
+            i_tim: {
+                [Op.ne]:null
+            }
+        },
+        raw:true
+    });
+
+    let processed = [];
+    output_posts.forEach(element=>{
+        processed.push(element['i_tim'])
+    })
+    
+    let output_images = await Image.findAll({
+        where: {
+            i_tim: {
+                [Op.in]: processed
+            }
+        },
+        raw:true
+    });
+    
+    return output_images;
+}
+
 //Thread
 async function AddThread(data){
     const {Thread} = require('./models')
@@ -105,6 +135,7 @@ async function AddThread(data){
         t_tag: data['t_tag'],
         t_replies: data['t_replies'],
         t_link: data['t_link'],
+        t_com: data['t_com'],
         i_tim: data['i_tim']
     })
 
@@ -161,6 +192,7 @@ async function AddPost(data){
         p_tag: data['p_tag'],
         p_replies: data['p_replies'],
         p_link: data['p_link'],
+        p_com: data['p_com'],
         p_tim: data['p_tim'],
         i_tim: data['i_tim']
     })
@@ -185,6 +217,19 @@ async function GetAllPosts(){
     const {Post} = require('./models')
 
     let output = await Post.findAll({raw:true});
+
+    return output;
+}
+
+async function GetAllPostsFromThread(thread_id){
+    const {Post} = require('./models')
+
+    let output = await Post.findAll({
+        where: {
+            t_number: id
+        },
+        raw:true
+    });
 
     return output;
 }
@@ -229,4 +274,4 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 })();
 */
 
-module.exports = {AddImage, AddThread, GetImage, GetThread, UpdateThread, AddPost, GetPost, GetAllPosts}
+module.exports = {AddImage, AddThread, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, UpdateThread, AddPost, GetPost, GetAllPosts}
