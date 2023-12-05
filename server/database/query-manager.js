@@ -150,6 +150,45 @@ async function GetAllThreads(){
     return output;
 }
 
+//POST
+async function AddPost(data){
+    const {Post} = require('./models')
+
+    const thread = await Post.create({
+        p_number: data['p_number'],
+        p_date: data['p_date'],
+        p_name: data['p_name'],
+        p_tag: data['p_tag'],
+        p_replies: data['p_replies'],
+        p_link: data['p_link'],
+        p_tim: data['p_tim'],
+        i_tim: data['i_tim']
+    })
+
+    console.log(`Post Data has been inserted: ${thread}`)
+}
+
+async function GetPost(id){
+    const {Post} = require('./models')
+
+    let output = await Post.findAll({
+        where: {
+            p_number: id
+        },
+        raw:true
+    });
+
+    return output[0];
+}
+
+async function GetAllPosts(){
+    const {Post} = require('./models')
+
+    let output = await Post.findAll({raw:true});
+
+    return output;
+}
+
 //Add Thread to Favourit
 /*
 //Favourites system will be on hold until proper association is integrated
@@ -190,4 +229,4 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 })();
 */
 
-module.exports = {AddImage, AddThread, GetImage, GetThread, UpdateThread}
+module.exports = {AddImage, AddThread, GetImage, GetThread, UpdateThread, AddPost, GetPost, GetAllPosts}
