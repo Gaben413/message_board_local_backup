@@ -7,78 +7,79 @@ let url = `https://a.4cdn.org/${board_name}/catalog.json`;
 
 const search_text = "bcb";
 
-
-let fetch_thread = new Promise((resolve, reject) => {
-    let output = '';
-
-    axios.get(url).then(async res => {
-        for (let i = 0; i < res.data.length; i++) {
-            let threads = res.data[i]['threads']
+function fetch_thread(){
+    return new Promise((resolve, reject) => {
+        let output = '';
     
-            for (let e = 0; e < threads.length; e++) {
-                if(check_data(threads[e]['sub'])){
-                    console.log(`########## PAGE ${i+1} ##########`)
-                    console.log(`Thread nº: ${threads[e]['no']}`)
-                    console.log(`Thread Name: ${threads[e]['name']}`)
-                    console.log(`Thread Creation Time UNIX: ${threads[e]['time']}`)
-                    console.log(`Thread Creation Time: ${threads[e]['now']}`)
-                    console.log(`Thread Sub: ${threads[e]['sub']}`)
-                    console.log(`Thread Tag: ${threads[e]['tag']}`)
-                    console.log(`Thread FileID: ${threads[e]['tim']}`)
-                    console.log(`Thread Archived: ${check_if_closed(threads[e]['closed'])}`)
-                    console.log(`Thread File Link: https://i.4cdn.org/${board_name}/${threads[e]['tim'] + threads[e]['ext']}`)
-                    console.log(`Thread Filename: ${threads[e]['filename'] + threads[e]['ext']}`)
-                    console.log(`Thread Filesize: ${threads[e]['fsize']}`)
-                    console.log(`Thread last_modified: ${threads[e]['last_modified']}`)
-                    console.log(`Thread replies count: ${threads[e]['replies']}`)
-                    console.log(`Thread Link: https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}`)
+        axios.get(url).then(async res => {
+            for (let i = 0; i < res.data.length; i++) {
+                let threads = res.data[i]['threads']
+        
+                for (let e = 0; e < threads.length; e++) {
+                    if(check_data(threads[e]['sub'])){
+                        console.log(`########## PAGE ${i+1} ##########`)
+                        console.log(`Thread nº: ${threads[e]['no']}`)
+                        console.log(`Thread Name: ${threads[e]['name']}`)
+                        console.log(`Thread Creation Time UNIX: ${threads[e]['time']}`)
+                        console.log(`Thread Creation Time: ${threads[e]['now']}`)
+                        console.log(`Thread Sub: ${threads[e]['sub']}`)
+                        console.log(`Thread Tag: ${threads[e]['tag']}`)
+                        console.log(`Thread FileID: ${threads[e]['tim']}`)
+                        console.log(`Thread Archived: ${check_if_closed(threads[e]['closed'])}`)
+                        console.log(`Thread File Link: https://i.4cdn.org/${board_name}/${threads[e]['tim'] + threads[e]['ext']}`)
+                        console.log(`Thread Filename: ${threads[e]['filename'] + threads[e]['ext']}`)
+                        console.log(`Thread Filesize: ${threads[e]['fsize']}`)
+                        console.log(`Thread last_modified: ${threads[e]['last_modified']}`)
+                        console.log(`Thread replies count: ${threads[e]['replies']}`)
+                        console.log(`Thread Link: https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}`)
+        
+                        output = threads[e]['no'];
     
-                    output = threads[e]['no'];
-
-                    let image_obj = {
-                        "tim": threads[e]['tim'],
-                        "filename": threads[e]['filename'],
-                        "filesize": threads[e]['fsize'],
-                        "ext": threads[e]['ext'],
-                    }
-
-                    if(await GetImage(image_obj['tim']) == undefined){
-                        await AddImage(image_obj)
-                    }
-
-                    let date = new Date(threads[e]['time']*1000)
-                    let formatedDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-                    //console.log(formatedDate)
-
-                    if(await GetThread(threads[e]['no']) == undefined){
-                        console.log('Thread does not exist in DB')
-                        await AddThread({
-                            "t_number": threads[e]['no'],
-                            "t_date": formatedDate,
-                            "t_archived": false,
-                            "t_tag": threads[e]['tag'],
-                            "t_replies": threads[e]['replies'],
-                            "t_link": `https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}`,
-                            "i_tim": threads[e]['tim'],
-                        })
-                    }else{
-                        console.log('Thread does exist in DB')
-                        await UpdateThread({
-                            "t_archived": threads[e]['closed'],
-                            "t_replies": threads[e]['replies'],
-                        }, threads[e]['no'])
+                        let image_obj = {
+                            "tim": threads[e]['tim'],
+                            "filename": threads[e]['filename'],
+                            "filesize": threads[e]['fsize'],
+                            "ext": threads[e]['ext'],
+                        }
+    
+                        if(await GetImage(image_obj['tim']) == undefined){
+                            await AddImage(image_obj)
+                        }
+    
+                        let date = new Date(threads[e]['time']*1000)
+                        let formatedDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+                        //console.log(formatedDate)
+    
+                        if(await GetThread(threads[e]['no']) == undefined){
+                            console.log('Thread does not exist in DB')
+                            await AddThread({
+                                "t_number": threads[e]['no'],
+                                "t_date": formatedDate,
+                                "t_archived": false,
+                                "t_tag": threads[e]['tag'],
+                                "t_replies": threads[e]['replies'],
+                                "t_link": `https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}`,
+                                "i_tim": threads[e]['tim'],
+                            })
+                        }else{
+                            console.log('Thread does exist in DB')
+                            await UpdateThread({
+                                "t_archived": threads[e]['closed'],
+                                "t_replies": threads[e]['replies'],
+                            }, threads[e]['no'])
+                        }
                     }
                 }
             }
-        }
-
-        resolve(output)
-
-    }).catch(error => {
-        reject('Failure')
-        console.log(error);
+    
+            resolve(output)
+    
+        }).catch(error => {
+            reject('Failure')
+            console.log(error);
+        })
     })
-})
+}
 
 async function GetPostData(input){
     let thread_url = `https://a.4cdn.org/${board_name}/thread/${input}.json`
@@ -141,24 +142,34 @@ async function GetPostData(input){
             }
             console.log(`\nIMAGE COUNT: ${imageCount}`)
 
+            resolve('Post Data Fetch Success')
+
         }).catch(error => {
             console.log(error);
         })
-        resolve('Test1')
     })
-    //return 'Test2'
-    
 }
 
-
+/*
 fetch_thread.then((data) => {
     console.log(`Thread ID: ${data}`)
 
     GetPostData(data).then((data2)=>{
         console.log(data2)
+    }).then((data3) => {
+        console.log('TEst, run')
     })
 })
+*/
 
+async function Test(){
+    let thread_id = await fetch_thread()
+    console.log(`\nThread ID: ${thread_id}\n`)
+    let response = await GetPostData(thread_id)
+    console.log(response)
+}
+
+Test()
 
 /*
     Code logic (DRAFT):
