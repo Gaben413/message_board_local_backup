@@ -178,25 +178,32 @@ fetch_thread.then((data) => {
 */
 
 async function Test(){
-    let board_name = 'trash'
-    let search_text = ["bcb"];
+    const boards = settings['settings']['boards']
 
-    let thread_id = await fetch_thread(board_name, search_text)
+    for (let i = 0; i < boards.length; i++) {
+        let board_name = boards[i]['board']
+        let search_text = boards[i]['tags']
+
+        console.log(`\n${i+1} - LOADING /${board_name}/`)
+        let thread_id = await fetch_thread(board_name, search_text)
     
-    if(thread_id != ''){
-        console.log(`\nThread ID: ${thread_id}\n`)
+        if(thread_id != ''){
+            console.log(`\nThread ID: ${thread_id}\n`)
 
-        let posts_response = await GetPostData(thread_id, board_name)
-        console.log(posts_response)
+            let posts_response = await GetPostData(thread_id, board_name)
+            console.log(posts_response)
 
-        let download_reponse = await downloadImages(board_name, thread_id)
-        console.log(download_reponse)
+            let download_reponse = await downloadImages(board_name, thread_id)
+            console.log(download_reponse)
 
-        //Now do the loop or check for the next board
-        //Still need to figure out how that will work
-    }else{
-        console.log(`No threads in ${board_name} have ${search_text} as tags`)
+            //Now do the loop or check for the next board
+            //Still need to figure out how that will work
+        }else{
+            console.log(`No threads in ${board_name} have ${search_text} as tags`)
+        }
+        
     }
+
 }
 
 Test()
@@ -213,16 +220,20 @@ function Test2(){
         
     }
 }
-Test2()
+//Test2()
 
 function check_data(input, search_text){
     if(input == undefined) return false;
+    let response = false;
 
-    if(input.toLowerCase().includes(search_text)){
-        return true
-    }else{
-        return false
+    for (let i = 0; i < search_text.length; i++) {
+        if(input.toLowerCase().includes(search_text[i])){
+            response = true
+            break
+        }        
     }
+
+    return response;
 }
 
 function check_if_closed(input){

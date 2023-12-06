@@ -31,9 +31,9 @@ async function downloadImages(board_name, thread_id){
             if(!fs.existsSync(filepath+processed_obj[i]['filename'])){
                 console.log(`Downloading ${i+1} images out of ${processed_obj.length}`)
                 await download_image(processed_obj[i])
-                console.log(`Download of ${processed_obj[i]['filename']} complete`)
+                console.log(`Download of ${processed_obj[i]['filename']} complete - ${calculate_percentage(processed_obj.length, i+1).toFixed(2)}%`)
             }else{
-                console.log(`Image ${i+1} out of ${processed_obj.length} (${processed_obj[i]['filename']}) is already downloaded`)
+                console.log(`Image ${i+1} out of ${processed_obj.length} (${processed_obj[i]['filename']}) is already downloaded - ${calculate_percentage(processed_obj.length, i+1).toFixed(2)}%`)
             }
         }
 
@@ -42,6 +42,10 @@ async function downloadImages(board_name, thread_id){
         resolve("Download was an successs!")
     });
     
+}
+
+function calculate_percentage(max, current){
+    return current / (max/100);
 }
 
 async function download_image(obj_data){
