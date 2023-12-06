@@ -36,7 +36,7 @@ async function downloadImages(board_name, thread_id){
         }
     }
 
-    console.log(`Download done, images location:\n${filepath}`)
+    console.log(`\nDownload done, images location:\n${filepath}`)
 
     /*
     const response = await Axios({
@@ -93,7 +93,7 @@ async function Test(){
     downloadImages('co', 140989504)
 }
 
-Test()
+//Test()
 
 /*
 //TEST
