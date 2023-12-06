@@ -8,51 +8,40 @@ const settings = require('../settings.json')
 let filepath;
 
 async function downloadImages(board_name, thread_id){
+    return new Promise(async (resolve, reject)=>{
+        let download_data = await GetAllImagesFromThread(thread_id)
 
-    let download_data = await GetAllImagesFromThread(thread_id)
+        let processed_obj = [];
 
-    let processed_obj = [];
+        console.log(`Download Amount: ${download_data.length}`)
 
-    console.log(`Download Amount: ${download_data.length}`)
+        download_data.forEach(element => {
+            let obj = {
+                "url": `https://i.4cdn.org/${board_name}/${element['i_tim'] + element['i_ext']}`,
+                "filename": element['i_tim'] + element['i_ext']
+            }
+            processed_obj.push(obj)
+        })
 
-    download_data.forEach(element => {
-        let obj = {
-            "url": `https://i.4cdn.org/${board_name}/${element['i_tim'] + element['i_ext']}`,
-            "filename": element['i_tim'] + element['i_ext']
+        //console.log(processed_obj)
+
+        check_dir(thread_id)
+
+        for (let i = 0; i < processed_obj.length; i++) {
+            if(!fs.existsSync(filepath+processed_obj[i]['filename'])){
+                console.log(`Downloading ${i+1} images out of ${processed_obj.length}`)
+                await download_image(processed_obj[i])
+                console.log(`Download of ${processed_obj[i]['filename']} complete`)
+            }else{
+                console.log(`Image ${i+1} out of ${processed_obj.length} (${processed_obj[i]['filename']}) is already downloaded`)
+            }
         }
-        processed_obj.push(obj)
-    })
 
-    //console.log(processed_obj)
+        console.log(`\nDownload done, images location:\n${filepath}`)
 
-    check_dir(thread_id)
-    for (let i = 0; i < processed_obj.length; i++) {
-        if(!fs.existsSync(filepath+processed_obj[i]['filename'])){
-            console.log(`Downloading ${i+1} images out of ${processed_obj.length}`)
-            await download_image(processed_obj[i])
-            console.log(`Download of ${processed_obj[i]['filename']} complete`)
-        }else{
-            console.log(`Image ${i+1} out of ${processed_obj.length} (${processed_obj[i]['filename']}) is already downloaded`)
-        }
-    }
-
-    console.log(`\nDownload done, images location:\n${filepath}`)
-
-    /*
-    const response = await Axios({
-        url,
-        method: 'GET',
-        responseType: 'stream'
+        resolve("Download was an successs!")
     });
-
-    check_dir()
-
-    return new Promise((resolve, reject) => {
-        response.data.pipe(fs.createWriteStream(filepath + filename))
-            .on('error', reject)
-            .once('close', () => resolve(filepath + filename));
-    });
-    */
+    
 }
 
 async function download_image(obj_data){
@@ -90,7 +79,8 @@ function check_dir(wildcard){
 //check_dir("1000015")
 
 async function Test(){
-    downloadImages('co', 140989504)
+    let response = await downloadImages('co', 140989504)
+    console.log(response)
 }
 
 //Test()

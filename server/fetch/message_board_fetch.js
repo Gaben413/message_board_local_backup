@@ -181,14 +181,18 @@ fetch_thread.then((data) => {
 
 async function Test(){
     let thread_id = await fetch_thread()
-
+    
     if(thread_id != ''){
         console.log(`\nThread ID: ${thread_id}\n`)
 
-        let response = await GetPostData(thread_id)
-        console.log(response)
+        let posts_response = await GetPostData(thread_id)
+        console.log(posts_response)
 
-        downloadImages(board_name, thread_id)
+        let download_reponse = await downloadImages(board_name, thread_id)
+        console.log(download_reponse)
+
+        //Now do the loop or check for the next board
+        //Still need to figure out how that will work
     }
 }
 
