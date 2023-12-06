@@ -2,16 +2,14 @@ const axios = require('axios');
 const {AddImage, AddThread, GetImage, GetThread, UpdateThread, AddPost, GetPost, GetAllPosts} = require('../database/query-manager')
 const {downloadImages} = require('./download-manager')
 
-let board_name = 'co';
-
-let url = `https://a.4cdn.org/${board_name}/catalog.json`;
-
-const search_text = "bcb";
+const settings = require('../settings.json')
 
 const simple_log_output = false;
 
-function fetch_thread(){
+function fetch_thread(board_name, search_text){
     return new Promise((resolve, reject) => {
+        let url = `https://a.4cdn.org/${board_name}/catalog.json`;
+
         let output = '';
     
         axios.get(url).then(async res => {
@@ -19,7 +17,7 @@ function fetch_thread(){
                 let threads = res.data[i]['threads']
         
                 for (let e = 0; e < threads.length; e++) {
-                    if(check_data(threads[e]['sub'])){
+                    if(check_data(threads[e]['sub'], search_text)){
                         if(simple_log_output){
                             console.log(`Page ${i+1} | ID: ${threads[e]['no']} | ARCHVIED: ${check_if_closed(threads[e]['closed'])} | DATE: ${threads[e]['now']}`);
                         }else{
@@ -90,7 +88,7 @@ function fetch_thread(){
     })
 }
 
-async function GetPostData(input){
+async function GetPostData(input, board_name){
     let thread_url = `https://a.4cdn.org/${board_name}/thread/${input}.json`
     
     return new Promise((resolve, reject) => {
@@ -180,12 +178,15 @@ fetch_thread.then((data) => {
 */
 
 async function Test(){
-    let thread_id = await fetch_thread()
+    let board_name = 'trash'
+    let search_text = ["bcb"];
+
+    let thread_id = await fetch_thread(board_name, search_text)
     
     if(thread_id != ''){
         console.log(`\nThread ID: ${thread_id}\n`)
 
-        let posts_response = await GetPostData(thread_id)
+        let posts_response = await GetPostData(thread_id, board_name)
         console.log(posts_response)
 
         let download_reponse = await downloadImages(board_name, thread_id)
@@ -193,12 +194,28 @@ async function Test(){
 
         //Now do the loop or check for the next board
         //Still need to figure out how that will work
+    }else{
+        console.log(`No threads in ${board_name} have ${search_text} as tags`)
     }
 }
 
 Test()
 
-function check_data(input){
+function Test2(){
+    const boards = settings['settings']['boards']
+
+    for (let i = 0; i < boards.length; i++) {
+        let board_name = boards[i]['board']
+        let search_text = boards[i]['tags']
+
+        console.log(`${i+1} - LOADING /${board_name}/`)
+        console.log(search_text)
+        
+    }
+}
+Test2()
+
+function check_data(input, search_text){
     if(input == undefined) return false;
 
     if(input.toLowerCase().includes(search_text)){
