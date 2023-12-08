@@ -26,6 +26,7 @@
             }
         ],
         "download_dir_name":"message board downloads/",
-        "folder_name": "Thread_"
+        "folder_name": "Thread_",
+        "interval_ms": 3000
     }
 }
