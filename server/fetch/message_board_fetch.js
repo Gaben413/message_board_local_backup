@@ -165,49 +165,41 @@ async function GetPostData(input, board_name){
     })
 }
 
-/*
-fetch_thread.then((data) => {
-    console.log(`Thread ID: ${data}`)
 
-    GetPostData(data).then((data2)=>{
-        console.log(data2)
-    }).then((data3) => {
-        console.log('TEst, run')
-    })
-})
-*/
+async function fetch(){
+    return new Promise(async (resolve, reject) => {
+        const boards = settings['settings']['boards']
 
-async function Test(){
-    const boards = settings['settings']['boards']
-
-    for (let i = 0; i < boards.length; i++) {
-        let board_name = boards[i]['board']
-        let search_text = boards[i]['tags']
-
-        console.log(`\n${i+1} - LOADING /${board_name}/`)
-        let thread_id = await fetch_thread(board_name, search_text)
+        for (let i = 0; i < boards.length; i++) {
+            let board_name = boards[i]['board']
+            let search_text = boards[i]['tags']
     
-        if(thread_id != ''){
-            console.log(`\nThread ID: ${thread_id}\n`)
-
-            let posts_response = await GetPostData(thread_id, board_name)
-            console.log(posts_response)
-
-            let download_reponse = await downloadImages(board_name, thread_id)
-            console.log(download_reponse)
-
-            //Now do the loop or check for the next board
-            //Still need to figure out how that will work
-        }else{
-            console.log(`No threads in ${board_name} have ${search_text} as tags`)
-        }
+            console.log(`\n${i+1} - LOADING /${board_name}/`)
+            let thread_id = await fetch_thread(board_name, search_text)
         
-    }
-
+            if(thread_id != ''){
+                console.log(`\nThread ID: ${thread_id}\n`)
+    
+                let posts_response = await GetPostData(thread_id, board_name)
+                console.log(posts_response)
+    
+                let download_reponse = await downloadImages(board_name, thread_id)
+                console.log(download_reponse)
+    
+                //Now do the loop or check for the next board
+                //Still need to figure out how that will work
+            }else{
+                console.log(`No threads in ${board_name} have ${search_text} as tags`)
+            }
+        }
+        resolve({message: 'success', key: true})
+    })
 }
 
-Test()
-
+//main()
+function Test(){
+    console.log('Test')
+}
 function Test2(){
     const boards = settings['settings']['boards']
 
@@ -221,6 +213,7 @@ function Test2(){
     }
 }
 //Test2()
+
 
 function check_data(input, search_text){
     if(input == undefined) return false;
@@ -243,3 +236,5 @@ function check_if_closed(input){
         return true
     }
 }
+
+module.exports = {fetch}
