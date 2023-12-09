@@ -1,6 +1,7 @@
 const { Sequelize, Op } = require('sequelize');
 //const sequelize = require('./database-manager');
-//Favourites
+
+// #region Favourites functions
 async function AddFavourite(data){
     const {Favourite} = require('./models')
         let date = new Date()
@@ -60,7 +61,10 @@ async function DeleteFavourite(id){
     console.log(`Deleted Favourite of ID ${id}`)
 }
 
-//Image
+// #endregion
+
+// #region Image functions
+
 async function AddImage(data){
     const {Image} = require('./models')
 
@@ -124,7 +128,9 @@ async function GetAllImagesFromThread(thread_id){
     return output_images;
 }
 
-//Thread
+// #endregion
+
+// #region Thread functions
 async function AddThread(data){
     const {Thread} = require('./models')
 
@@ -181,7 +187,9 @@ async function GetAllThreads(){
     return output;
 }
 
-//POST
+// #endregion
+
+// #region Post functions
 async function AddPost(data){
     const {Post} = require('./models')
 
@@ -247,7 +255,9 @@ async function GetPostThread(id){
 
     return output[0];
 }
+//#endregion
 
+//#region Test Area
 //Add Thread to Favourit
 /*
 //Favourites system will be on hold until proper association is integrated
@@ -287,5 +297,6 @@ async function AddThreadToFavourite(thread_id, favourite_id){
     }
 })();
 */
+//#endregion
 
 module.exports = {AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, AddPost, GetPost, GetAllPosts, GetAllPostsFromThread}
