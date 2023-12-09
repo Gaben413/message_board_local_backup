@@ -4,7 +4,7 @@ const {downloadImages} = require('./download-manager')
 
 const settings = require('../settings.json')
 
-const simple_log_output = false;
+const simple_log_output = settings['settings']['simple_log_output'];
 
 function fetch_thread(board_name, search_text){
     return new Promise((resolve, reject) => {
@@ -36,8 +36,7 @@ function fetch_thread(board_name, search_text){
                             console.log(`Thread last_modified: ${threads[e]['last_modified']}`);
                             console.log(`Thread replies count: ${threads[e]['replies']}`);
                             console.log(`Thread Link: https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}`);
-                        }
-                        
+                        }                        
         
                         output = threads[e]['no'];
     
