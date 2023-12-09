@@ -14,7 +14,7 @@ async function go() {
         let date_formated = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
     
         console.log(`\n########## Response: ${response['message']} ##########`)
-        console.log(`Next check will be in ${interval}ms | ${interval/1000}s | At ${date_formated}`)
+        console.log(`Next check will be in ${interval/1000}s(${interval}ms) | At ${date_formated}`)
     
         main()
     }catch(error){
