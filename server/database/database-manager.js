@@ -3,12 +3,16 @@ require('dotenv').config()
 const { Sequelize } = require('sequelize');
 
 const settings = require('../settings.json')
+let logBool = (() => {
+  if(settings['settings']['simple_log_output']) return false 
+  else return console.log
+})();
 
 const sequelize = new Sequelize(process.env.DB, process.env.USER, process.env.PASSWORD, {
     host: process.env.HOST,
     dialect: process.env.DIALECT,
     port: process.env.PORT,
-    logging: settings['settings']['simple_log_output']
+    logging: logBool
 });
 
 /*

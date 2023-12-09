@@ -226,12 +226,26 @@ async function GetAllPostsFromThread(thread_id){
 
     let output = await Post.findAll({
         where: {
-            t_number: id
+            t_number: thread_id
         },
         raw:true
     });
 
     return output;
+}
+
+async function GetPostThread(id){
+    const {Post} = require('./models')
+
+    let output = await Post.findAll({
+        attributes: ['t_number', 'i_tim'],
+        where: {
+            p_number: id
+        },
+        raw:true
+    });
+
+    return output[0];
 }
 
 //Add Thread to Favourit
@@ -274,4 +288,4 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 })();
 */
 
-module.exports = {AddImage, AddThread, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, UpdateThread, AddPost, GetPost, GetAllPosts}
+module.exports = {AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, AddPost, GetPost, GetAllPosts, GetAllPostsFromThread}
