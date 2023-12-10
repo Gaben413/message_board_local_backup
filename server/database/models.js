@@ -54,6 +54,9 @@ const Thread = database.define('thread', {
         type: DataTypes.BOOLEAN,
         defaultValue: false
     },
+    t_sub: {
+        type: DataTypes.STRING
+    },
     t_tag: {
         type: DataTypes.STRING
     },
@@ -63,16 +66,6 @@ const Thread = database.define('thread', {
     },
     t_link: {
         type: DataTypes.STRING
-    },
-    t_com: {
-        type: DataTypes.TEXT
-    },
-    i_tim: {
-        type: DataTypes.BIGINT,
-        references: {
-            model: Image,
-            key: 'i_tim'
-        }
     }
 },
 {
@@ -104,30 +97,19 @@ const Post = database.define('post', {
     p_com: {
         type: DataTypes.TEXT
     },
-    p_tim:{
+    i_tim:{
         type: DataTypes.BIGINT
     },
     t_number: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 140989504,
-        references: {
-            model: Thread,
-            key: 't_number',
-        }
     },
-    i_tim: {
-        type: DataTypes.BIGINT,
-        references: {
-            model: Image,
-            key: 'i_tim',
-        }
-    }
 },
 {
     timestamps: false
 })
-
+/*
+//Most likely unecessary
 const replies = database.define('replies', {
     p_number: {
         type: DataTypes.INTEGER,
@@ -147,25 +129,39 @@ const replies = database.define('replies', {
 {
     timestamps: false
 })
-
+*/
 const favourite_has_thread = database.define('favourite_has_thread', {
     f_id: {
         type: DataTypes.INTEGER,
+        /*
         references: {
             model: Favourite,
             key: 'f_id'
         }
+        */
     },
     t_number: {
         type: DataTypes.INTEGER,
+        /*
         references: {
             model: Thread,
             key: 't_number'
         }
+        */
     }
 },
 {
     timestamps: false
 })
 
-module.exports = { Favourite, Image, Thread, Post, replies, favourite_has_thread };
+Thread.hasMany(Post, {
+    foreignKey: 't_number'
+})
+
+Image.hasOne(Post, {
+    foreignKey: 'i_tim'
+})
+
+//database.sync()
+
+module.exports = { Favourite, Image, Thread, Post, favourite_has_thread };

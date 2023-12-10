@@ -61,11 +61,10 @@ function fetch_thread(board_name, search_text){
                                 "t_number": threads[e]['no'],
                                 "t_date": formatedDate,
                                 "t_archived": false,
+                                "t_sub": threads[e]['sub'],
                                 "t_tag": threads[e]['tag'],
                                 "t_replies": threads[e]['replies'],
                                 "t_link": `https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}`,
-                                "t_com": threads[e]['com'],
-                                "i_tim": threads[e]['tim'],
                             })
                         }else{
                             console.log('Thread does exist in DB')
@@ -148,7 +147,6 @@ async function GetPostData(input, board_name){
                         "p_replies": res.data['posts'][i]['replies'],
                         "p_link": `https://i.4cdn.org/${board_name}/${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']}`,
                         "p_com": res.data['posts'][i]['com'],
-                        "p_tim": res.data['posts'][i]['tim'],
                         "i_tim": res.data['posts'][i]['tim'],
                     })
                 }

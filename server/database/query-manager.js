@@ -138,11 +138,10 @@ async function AddThread(data){
         t_number: data['t_number'],
         t_date: data['t_date'],
         t_archived: data['t_archived'],
+        t_tag: data['t_sub'],
         t_tag: data['t_tag'],
         t_replies: data['t_replies'],
-        t_link: data['t_link'],
-        t_com: data['t_com'],
-        i_tim: data['i_tim']
+        t_link: data['t_link']
     })
 
     console.log(`Thread Data ahs been inserted: ${thread}`)
@@ -201,7 +200,6 @@ async function AddPost(data){
         p_replies: data['p_replies'],
         p_link: data['p_link'],
         p_com: data['p_com'],
-        p_tim: data['p_tim'],
         i_tim: data['i_tim']
     })
 
