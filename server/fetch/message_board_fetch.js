@@ -39,7 +39,8 @@ function fetch_thread(board_name, search_text){
                         }                        
         
                         output = threads[e]['no'];
-    
+                        
+                        /*
                         let image_obj = {
                             "tim": threads[e]['tim'],
                             "filename": threads[e]['filename'],
@@ -50,7 +51,8 @@ function fetch_thread(board_name, search_text){
                         if(await GetImage(image_obj['tim']) == undefined){
                             await AddImage(image_obj)
                         }
-    
+                        */
+
                         let date = new Date(threads[e]['time']*1000)
                         let formatedDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
                         //console.log(formatedDate)
@@ -61,11 +63,10 @@ function fetch_thread(board_name, search_text){
                                 "t_number": threads[e]['no'],
                                 "t_date": formatedDate,
                                 "t_archived": false,
+                                "t_sub": threads[e]['sub'],
                                 "t_tag": threads[e]['tag'],
                                 "t_replies": threads[e]['replies'],
                                 "t_link": `https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}`,
-                                "t_com": threads[e]['com'],
-                                "i_tim": threads[e]['tim'],
                             })
                         }else{
                             console.log('Thread does exist in DB')
@@ -137,9 +138,11 @@ async function GetPostData(input, board_name){
 
                 if(await GetPost(res.data['posts'][i]['no']) == undefined){
                     console.log('Post does not exist in DB')
+
                     let date = new Date(res.data['posts'][i]['time']*1000)
                     let formatedDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
                     console.log(`Formated Date: ${formatedDate}`)
+
                     await AddPost({
                         "p_number": res.data['posts'][i]['no'],
                         "p_date": formatedDate,
@@ -148,8 +151,8 @@ async function GetPostData(input, board_name){
                         "p_replies": res.data['posts'][i]['replies'],
                         "p_link": `https://i.4cdn.org/${board_name}/${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']}`,
                         "p_com": res.data['posts'][i]['com'],
-                        "p_tim": res.data['posts'][i]['tim'],
                         "i_tim": res.data['posts'][i]['tim'],
+                        "t_number": input,
                     })
                 }
             }

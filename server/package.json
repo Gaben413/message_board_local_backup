@@ -8,6 +8,7 @@
   "scripts": {
     "start": "node index.js",
     "sync": "node database/sync-db.js",
+    "sync2": "node database/models.js",
     "fetch": "node fetch/message_board_local_backup.js",
     "api": "nodemon api/api.js"
   },
