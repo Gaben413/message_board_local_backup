@@ -138,6 +138,7 @@ async function AddThread(data){
 
     const thread = await Thread.create({
         t_number: data['t_number'],
+        t_board: data['board_name'],
         t_date: data['t_date'],
         t_archived: data['t_archived'],
         t_tag: data['t_sub'],
@@ -167,6 +168,23 @@ async function UpdateThread(update_data, id){
     console.log(`Updated Thread of id: ${id}:\nData: ${JSON.stringify(update_data)}`)
 }
 
+async function ArchiveThread(id){
+    const {Thread} = require('./models')
+
+    await Thread.update(
+        {
+            t_archived: true
+        },
+        {
+            where: {
+                t_number: id
+            }
+        }
+    );
+    
+    return `Thread NO ${id} has been archived`
+}
+
 async function GetThread(id){
     const {Thread} = require('./models')
 
@@ -186,6 +204,28 @@ async function GetAllThreads(){
     let output = await Thread.findAll({raw:true});
 
     return output;
+}
+
+async function IsThreadInList(threads_no_list){
+    const {Thread} = require('./models')
+
+    let threads = await Thread.findAll({
+        where: {
+            t_archived: false
+        },
+        raw: true
+    })
+
+    threads.forEach(async element => {
+        let result = threads_no_list.includes(element['t_number'])
+        //console.log(`Thread NO: ${element['t_number']} | Archived: ${element['t_archived']} | Result: ${result}`)
+
+        if(!result){
+            await ArchiveThread(element['t_number'])
+        }
+    })
+
+    //console.log(threads)
 }
 
 // #endregion
@@ -301,4 +341,4 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 */
 //#endregion
 
-module.exports = {AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, AddPost, GetPost, GetAllPosts, GetAllPostsFromThread}
+module.exports = {AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, IsThreadInList, AddPost, GetPost, GetAllPosts, GetAllPostsFromThread}

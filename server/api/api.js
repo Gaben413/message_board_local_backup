@@ -6,7 +6,7 @@ const express = require('express')
 const path = require('path')
 
 const app = express()
-const port = 3030
+const port = settings['settings']['api_port']
 
 let root_path = settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'];
 let thread_folder = root_path + settings['settings']['folder_name'] + '';
