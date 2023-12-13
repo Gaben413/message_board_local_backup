@@ -3,8 +3,11 @@
     <h1>Thread Lists</h1>
     <div class="threads">
       <ThreadComponent />
-      <ThreadComponent />
-      <ThreadComponent />
+      <!--
+      <PostComponent />
+      <PostComponent />
+      <PostComponent />
+      -->
     </div>
     
   </div>
@@ -13,11 +16,13 @@
 <script>
 // @ is an alias to /src
 //import HelloWorld from '@/components/HelloWorld.vue'
+import PostComponent from '@/components/PostComponent.vue'
 import ThreadComponent from '@/components/ThreadComponent.vue'
 
 export default {
   name: 'HomeView',
   components: {
+    PostComponent,
     ThreadComponent
   }
 }
