@@ -29,7 +29,8 @@ async function downloadImages(board_name, thread_id){
 
         for (let i = 0; i < processed_obj.length; i++) {
             if(!fs.existsSync(filepath+processed_obj[i]['filename'])){
-                console.log(`Downloading ${i+1} images out of ${processed_obj.length}`)
+                //Calculate file size: (byteSize/1*Math.pow(10, 6))
+                console.log(`Downloading ${i+1} image out of ${processed_obj.length}`)
                 await download_image(processed_obj[i])
                 console.log(`Download of ${processed_obj[i]['filename']} complete - ${calculate_percentage(processed_obj.length, i+1).toFixed(2)}%`)
             }else{
