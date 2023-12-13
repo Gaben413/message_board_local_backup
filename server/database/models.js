@@ -47,6 +47,10 @@ const Thread = database.define('thread', {
         type: DataTypes.INTEGER,
         primaryKey: true
     },
+    t_board: {
+        type: DataTypes.STRING,
+        defaultValue: '/co/'
+    },
     t_date: {
         type: DataTypes.DATE
     },

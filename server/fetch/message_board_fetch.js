@@ -1,5 +1,5 @@
 const axios = require('axios');
-const {AddImage, AddThread, GetImage, GetThread, UpdateThread, AddPost, GetPost, GetAllPosts} = require('../database/query-manager')
+const {AddImage, AddThread, GetImage, GetThread, UpdateThread, IsThreadInList, AddPost, GetPost, GetAllPosts} = require('../database/query-manager')
 const {downloadImages} = require('./download-manager')
 
 const settings = require('../settings.json')
@@ -36,8 +36,8 @@ function fetch_thread(board_name, search_text){
                             console.log(`Thread last_modified: ${threads[e]['last_modified']}`);
                             console.log(`Thread replies count: ${threads[e]['replies']}`);
                             console.log(`Thread Link: https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}`);
-                        }                        
-        
+                        }
+
                         output = threads[e]['no'];
                         
                         /*
@@ -61,6 +61,7 @@ function fetch_thread(board_name, search_text){
                             console.log('Thread does not exist in DB')
                             await AddThread({
                                 "t_number": threads[e]['no'],
+                                "t_board": `/${board_name}/`,
                                 "t_date": formatedDate,
                                 "t_archived": false,
                                 "t_sub": threads[e]['sub'],
@@ -78,7 +79,7 @@ function fetch_thread(board_name, search_text){
                     }
                 }
             }
-    
+
             resolve(output)
     
         }).catch(error => {
@@ -172,6 +173,8 @@ async function fetch(){
     return new Promise(async (resolve, reject) => {
         const boards = settings['settings']['boards']
 
+        let threads_no_list= []
+
         for (let i = 0; i < boards.length; i++) {
             let board_name = boards[i]['board']
             let search_text = boards[i]['tags']
@@ -190,10 +193,17 @@ async function fetch(){
     
                 //Now do the loop or check for the next board
                 //Still need to figure out how that will work
+
+                threads_no_list.push(thread_id)
             }else{
                 console.log(`No threads in ${board_name} have ${search_text} as tags`)
             }
         }
+
+        await IsThreadInList(threads_no_list)
+
+        console.log(`ALL THREAD IDS: ${threads_no_list}`)
+
         resolve({message: 'success', key: true})
     })
 }
@@ -230,6 +240,8 @@ function check_data(input, search_text){
 
     return response;
 }
+
+//Might be unecessery
 
 function check_if_closed(input){
     if(input == undefined){

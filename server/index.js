@@ -1,4 +1,4 @@
-const api = require('./api/api')
+//const api = require('./api/api')
 const {fetch} = require('./fetch/message_board_fetch')
 const settings = require('./settings.json')
 
