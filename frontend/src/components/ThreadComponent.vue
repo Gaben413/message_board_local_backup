@@ -1,15 +1,15 @@
 <template>
     <div class="container">
         <div class="item1">
-            <p class="header-text">{{ data.num }} | Sub/Tag String</p>
+            <p class="header-text">{{ data.t_number }} | Sub/Tag String</p>
         </div>
         <img src="../assets/stockimage.png" alt="threadImage" class="img-min item2">
         <p class="item3">Thread Comment</p>
         <div class="item4">
-            <p v-if="data.archived" class="archived-text">archived</p>
-            <p v-else class="archived-text">On going</p>
+            <p v-if="data.t_archived" class="archived-text">archived</p>
+            <p v-else class="archived-text">on going</p>
 
-            <p class="date-text">date</p>
+            <p class="date-text">{{ data.t_date }}</p>
         </div>
     </div>
     
@@ -93,9 +93,13 @@ export default{
 }
 
 .item4{
+    display: flex;
+    align-content: center;
+    justify-content: space-between;
+
     margin: 0;
     padding-left: 15px;
-    padding-right: 15px;
+    padding-right: 10px;
     background: rgb(226, 255, 226);
 
     height: fit-content;
@@ -113,6 +117,13 @@ export default{
 
 .archived-text{
     float: left;
+}
+.date-text{
+    font-size: 10px;
+
+    margin: 0;
+
+    align-self: center;
 }
 /*
 .content{

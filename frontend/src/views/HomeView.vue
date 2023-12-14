@@ -1,8 +1,8 @@
 <template>
   <div class="home">
     <h1>Thread Lists</h1>
-    <div class="threads">
-      <div v-for="data in dummy_data" :key="data.key" class="thread-comp">
+    <div class="threads" v-if="threads_data.length">
+      <div v-for="data in threads_data" :key="data.key" class="thread-comp">
         <ThreadComponent :data="data" @click="test(data.key)"/>
       </div>
       
@@ -22,6 +22,8 @@
 import PostComponent from '@/components/PostComponent.vue'
 import ThreadComponent from '@/components/ThreadComponent.vue'
 
+import axios from 'axios'
+
 export default {
   name: 'HomeView',
   components: {
@@ -30,17 +32,29 @@ export default {
   },
   data(){
     return{
+      threads_data: [],
       dummy_data: [
-        {name: "name1", num: "10", archived: 1, key: 1},
-        {name: "name2", num: "20", archived: 0, key: 2},
-        {name: "name3", num: "30", archived: 1, key: 3},
+        {name: "name1", t_number: "10", t_archived: 1, key: 1},
+        {name: "name2", t_number: "20", t_archived: 0, key: 2},
+        {name: "name3", t_number: "30", t_archived: 1, key: 3},
       ]
     }
   },
   mounted(){
-    fetch('http://localhost:3000/db/get_all_threads').then(res => {
-      console.log(res.json())
+    
+    axios.get('http://localhost:3000/db/get_all_threads')
+    .then((res) => {
+      let keyNumber = 1;
+
+      res.data.forEach(data => {
+        Object.assign(data, {key: keyNumber})
+        this.threads_data.push(data)
+
+        keyNumber++;
+      });
+      console.log(this.threads_data)
     })
+    
   },
   methods: {
     test(input){

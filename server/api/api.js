@@ -4,12 +4,15 @@ const settings = require('../settings.json')
 
 const express = require('express')
 const path = require('path')
+const cors = require('cors')
 
 const app = express()
 const port = settings['settings']['api_port']
 
 let root_path = settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'];
 let thread_folder = root_path + settings['settings']['folder_name'] + '';
+
+app.use(cors())
 
 app.set('json spaces', 40)
 
