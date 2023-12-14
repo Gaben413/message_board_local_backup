@@ -2,7 +2,10 @@
   <div class="home">
     <h1>Thread Lists</h1>
     <div class="threads">
-      <ThreadComponent />
+      <div v-for="data in dummy_data" :key="data.key" class="thread-comp">
+        <ThreadComponent :data="data" @click="test(data.key)"/>
+      </div>
+      
       <!--
       <PostComponent />
       <PostComponent />
@@ -24,6 +27,25 @@ export default {
   components: {
     PostComponent,
     ThreadComponent
+  },
+  data(){
+    return{
+      dummy_data: [
+        {name: "name1", num: "10", archived: 1, key: 1},
+        {name: "name2", num: "20", archived: 0, key: 2},
+        {name: "name3", num: "30", archived: 1, key: 3},
+      ]
+    }
+  },
+  mounted(){
+    fetch('http://localhost:3000/db/get_all_threads').then(res => {
+      console.log(res.json())
+    })
+  },
+  methods: {
+    test(input){
+      console.log(`Test ${input}`);
+    }
   }
 }
 </script>

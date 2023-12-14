@@ -1,12 +1,14 @@
 <template>
     <div class="container">
         <div class="item1">
-            <p class="header-text">Thread ID | Sub/Tag String</p>
+            <p class="header-text">{{ data.num }} | Sub/Tag String</p>
         </div>
         <img src="../assets/stockimage.png" alt="threadImage" class="img-min item2">
         <p class="item3">Thread Comment</p>
         <div class="item4">
-            <p class="archived-text">archived</p>
+            <p v-if="data.archived" class="archived-text">archived</p>
+            <p v-else class="archived-text">On going</p>
+
             <p class="date-text">date</p>
         </div>
     </div>
@@ -15,7 +17,13 @@
 
 <script>
 export default{
-    name: 'ThreadComponent'
+    name: 'ThreadComponent',
+    props: ['data'],
+    data(){
+        return{
+            
+        }
+    }
 }
 </script>
 
@@ -38,6 +46,9 @@ export default{
     max-height: 750px;
     max-width: 75%;
 }
+.container:hover{
+    border-color: rgb(63, 255, 111);
+}
 
 .img-min{
     height: 150px;
@@ -52,10 +63,6 @@ export default{
     text-align: left;
 }
 
-.header-text:hover{
-    color: white;
-}
-
 .item1{
     margin: 0;
 
@@ -66,6 +73,7 @@ export default{
     grid-column: 1/5;
 
     background: rgb(0, 138, 34);
+    border-radius: 6px 6px 0 0;
 }
 
 .item2{
