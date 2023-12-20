@@ -141,7 +141,7 @@ async function AddThread(data){
         t_board: data['board_name'],
         t_date: data['t_date'],
         t_archived: data['t_archived'],
-        t_tag: data['t_sub'],
+        t_sub: data['t_sub'],
         t_tag: data['t_tag'],
         t_replies: data['t_replies'],
         t_link: data['t_link']
