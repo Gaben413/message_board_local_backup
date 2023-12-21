@@ -1,18 +1,26 @@
 <template>
   <div class="home">
-    <h1>Thread Lists</h1>
+    <h1 id="TopMain">
+      Thread - {{ this.thread_data['t_number'] }} - {{ this.thread_data['t_sub'] }} - {{ this.thread_data['t_board'] }} |
+       <span v-if="this.thread_data['t_archived']">Archived</span> <span v-else>On Going</span>
+    </h1>
+
+    <div v-for="data in post_data" :key="data.key" class="thread-comp">
+      <PostComponent :data="data"/>
+    </div>
+    <!--
     <div class="threads" v-if="threads_data.length">
       <div v-for="data in threads_data" :key="data.key" class="thread-comp">
         <ThreadComponent :data="data" @click="test(data.key)"/>
       </div>
       
-      <!--
+      
       <PostComponent />
       <PostComponent />
       <PostComponent />
-      -->
+      
     </div>
-    
+    -->
   </div>
 </template>
 
@@ -25,49 +33,36 @@ import router from '@/router'
 
 import axios from 'axios'
 
+
 export default {
   name: 'HomeView',
   components: {
     PostComponent,
     ThreadComponent
   },
+  props: ['t_number'],
   data(){
     return{
-      threads_data: [],
-      dummy_data: [
-        {name: "name1", t_number: "10", t_archived: 1, key: 1},
-        {name: "name2", t_number: "20", t_archived: 0, key: 2},
-        {name: "name3", t_number: "30", t_archived: 1, key: 3},
-      ]
+      thread_data: 'empty',
+      post_data: [],
+      test: 'testing'
     }
   },
   mounted(){
     
-    axios.get('http://localhost:3000/vue/get_threads/')
+    axios.get(`http://localhost:3000/vue/get_thread_data/${this.t_number}`)
     .then((res) => {
-
-      let keyNumber = 1;
-
-      res.data.forEach(data => {
-        Object.assign(data, {key: keyNumber})
-        this.threads_data.push(data)
-
-        keyNumber++;
-      });
-
-      console.log(this.threads_data)
+      this.thread_data = res.data.thread
+      this.post_data = res.data.posts
+      //console.log(res.data.thread)
+      console.log(this.thread_data)
+      console.log(this.post_data)
     })
     
+    console.log(this.t_number)
   },
   methods: {
-    test(input){
-      //router.push('/about')
-      
-      router.push({name: 'thread', params: this.threads_data[input-1]})
 
-      //console.log(input-1)
-      //console.log(this.threads_data[input-1].t_number);
-    }
   }
 }
 </script>

@@ -1,4 +1,7 @@
 const { Sequelize, Op } = require('sequelize');
+
+const settings = require('../settings.json')
+
 //const sequelize = require('./database-manager');
 
 // #region Favourites functions
@@ -288,9 +291,9 @@ async function GetPostThread(id){
     const {Post} = require('./models')
 
     let output = await Post.findAll({
-        attributes: ['t_number', 'i_tim'],
+        //attributes: ['t_number', 'i_tim'],
         where: {
-            p_number: id
+            t_number: id
         },
         raw:true
     });
@@ -298,6 +301,102 @@ async function GetPostThread(id){
     return output[0];
 }
 //#endregion
+
+// #region Vue Return functions
+async function GetAllThreadsVue(){
+    const {Thread, Post} = require('./models')
+
+    let output = []
+
+    let threads = await Thread.findAll({raw:true});
+
+    for (let i = 0; i < threads.length; i++) {
+        let post = await Post.findAll({
+            attributes: ['i_tim', 'p_com'],
+            where: {
+                t_number: threads[i]['t_number']
+            },
+            raw:true
+        });
+
+        let image = await GetImage(post[0]['i_tim'])
+
+        let filename = image['i_tim'] + image['i_ext']
+        //let file_path = `${settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'] + settings['settings']['folder_name'] + threads[i]['t_number']}/${filename}`
+        let file_path = `http://localhost:${settings['settings']['api_port']}/db/get_image_file/${threads[i]['t_number']}`
+
+        obj_data = {
+            "t_number": threads[i]['t_number'],
+            "t_sub": threads[i]['t_sub'],
+            't_archived': threads[i]['t_archived'],
+            't_board': threads[i]['t_board'],
+            't_date': threads[i]['t_date'],
+            't_link': threads[i]['t_link'],
+            'p_com': post[0]['p_com'],
+            'filepath': file_path
+        }
+        
+        output.push(obj_data)
+
+    }
+
+    return output;
+}
+
+async function GetThreadDataVue(id){
+    const {Thread, Post} = require('./models')
+
+    let thread = await Thread.findOne({
+        where: {
+            t_number: id
+        },
+        raw:true
+    });
+
+    let processed_thread_data = {
+        't_number': thread['t_number'],
+        't_board': thread['t_board'],
+        't_date': thread['t_date'],
+        't_archived': thread['t_archived'],
+        't_sub': thread['t_sub'],
+        't_link': thread['t_link'],
+    }
+
+    let posts = await Post.findAll({
+        where: {
+            t_number: thread['t_number']
+        },
+        raw:true
+    });
+
+    let post_data = []
+
+    for (let i = 0; i < posts.length; i++) {
+        let processed_post_data = {
+            'key': i,
+            'p_number': posts[i]['p_number'],
+            'p_date': posts[i]['p_date'],
+            'p_name': posts[i]['p_name'],
+            'p_link': posts[i]['p_link'],
+            'p_com': posts[i]['p_com'],
+            'img_data': {
+                'i_tim': posts[i]['i_tim'],
+                'has_image': posts[i]['i_tim'] != null,
+                'file_path': posts[i]['i_tim'] != null ? `http://localhost:${settings['settings']['api_port']}/db/get_image_file/${posts[i]['p_number']}` : null,
+            }
+        }
+        
+        post_data.push(processed_post_data)
+    }
+
+    let output = {
+        'thread': processed_thread_data,
+        'posts': post_data
+    }
+
+    return output;
+}
+// #endregion
 
 //#region Test Area
 //Add Thread to Favourit
@@ -341,4 +440,4 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 */
 //#endregion
 
-module.exports = {AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, IsThreadInList, AddPost, GetPost, GetAllPosts, GetAllPostsFromThread}
+module.exports = {AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, IsThreadInList, AddPost, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllThreadsVue, GetThreadDataVue}

@@ -1,4 +1,4 @@
-const {GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread} = require('../database/query-manager')
+const {GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread, GetAllThreadsVue, GetThreadDataVue} = require('../database/query-manager')
 
 const settings = require('../settings.json')
 
@@ -86,7 +86,7 @@ app.get('/db/get_thread_image/:id', async (req, res) => {
 })
 app.get('/db/get_image_file/:id', async (req, res) => {
     try{
-        let post_data = await GetPostThread(parseInt(req.params['id']))
+        let post_data = await GetPost(parseInt(req.params['id']))
         let image_tim = post_data['i_tim']
         let path = thread_folder + post_data['t_number']
     
@@ -111,6 +111,24 @@ app.get('/db/get_image_file/:id', async (req, res) => {
         res.send(`Error: ${err}`)
     }
 
+})
+
+//Vue Return
+app.get('/vue/get_threads/', async (req, res) => {
+    try{
+        res.send(await GetAllThreadsVue())
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
+})
+app.get('/vue/get_thread_data/:id', async (req, res) => {
+    try{
+        res.send(await GetThreadDataVue(parseInt(req.params['id'])))
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
 })
 
 app.listen(port, () => {

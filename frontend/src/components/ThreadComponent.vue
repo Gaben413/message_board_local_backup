@@ -1,10 +1,10 @@
 <template>
     <div class="container">
         <div class="item1">
-            <p class="header-text">{{ data.t_number }} | Sub/Tag String</p>
+            <p class="header-text">{{ data.t_number }} | {{ data.t_sub }} - {{ data.t_board }}</p>
         </div>
-        <img src="../assets/stockimage.png" alt="threadImage" class="img-min item2">
-        <p class="item3">Thread Comment</p>
+        <img :src="data.filepath" alt="threadImage" class="img-min item2">
+        <p class="item3">{{ data.p_com }}</p>
         <div class="item4">
             <p v-if="data.t_archived" class="archived-text">archived</p>
             <p v-else class="archived-text">on going</p>
