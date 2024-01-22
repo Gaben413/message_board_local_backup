@@ -2,6 +2,8 @@
 const {fetch} = require('./fetch/message_board_fetch')
 const settings = require('./settings.json')
 
+start_time = new Date()
+
 let first = true;
 
 let interval = settings["settings"]["interval_ms"]
@@ -32,6 +34,7 @@ async function delay(timeDelay){
 }
 
 async function main(){
+
     if(first){
         go()
         first = false
@@ -42,3 +45,9 @@ async function main(){
 }
 
 main()
+
+const process = require('process')
+
+process.on('SIGINT', (code) => {
+    console.log('exit', code)
+})

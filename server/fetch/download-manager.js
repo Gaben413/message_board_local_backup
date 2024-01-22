@@ -101,5 +101,38 @@ async function Test(){
 
 Test()
 */
+async function DirSize(){
+    return new Promise(async (resolve, reject)=>{
+        let root_path = settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name']
+        console.log(root_path)
+        let files = fs.readdirSync(root_path)
 
-module.exports = {downloadImages}
+        let data_output = 0;
+        
+        for (let i = 0; i < files.length; i++) {
+            let file_contents = fs.readdirSync(root_path+files[i])
+
+            for (let e = 0; e < file_contents.length; e++) {
+                let stat_data = fs.statSync(root_path+files[i]+"/"+file_contents[e])
+                data_output += stat_data.size
+            }
+            
+        }
+
+        obj = {
+            "bytes": data_output+" B",
+            "megabytes": (data_output*1e-6)+" MB",
+            "gigabytes": (data_output*1e-9)+" GB",
+
+            "megabytes_short": (data_output*1e-6).toFixed(2)+" MB",
+            "gigabytes_short": (data_output*1e-9).toFixed(3)+" GB",
+
+            "bytes_raw": data_output,
+            "megabytes_raw": (data_output*1e-6),
+            "gigabytes_raw": (data_output*1e-9),
+        }
+
+        resolve(obj)
+    })
+}
+module.exports = {downloadImages, DirSize}

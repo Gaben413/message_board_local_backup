@@ -3,6 +3,7 @@ const {GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, Ge
 const settings = require('../settings.json')
 
 const express = require('express')
+//const fs = require('fs')
 const path = require('path')
 const cors = require('cors')
 
@@ -11,6 +12,9 @@ const port = settings['settings']['api_port']
 
 let root_path = settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'];
 let thread_folder = root_path + settings['settings']['folder_name'] + '';
+
+
+let api_start_time = new Date();
 
 app.use(cors())
 
@@ -131,6 +135,36 @@ app.get('/vue/get_thread_data/:id', async (req, res) => {
     }
 })
 
+//Status
+app.get('/status', async (req, res) => {
+    try{
+        let {DirSize} = require('../fetch/download-manager')
+
+        let threads = await GetAllThreads()
+        let used_space = await DirSize()
+
+        res.send({
+            'total_threads': threads.length,
+            'used_space': used_space['megabytes_short'],
+            'current_time': new Date(),
+            'running_for': GetTimeDifference(api_start_time),
+        })
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
+})
+
 app.listen(port, () => {
     console.log(`API running on PORT: ${port}\nhttp://localhost:${port}`)
 })
+
+function GetTimeDifference(input_date){
+    let current_date = new Date()
+    let running_time_stamp = current_date.getTime() - input_date.getTime()
+    let seconds = Math.floor(running_time_stamp/1000)
+    let minutes = Math.floor(seconds/60)
+    let hours = Math.floor(minutes/60)
+
+    return `${hours.toString().padStart(2,"0")}:${minutes.toString().padStart(2,"0")}:${seconds.toString().padStart(2,"0")}`
+}
