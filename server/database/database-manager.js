@@ -8,12 +8,7 @@ let logBool = (() => {
   else return console.log
 })();
 
-const sequelize = new Sequelize(process.env.DB, process.env.USER, process.env.PASSWORD, {
-    host: process.env.HOST,
-    dialect: process.env.DIALECT,
-    port: process.env.PORT,
-    logging: logBool
-});
+const sequelize = new Sequelize(process.env.PG_URL);
 
 /*
 (async () => {

@@ -132,5 +132,5 @@ app.get('/vue/get_thread_data/:id', async (req, res) => {
 })
 
 app.listen(port, () => {
-    console.log(`Example app listening on port http://localhost:${port}`)
+    console.log(`API running on PORT: ${port}\nhttp://localhost:${port}`)
 })
