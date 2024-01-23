@@ -45,9 +45,3 @@ async function main(){
 }
 
 main()
-
-const process = require('process')
-
-process.on('SIGINT', (code) => {
-    console.log('exit', code)
-})

@@ -1,10 +1,12 @@
 <template>
-    <div class="container" :id="data.p_number">
+    <div class="container" :id="'p'+data.p_number">
         <div class="item1">
-            <p class="header-text">{{ data.p_number }} | {{ data.p_name }}</p>
+            <p class="header-text"> {{ (data.key + 1) }} - {{ data.p_number }} | {{ data.p_name }} | <a v-for="reply in post_reply" :href="reply" class="reply tooltip">@ <span class="tooltiptext">{{ reply }}</span></a></p>
         </div>
         <img :src="data.img_data.file_path" alt="threadImage" class="img-min item2" v-if="data.img_data.has_image">
-        <p class="item3">{{ data.p_com }}</p>
+        <div class="item3">
+            <p v-for="line in comment.split('\n')">{{ line }}</p>
+        </div>
         <!--
         <a href="#141291547">Go Top</a>
         -->
@@ -22,11 +24,32 @@ export default{
     props: ['data'],
     data(){
         return{
-            
+            comment: "",
+            post_reply: []
         }
     },
     mounted(){
         console.log(`${this.data.key} - ${this.data.img_data.has_image}`)
+        console.log(this.data.p_com)
+
+        if(this.data.p_com != null){
+            let r = /<a(.*?)<\/a>/gs
+
+            this.comment = ((this.data.p_com).replace(r, ">>Link to another post<< ")).replaceAll("<br>","\n")
+
+            //href treatment
+            let split_com = (this.data.p_com.trim()).split(r)
+
+            console.log(split_com)
+            console.log(`Replying to: ${(split_com.length-1)/2}`)
+
+            split_com.forEach(element => {
+                if(element.includes('href="#'))
+                    this.post_reply.push("#" + element.split(/href="#(.*?)"/g)[1])
+            });
+
+            console.log(this.post_reply)
+        }
     }
 }
 </script>
@@ -62,6 +85,8 @@ export default{
 }
 
 .header-text{
+    color: black;
+
     margin: 0;
 
     text-align: left;
@@ -93,6 +118,11 @@ export default{
 
     min-width: 250px;
 
+    text-align: left;
+}
+
+.item3 > p{
+    color: black;
     text-align: left;
 }
 
@@ -128,5 +158,50 @@ export default{
     margin: 0;
 
     align-self: center;
+}
+
+.reply{
+    color: rgb(0, 26, 0);
+}
+
+.tooltip{
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext{
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    padding: 5px 0;
+    border-radius: 6px;
+
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.tooltip .tooltiptext::after{
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext{
+    visibility: visible;
+    opacity: 1;
 }
 </style>

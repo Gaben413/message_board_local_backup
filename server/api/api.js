@@ -144,10 +144,11 @@ app.get('/status', async (req, res) => {
         let used_space = await DirSize()
 
         res.send({
+            'api_running': true,
             'total_threads': threads.length,
             'used_space': used_space['megabytes_short'],
-            'current_time': new Date(),
             'running_for': GetTimeDifference(api_start_time),
+            'api_start_timestamp': api_start_time.getTime()
         })
     }catch(err){
         console.log(err)

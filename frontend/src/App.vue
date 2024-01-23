@@ -5,7 +5,17 @@
     <router-link to="/thread">Thread</router-link>
   </nav>
   <router-view/>
+  <FooterComponent/>
 </template>
+
+<script>
+  import FooterComponent from '@/components/FooterComponent.vue'
+  export default{
+    components: {
+      FooterComponent,
+  },
+  }
+</script>
 
 <style>
 #app {
@@ -14,6 +24,7 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  margin-bottom: 20px;
 }
 
 nav {
