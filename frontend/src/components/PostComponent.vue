@@ -5,7 +5,13 @@
         </div>
         <img :src="data.img_data.file_path" alt="threadImage" class="img-min item2" v-if="data.img_data.has_image">
         <div class="item3">
+            <div v-for="com in com_obj">
+                <a :href="'#'+com.href" v-if="com.type == 'reply'">{{ com.content }}</a>
+                <p v-else :class="com.type">{{ com.content }}</p>
+            </div>
+            <!--
             <p v-for="line in comment.split('\n')">{{ line }}</p>
+            -->
         </div>
         <!--
         <a href="#141291547">Go Top</a>
@@ -25,7 +31,8 @@ export default{
     data(){
         return{
             comment: "",
-            post_reply: []
+            post_reply: [],
+            com_obj: []
         }
     },
     mounted(){
@@ -34,7 +41,36 @@ export default{
 
         if(this.data.p_com != null){
             let r = /<a(.*?)<\/a>/gs
+            let r_href = /href="#(.*?)"/g
+            let r_quote = /<span class="quote">(.*?)<\/span>/gs
 
+            let split_com = this.data.p_com.split("<br>")
+
+            for (let i = 0; i < split_com.length; i++) {
+
+                let com_type = "com"
+                let com_href = ''
+                let com_content = split_com[i]
+                if(split_com[i].match(r)) {
+                    com_type = "reply"
+                    com_href = (split_com[i].replace(/<a href="#(.*?)/g, '')).replace(/" class(.*?)<\/a>/g, '')
+                    com_content = `>> ${com_href}`
+                } else if(split_com[i].match(r_quote)) {
+                    com_type = "quote"
+                    com_content = (split_com[i].replace('<span class="quote">&gt;','>')).replace('</span>','')
+                }
+
+                let obj = {
+                    type: com_type,
+                    href: com_href,
+                    content: com_content
+                }
+                this.com_obj.push(obj)  
+            }
+
+            //this.com_obj = split_com
+
+            /*
             this.comment = ((this.data.p_com).replace(r, ">>Link to another post<< ")).replaceAll("<br>","\n")
 
             //href treatment
@@ -49,6 +85,7 @@ export default{
             });
 
             console.log(this.post_reply)
+            */
         }
     }
 }
@@ -121,7 +158,7 @@ export default{
     text-align: left;
 }
 
-.item3 > p{
+.com{
     color: black;
     text-align: left;
 }
@@ -147,6 +184,11 @@ export default{
 .item4 > p{
     text-align: right;
     margin: 0;
+}
+
+.quote{
+    color: darkolivegreen;
+    text-decoration-line: underline;
 }
 
 .archived-text{
