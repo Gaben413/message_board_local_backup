@@ -66,7 +66,8 @@ nav a.router-link-exact-active {
 #scrollbutton {
   display: none;
   position: fixed;
-  bottom: 20px;
+
+  bottom: 50px;
   right: 30px;
   z-index: 99;
   border: none;
@@ -77,8 +78,11 @@ nav a.router-link-exact-active {
   padding: 15px;
   border-radius: 10px;
   font-size: 18px;
+
+  font-size: 15px;
+  font-weight: 250;
 }
 #scrollbutton:hover {
-  background-color: #555;
+  background-color: rgb(0, 37, 0);
 }
 </style>

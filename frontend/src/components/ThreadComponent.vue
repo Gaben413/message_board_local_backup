@@ -42,14 +42,16 @@ export default{
     border-color: rgb(0, 138, 34);    
 
     width: fit-content;    
-
+    /*
     max-height: 750px;
     max-width: 75%;
+    */
 }
+/*
 .container:hover{
     border-color: rgb(63, 255, 111);
 }
-
+*/
 .img-min{
     height: 150px;
 }
@@ -125,55 +127,4 @@ export default{
 
     align-self: center;
 }
-/*
-.content{
-    position: relative;
-    margin: 15px;
-
-    background: lightgreen;
-
-    border-style: solid;
-    border-radius: 10px;
-    border-color: rgb(0, 138, 34);
-
-    min-width: 450px;
-    min-height: 200px;
-
-    width: fit-content;    
-
-    max-height: 750px;
-    max-width: 75%;
-}
-
-
-.header-div{
-    background: rgb(0, 138, 34);
-}
-.header-div > p{
-    margin: 0;
-    padding-left: 15px;
-
-    color: white;
-    text-align: left;
-}
-
-
-
-.bottom-div{
-    position: absolute;
-    bottom: 0;
-
-    width: 100%;
-    height: 18px;
-
-    background: rgb(226, 255, 226);
-    border-radius: 0 0 6px 6px;
-}
-.bottom-div > p{
-    margin: 0;
-    padding-right: 15px;
-
-    text-align: right;
-}
-*/
 </style>
