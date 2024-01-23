@@ -1,7 +1,7 @@
 <template>
     <div class="footerContainer">
         <label>API Status: <span v-if="api_data.api_running">🟢</span><span v-else>🔴</span></label>
-        <label>{{ api_data.total_threads }} Threads</label>
+        <label>{{ api_data.total_threads }} <span v-if="api_data.total_threads == 1">Thread</span> <span v-else>Threads</span></label>
         <label>Space in use: {{ api_data.used_space }}</label>
         <label class="timerLabel">Running for: {{ time }}</label>
     </div>

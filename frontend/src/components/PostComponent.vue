@@ -145,7 +145,7 @@ export default{
 .item1_p{
     margin: 0;
 
-    padding-left: 15px;
+    padding-left: 10px;
 
     height: fit-content;
 

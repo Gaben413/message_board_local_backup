@@ -67,6 +67,8 @@ nav a.router-link-exact-active {
   display: none;
   position: fixed;
 
+  opacity: 50%;
+
   bottom: 50px;
   right: 30px;
   z-index: 99;
