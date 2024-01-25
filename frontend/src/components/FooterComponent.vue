@@ -8,7 +8,8 @@
 </template>
 
 <script>
-import axios from 'axios'
+    import axios from 'axios'
+    import settings from '../assets/frontend-settings.json'
 
     export default{
         name: 'FooterComponent',
@@ -31,7 +32,10 @@ import axios from 'axios'
                 })
             }, 1000);
             */
-            axios.get(`http://localhost:3000/status`)
+            let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
+            //console.log(axios_link)
+
+            axios.get(`${axios_link}status`)
             .then((res) => {
                 this.api_data = res.data
             }).catch((err) => {

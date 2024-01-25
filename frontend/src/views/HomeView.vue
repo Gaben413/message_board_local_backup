@@ -23,6 +23,7 @@ import PostComponent from '@/components/PostComponent.vue'
 import ThreadComponent from '@/components/ThreadComponent.vue'
 import router from '@/router'
 
+import settings from '../assets/frontend-settings.json'
 import axios from 'axios'
 
 export default {
@@ -42,8 +43,9 @@ export default {
     }
   },
   mounted(){
+    let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
     
-    axios.get('http://localhost:3000/vue/get_threads/')
+    axios.get(`${axios_link}vue/get_threads/`)
     .then((res) => {
 
       let keyNumber = 1;

@@ -31,6 +31,7 @@ import PostComponent from '@/components/PostComponent.vue'
 import ThreadComponent from '@/components/ThreadComponent.vue'
 import router from '@/router'
 
+import settings from '../assets/frontend-settings.json'
 import axios from 'axios'
 
 
@@ -50,7 +51,8 @@ export default {
   },
   mounted(){
     
-    axios.get(`http://localhost:3000/vue/get_thread_data/${this.t_number}`)
+    let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
+    axios.get(`${axios_link}vue/get_thread_data/${this.t_number}`)
     .then((res) => {
       this.thread_data = res.data.thread
       this.post_data = res.data.posts
