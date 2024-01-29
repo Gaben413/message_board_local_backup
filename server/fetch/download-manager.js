@@ -3,7 +3,7 @@ const Axios = require('axios')
 
 const {GetAllImages, GetAllImagesFromThread} = require('../database/query-manager')
 
-const settings = require('../settings.json')
+const {root_path, thread_folder, os} = require('../settings')
 
 let filepath;
 
@@ -67,8 +67,8 @@ async function download_image(obj_data){
 }
 
 function check_dir(wildcard){
-    let root_path = settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'];
-    let thread_folder = root_path + settings['settings']['folder_name'] + wildcard;
+    //let root_path = settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'];
+    let new_thread_folder = thread_folder + wildcard;
 
     filepath = thread_folder + '/'
 
@@ -76,9 +76,9 @@ function check_dir(wildcard){
         console.log(`Generating root folder "${settings['settings']['download_dir_name']}"`)
         fs.mkdirSync(root_path)
     }
-    if(!fs.existsSync(thread_folder)){
+    if(!fs.existsSync(new_thread_folder)){
         console.log(`Generating folder "${settings['settings']['folder_name'] + wildcard}"`)
-        fs.mkdirSync(thread_folder)
+        fs.mkdirSync(new_thread_folder)
     }
 }
 //check_dir("1000015")
