@@ -3,6 +3,7 @@ const Axios = require('axios')
 
 const {GetAllImages, GetAllImagesFromThread} = require('../database/query-manager')
 
+const settings = require('../settings.json')
 const {root_path, thread_folder, os} = require('../settings')
 
 let filepath;
