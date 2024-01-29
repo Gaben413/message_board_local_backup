@@ -71,7 +71,7 @@ function check_dir(wildcard){
     //let root_path = settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'];
     let new_thread_folder = thread_folder + wildcard;
 
-    filepath = thread_folder + '/'
+    filepath = new_thread_folder + '/'
 
     if(!fs.existsSync(root_path)){
         console.log(`Generating root folder "${settings['settings']['download_dir_name']}"`)
