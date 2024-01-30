@@ -2,7 +2,7 @@
   <div class="home">
     <h1 id="TopMain">
       Thread - {{ this.thread_data['t_number'] }} - {{ this.thread_data['t_sub'] }} - {{ this.thread_data['t_board'] }} |
-       <a v-if="this.thread_data['t_archived']" :href="this.thread_data['t_link']">Archived</a> <a :href="this.thread_data['t_link']" v-else>On Going</a>
+       <a v-if="this.thread_data['t_archived']" :href="this.thread_data['t_link']" target="_blank">Archived</a> <a :href="this.thread_data['t_link']"  target="_blank" v-else>On Going</a>
     </h1>
 
     <div v-for="data in post_data" :key="data.key" class="thread-comp">
