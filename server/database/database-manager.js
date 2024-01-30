@@ -8,7 +8,9 @@ let logBool = (() => {
   else return console.log
 })();
 
-const sequelize = new Sequelize(process.env.PG_URL);
+const sequelize = new Sequelize(process.env.PG_URL, {
+  logging: logBool
+});
 
 /*
 (async () => {
