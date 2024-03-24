@@ -11,6 +11,7 @@
     "sync2": "node database/models.js",
     "fetch": "node fetch/message_board_local_backup.js",
     "api": "nodemon api/api.js",
+    "setup": "node setup.js",
     "test": "jest"
   },
   "dependencies": {
@@ -21,6 +22,7 @@
     "mariadb": "^3.2.2",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
+    "prompt-sync": "^4.2.0",
     "sequelizer": "^1.1.4"
   },
   "devDependencies": {

@@ -1,0 +1,18 @@
+{
+    "settings": {
+        "boards": [],
+        "check_days": [
+            1
+        ],
+        "intervals": {
+            "post": 5,
+            "thread": 300
+        },
+        "downloads_dir_path": [],
+        "download_dir_name": "message board downloads/",
+        "folder_name": "Thread_",
+        "interval_ms": 30000,
+        "simple_log_output": false,
+        "api_port": 3000
+    }
+}
