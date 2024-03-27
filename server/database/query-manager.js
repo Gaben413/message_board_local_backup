@@ -92,7 +92,10 @@ async function GetImage(id){
         raw:true
     });
 
-    return output[0];
+    if(output.length > 0)
+        return output[0];
+    else
+        return "404";
 }
 
 async function GetAllImages(){
@@ -321,9 +324,16 @@ async function GetAllThreadsVue(){
             raw:true
         });
 
+        /*
+        if(post[0]['i_tim'] == null){
+            console.log("Shit")
+        }
+
         let image = await GetImage(post[0]['i_tim'])
 
         let filename = image['i_tim'] + image['i_ext']
+        */
+
         //let file_path = `${settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'] + settings['settings']['folder_name'] + threads[i]['t_number']}/${filename}`
         let file_path = `http://${local_api}:${settings['settings']['api_port']}/db/get_image_file/${threads[i]['t_number']}`
 

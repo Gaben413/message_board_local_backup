@@ -97,9 +97,17 @@ app.get('/db/get_image_file/:id', async (req, res) => {
         let path = thread_folder + post_data['t_number']
     
         let image_data = await GetImage(image_tim);
+        console.log(image_data)
         let image_name = image_data['i_tim'] + image_data['i_ext']
-    
-        console.log(image_name)
+        
+        if(image_data == "404"){
+            console.log(__dirname);
+            console.log(path);
+            path = __dirname
+            image_name = "404.png"
+        }
+
+        //console.log(image_name)
         
         const options = {
             root: path
