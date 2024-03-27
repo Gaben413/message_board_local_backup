@@ -3,7 +3,7 @@ const Axios = require('axios')
 
 const {GetAllImages, GetAllImagesFromThread} = require('../database/query-manager')
 
-const settings = require('../settings.json')
+//const settings = require('../settings.json')
 const {root_path, thread_folder, os} = require('../settings')
 
 let filepath;
@@ -104,7 +104,7 @@ Test()
 */
 async function DirSize(){
     return new Promise(async (resolve, reject)=>{
-        let root_path = settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name']
+        //let root_path = root_path
         console.log(root_path)
         let files = fs.readdirSync(root_path)
 
