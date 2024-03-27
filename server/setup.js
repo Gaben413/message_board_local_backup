@@ -1,6 +1,6 @@
 const fs = require('fs');
 const prompt = require("prompt-sync")({singint: true});
-
+//Testing things out
 const FILENAME = "settings.json"
 
 // #region Set Boards
