@@ -2,7 +2,7 @@ const { Sequelize, Op } = require('sequelize');
 
 const settings = require('../settings.json')
 
-let local_api = '192.168.0.13';
+let local_api = settings['settings']['local_api'];
 
 //const sequelize = require('./database-manager');
 
