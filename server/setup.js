@@ -1,4 +1,5 @@
 const fs = require('fs');
+
 const prompt = require("prompt-sync")({singint: true});
 
 const FILENAME = "settings.json"
