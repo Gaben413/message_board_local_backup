@@ -116,7 +116,7 @@ async function GetPostData(input, board_name){
                         "ext": res.data['posts'][i]['ext'],
                     }
 
-                    if(await GetImage(image_obj['tim']) == undefined){
+                    if(await GetImage(image_obj['tim']) == "404"){
                         await AddImage(image_obj)
                     }
                 }
