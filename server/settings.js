@@ -11,6 +11,7 @@ if(process.platform === "win32"){
 
 let root_path = settings['settings']['downloads_dir_path'][os]['dir'] + settings['settings']['download_dir_name']
 let thread_folder = root_path + settings['settings']['folder_name']
+let folder_name = settings['settings']['folder_name']
 /*
 function GetLocalIPAddress(){
     const nets = networkInterfaces();
@@ -35,4 +36,4 @@ function GetLocalIPAddress(){
 
 let local_api = GetLocalIPAddress()
 */
-module.exports = {root_path, thread_folder, os}
+module.exports = {root_path, thread_folder, folder_name, os}

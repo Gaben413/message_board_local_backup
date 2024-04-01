@@ -4,7 +4,7 @@ const Axios = require('axios')
 const {GetAllImages, GetAllImagesFromThread} = require('../database/query-manager')
 
 //const settings = require('../settings.json')
-const {root_path, thread_folder, os} = require('../settings')
+const {root_path, thread_folder, folder_name, os} = require('../settings')
 
 let filepath;
 
@@ -78,7 +78,7 @@ function check_dir(wildcard){
         fs.mkdirSync(root_path)
     }
     if(!fs.existsSync(new_thread_folder)){
-        console.log(`Generating folder "${settings['settings']['folder_name'] + wildcard}"`)
+        console.log(`Generating folder "${folder_name + wildcard}"`)
         fs.mkdirSync(new_thread_folder)
     }
 }
