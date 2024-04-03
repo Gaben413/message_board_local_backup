@@ -35,6 +35,7 @@ import router from '@/router'
 import settings from '../assets/frontend-settings.json'
 import axios from 'axios'
 
+import fileDownload from'js-file-download'
 
 export default {
   name: 'HomeView',
@@ -72,12 +73,7 @@ export default {
         },
         responseType: "arraybuffer"
       }).then((res) => {
-        const url = new Blob([res.data],{type:'application/zip'});
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'file.zip');
-        document.body.appendChild(link);
-        link.click();
+        fileDownload(res.data, `thread_${this.t_number}_backup.zip`)
       })
     }
   }
