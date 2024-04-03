@@ -236,6 +236,19 @@ async function IsThreadInList(threads_no_list){
     //console.log(threads)
 }
 
+async function ThreadExists(id){
+    const {Thread} = require('./models')
+
+    let output = await Thread.findOne({
+        where: {
+            t_number: id
+        },
+        raw:true
+    });
+
+    return output;
+}
+
 // #endregion
 
 // #region Post functions
@@ -452,4 +465,7 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 */
 //#endregion
 
-module.exports = {AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, IsThreadInList, AddPost, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllThreadsVue, GetThreadDataVue}
+module.exports = {
+    AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, IsThreadInList, ThreadExists,
+    AddPost, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllThreadsVue, GetThreadDataVue
+}

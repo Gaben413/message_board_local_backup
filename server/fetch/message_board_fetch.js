@@ -96,7 +96,6 @@ async function GetPostData(input, board_name){
                     console.log(`${i+1} - ${res.data['posts'][i]['no']} - ${res.data['posts'][i]['name']} | ${res.data['posts'][i]['now']}`)
                     console.log(`${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']} | ${res.data['posts'][i]['fsize']}B`)
                     console.log(`Post Comment: ${res.data['posts'][i]['com']}`)
-    
                 }
                 
                 //if(i == 253) break;

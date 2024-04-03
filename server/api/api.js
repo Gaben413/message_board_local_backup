@@ -1,13 +1,16 @@
-const {GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread, GetAllThreadsVue, GetThreadDataVue} = require('../database/query-manager')
+const {GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread, GetAllThreadsVue, GetThreadDataVue, ThreadExists} = require('../database/query-manager')
 
 const settings = require('../settings.json')
 
-const {root_path, thread_folder} = require('../settings')
+const {root_path, thread_folder, folder_name} = require('../settings')
+
+let AdmZip = require('adm-zip');
 
 const express = require('express')
 //const fs = require('fs')
 const path = require('path')
-const cors = require('cors')
+const cors = require('cors');
+const { threadId } = require('worker_threads');
 
 const app = express()
 const port = settings['settings']['api_port']
@@ -160,6 +163,49 @@ app.get('/status', async (req, res) => {
             'running_for': GetTimeDifference(api_start_time),
             'api_start_timestamp': api_start_time.getTime()
         })
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
+})
+
+//Return file
+app.get('/file/:id', async (req, res) => {
+    try{
+        let thread_id = req.params['id'];
+
+        if(await ThreadExists(thread_id) != null){
+            console.log(`Thread ${thread_id} Exists`)
+        }else{
+            console.log(`Thread ${thread_id} Doesn't Exists`)
+            return res.send({
+                'status':"Thread Does not Exist"
+            })
+        }
+
+        let file_path = thread_folder+thread_id
+
+        let zip = new AdmZip();
+
+        let fileName = `thread_${thread_id}_backup.zip`
+        let fileType = "application/zip"
+        zip.addLocalFolder(file_path, `/thread_${thread_id}_images`)
+
+        if(req.headers['get-comments'] == 'true'){
+            const content = await GetAllPostsFromThread(thread_id)
+            zip.addFile(`thread_${thread_id}_comments.json`, Buffer.from(JSON.stringify(content), "utf8"), "entry comment goes here")
+        }
+
+
+        let willSendThis = zip.toBuffer();
+        
+        res.writeHead(200, {
+            'Content-Disposition': `attachment; filename="${fileName}"`,
+            'Content-Type': fileType,
+        })
+
+        res.end(willSendThis);
+
     }catch(err){
         console.log(err)
         res.send(`Error: ${err}`)
