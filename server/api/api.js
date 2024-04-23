@@ -1,8 +1,8 @@
 const {GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread, GetAllThreadsVue, GetThreadDataVue, ThreadExists} = require('../database/query-manager')
 
-const settings = require('../settings.json')
+//const settings = require('../settings.json')
 
-const {root_path, thread_folder, folder_name} = require('../settings')
+const {root_path, thread_folder, folder_name, api_port} = require('../settings')
 
 let AdmZip = require('adm-zip');
 
@@ -13,7 +13,7 @@ const cors = require('cors');
 const { threadId } = require('worker_threads');
 
 const app = express()
-const port = settings['settings']['api_port']
+//const port = settings['settings']['api_port']
 
 //let root_path = settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'];
 //let thread_folder = root_path + settings['settings']['folder_name'] + '';
@@ -212,8 +212,8 @@ app.get('/file/:id', async (req, res) => {
     }
 })
 
-app.listen(port, () => {
-    console.log(`API running on PORT: ${port}\nhttp://localhost:${port}`)
+app.listen(api_port, () => {
+    console.log(`API running on PORT: ${api_port}\nhttp://localhost:${api_port}`)
 })
 
 function GetTimeDifference(input_date){

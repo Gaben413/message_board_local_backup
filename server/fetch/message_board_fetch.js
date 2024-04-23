@@ -4,7 +4,9 @@ const {downloadImages} = require('./download-manager')
 
 const settings = require('../settings.json')
 
-const simple_log_output = settings['settings']['simple_log_output'];
+const {logBool, boards} = require('../settings');
+
+//const simple_log_output = settings['settings']['simple_log_output'];
 
 function fetch_thread(board_name, search_text){
     return new Promise((resolve, reject) => {
@@ -18,7 +20,7 @@ function fetch_thread(board_name, search_text){
         
                 for (let e = 0; e < threads.length; e++) {
                     if(check_data(threads[e]['sub'], search_text)){
-                        if(simple_log_output){
+                        if(logBool){
                             console.log(`Page ${i+1} | ID: ${threads[e]['no']} | ARCHVIED: ${check_if_closed(threads[e]['closed'])} | DATE: ${threads[e]['now']}`);
                         }else{
                             console.log(`########## PAGE ${i+1} ##########`);
@@ -88,16 +90,7 @@ async function GetPostData(input, board_name){
         console.log(thread_url)
         axios.get(thread_url).then(async res => {
             for (let i = 0; i < res.data['posts'].length; i++) {
-                //console.log(res.data['posts'][i])
-                if(simple_log_output){
-                    console.log(`POST ${i+1} | NO: ${res.data['posts'][i]['no']} | TIM: ${res.data['posts'][i]['tim']} | ${res.data['posts'][i]['now']}`)
-                }else{
-                    console.log(`@@@@@@@@@@@@@@@@@@@@`)
-                    console.log(`${i+1} - ${res.data['posts'][i]['no']} - ${res.data['posts'][i]['name']} | ${res.data['posts'][i]['now']}`)
-                    console.log(`${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']} | ${res.data['posts'][i]['fsize']}B`)
-                    console.log(`Post Comment: ${res.data['posts'][i]['com']}`)
-                }
-                
+
                 //if(i == 253) break;
 
                 if(res.data['posts'][i]['fsize'] != undefined){
@@ -121,7 +114,16 @@ async function GetPostData(input, board_name){
                 }
 
                 if(await GetPost(res.data['posts'][i]['no']) == undefined){
-                    console.log('Post does not exist in DB')
+                    console.log('Post does not exist in DB\n')
+                    
+                    if(logBool){
+                        console.log(`POST ${i+1} | NO: ${res.data['posts'][i]['no']} | TIM: ${res.data['posts'][i]['tim']} | ${res.data['posts'][i]['now']}`)
+                    }else{
+                        console.log(`@@@@@@@@@@@@@@@@@@@@`)
+                        console.log(`${i+1} - ${res.data['posts'][i]['no']} - ${res.data['posts'][i]['name']} | ${res.data['posts'][i]['now']}`)
+                        console.log(`${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']} | ${res.data['posts'][i]['fsize']}B`)
+                        console.log(`Post Comment: ${res.data['posts'][i]['com']}`)
+                    }
 
                     let date = new Date(res.data['posts'][i]['time']*1000)
                     let formatedDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
@@ -155,7 +157,7 @@ async function GetPostData(input, board_name){
 async function fetch(){
     return new Promise(async (resolve, reject) => {
         try{
-            const boards = settings['settings']['boards']
+            //const boards = settings['settings']['boards']
 
             let threads_no_list= []
 
@@ -204,7 +206,7 @@ function Test(){
     console.log('Test')
 }
 function Test2(){
-    const boards = settings['settings']['boards']
+    //const boards = settings['settings']['boards']
 
     for (let i = 0; i < boards.length; i++) {
         let board_name = boards[i]['board']

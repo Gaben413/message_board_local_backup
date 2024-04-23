@@ -5,13 +5,13 @@
         </div>
         <img :src="data.img_data.file_path" alt="threadImage" :id="'img_'+data.p_number" class="img-min_p img-max_p item2_p" v-if="data.img_data.has_image" v-on:click="ChangeImageZoom(data.p_number)">
         <div class="item3_p">
-            <div v-for="com in com_obj">
+            <p v-if="test_prop" v-for="line in comment.split('\n')">{{ line }}</p>
+
+            <div v-else v-for="com in com_obj">
                 <a :href="'#'+com.href" v-if="com.type == 'reply'" :class="com.type">{{ com.content }}</a>
                 <p v-else :class="com.type">{{ com.content }}</p>
             </div>
-            <!--
-            <p v-for="line in comment.split('\n')">{{ line }}</p>
-            -->
+            
         </div>
         <!--
         <a href="#141291547">Go Top</a>
@@ -27,12 +27,12 @@
 <script>
 export default{
     name: 'PostComponent',
-    props: ['data'],
+    props: ['data', 'test_prop'],
     data(){
         return{
             comment: "",
             post_reply: [],
-            com_obj: []
+            com_obj: [],
         }
     },
     mounted(){
@@ -71,6 +71,8 @@ export default{
             }
 
             //this.com_obj = split_com
+
+            this.comment = this.data.p_com.replaceAll("<br>","\n")
 
             /*
             this.comment = ((this.data.p_com).replace(r, ">>Link to another post<< ")).replaceAll("<br>","\n")

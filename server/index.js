@@ -1,12 +1,10 @@
 //const api = require('./api/api')
 const {fetch} = require('./fetch/message_board_fetch')
-const settings = require('./settings.json')
+const {interval} = require('./settings');
 
 start_time = new Date()
 
 let first = true;
-
-let interval = settings["settings"]["interval_ms"]
 
 async function go() {
     try {

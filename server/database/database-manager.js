@@ -2,11 +2,7 @@
 require('dotenv').config()
 const { Sequelize } = require('sequelize');
 
-const settings = require('../settings.json')
-let logBool = (() => {
-  if(settings['settings']['simple_log_output']) return false 
-  else return console.log
-})();
+const {logBool} = require('../settings');
 
 const sequelize = new Sequelize(process.env.PG_URL, {
   logging: logBool

@@ -12,6 +12,18 @@ if(process.platform === "win32"){
 let root_path = settings['settings']['downloads_dir_path'][os]['dir'] + settings['settings']['download_dir_name']
 let thread_folder = root_path + settings['settings']['folder_name']
 let folder_name = settings['settings']['folder_name']
+let interval = settings["settings"]["interval_ms"]
+
+let logBool = (() => {
+    if(settings['settings']['simple_log_output']) return false 
+    else return console.log
+})();
+
+let local_api = settings['settings']['local_api'];
+let api_port = settings['settings']['api_port'];
+
+let boards = settings['settings']['boards'];
+
 /*
 function GetLocalIPAddress(){
     const nets = networkInterfaces();
@@ -36,4 +48,4 @@ function GetLocalIPAddress(){
 
 let local_api = GetLocalIPAddress()
 */
-module.exports = {root_path, thread_folder, folder_name, os}
+module.exports = {root_path, thread_folder, folder_name, os, interval, logBool, local_api, api_port, boards}

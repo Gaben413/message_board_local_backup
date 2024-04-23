@@ -6,7 +6,10 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    component: HomeView
+    component: HomeView,
+    meta: {
+      title: 'Home Page'
+    }
   },
   {
     path: '/about',
@@ -20,7 +23,10 @@ const routes = [
     path: '/thread/:t_number',
     name: 'thread',
     component: ThreadView,
-    props: true
+    props: true,
+    meta: {
+      title: 'Thread'
+    }
   }
 ]
 

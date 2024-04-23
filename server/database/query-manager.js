@@ -1,8 +1,9 @@
 const { Sequelize, Op } = require('sequelize');
 
-const settings = require('../settings.json')
+//const settings = require('../settings.json')
+//let local_api = settings['settings']['local_api'];
 
-let local_api = settings['settings']['local_api'];
+const {local_api, api_port} = require('../settings');
 
 //const sequelize = require('./database-manager');
 
@@ -348,7 +349,7 @@ async function GetAllThreadsVue(){
         */
 
         //let file_path = `${settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'] + settings['settings']['folder_name'] + threads[i]['t_number']}/${filename}`
-        let file_path = `http://${local_api}:${settings['settings']['api_port']}/db/get_image_file/${threads[i]['t_number']}`
+        let file_path = `http://${local_api}:${api_port}/db/get_image_file/${threads[i]['t_number']}`
 
         obj_data = {
             "t_number": threads[i]['t_number'],
@@ -407,7 +408,7 @@ async function GetThreadDataVue(id){
             'img_data': {
                 'i_tim': posts[i]['i_tim'],
                 'has_image': posts[i]['i_tim'] != null,
-                'file_path': posts[i]['i_tim'] != null ? `http://${local_api}:${settings['settings']['api_port']}/db/get_image_file/${posts[i]['p_number']}` : null,
+                'file_path': posts[i]['i_tim'] != null ? `http://${local_api}:${api_port}/db/get_image_file/${posts[i]['p_number']}` : null,
             }
         }
         
