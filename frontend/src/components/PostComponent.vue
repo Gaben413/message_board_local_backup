@@ -18,7 +18,7 @@
         <a href="#141291547">Go Top</a>
         -->
         <div class="item4_p">
-            <p class="date-text">{{ data.p_date }}</p>
+            <p class="date-text">{{ display_date }}</p>
         </div>
         
     </div>
@@ -34,9 +34,29 @@ export default{
             comment: "",
             post_reply: [],
             com_obj: [],
+            display_date: ""
         }
     },
     mounted(){
+        let date = new Date(this.data.p_date);
+        let week_day = (() => {
+            if(date.getDay() == 0)
+                return "Sunday";
+            else if(date.getDay() == 1)
+                return "Monday";
+            else if(date.getDay() == 2)
+                return "Tuesday";
+            else if(date.getDay() == 3)
+                return "Wednesday";
+            else if(date.getDay() == 4)
+                return "Thursday";
+            else if(date.getDay() == 5)
+                return "Friday";
+            else if(date.getDay() == 6)
+                return "Sartuday";
+            else return "Error"
+        })();
+        this.display_date = `(${week_day}) ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes().toString().padStart(2,'0')}:${date.getSeconds().toString().padStart(2,'0')}`
         //console.log(`${this.data.key} - ${this.data.img_data.has_image}`)
         //console.log(this.data.p_com)
 
@@ -167,7 +187,7 @@ export default{
 }
 
 .item3_p{
-    margin: 10px 10px 0px 10px;
+    margin: 10px 10px 5px 10px;
     padding: 0;
 
     grid-column: 2/5;

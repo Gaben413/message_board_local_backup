@@ -49,7 +49,7 @@
                 let minutes = Math.floor(seconds/60)
                 let hours = Math.floor(minutes/60)
 
-                this.time = `${hours}:${minutes.toString().padStart(2,"0")}:${(seconds%60).toString().padStart(2, "0")}`
+                this.time = `${hours}:${(minutes%60).toString().padStart(2,"0")}:${(seconds%60).toString().padStart(2, "0")}`
             }, 1000);
         }
     }
