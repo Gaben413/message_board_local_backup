@@ -5,7 +5,8 @@
         </div>
         <img :src="data.img_data.file_path" alt="threadImage" :id="'img_'+data.p_number" class="img-min_p img-max_p item2_p" v-if="data.img_data.has_image" v-on:click="ChangeImageZoom(data.p_number)">
         <div class="item3_p">
-            <p v-if="test_prop" v-for="line in comment.split('\n')">{{ line }}</p>
+
+            <p v-if="test_prop" v-for="line in comment.split('\n')" id="raw_content">{{ line }}</p>
 
             <div v-else v-for="com in com_obj">
                 <a :href="'#'+com.href" v-if="com.type == 'reply'" :class="com.type">{{ com.content }}</a>
@@ -105,6 +106,9 @@ export default{
 </script>
 
 <style>
+#raw_content{
+    color: black;
+}
 .container{
     display: grid;
     grid-template-columns: auto auto auto auto;
