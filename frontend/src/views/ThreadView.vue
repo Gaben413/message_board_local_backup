@@ -170,14 +170,17 @@ h1{
   display: flex;
 
   margin: 20px 0px 0px 0px;
-  padding: 10px 0px;
+  padding: 0px 0px;
 
-  height: 30px;
+  height: 40px;
   width: 100%;
 
   background-color: green;
 
   justify-content: space-around;
+}
+#utilities > div{
+  margin: 10px 0px;
 }
 #utilities > div > label{
   color: black;
@@ -189,7 +192,7 @@ h1{
 #thread-download{
   /*height: 37px;*/
 
-  margin-right: 25px;
+  margin: 5px 0px;
 
   color: white;
   background-color: darkgreen;
