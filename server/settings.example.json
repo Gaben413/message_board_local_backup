@@ -3,11 +3,13 @@
         "boards":[
             {
                 "board":"co",
-                "tags":["tag", "tag2"]
+                "tags":["tag", "tag2"],
+                "auto": true
             },
             {
                 "board":"trash",
-                "tags":["tag", "tag2"]
+                "tags":["tag", "tag2"],
+                "auto": false
             }
         ],
         "check_days":[1],

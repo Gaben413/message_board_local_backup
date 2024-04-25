@@ -154,7 +154,7 @@ async function GetPostData(input, board_name){
 }
 
 
-async function fetch(){
+async function fetch(manual_fetch = false){
     return new Promise(async (resolve, reject) => {
         try{
             //const boards = settings['settings']['boards']
@@ -164,33 +164,35 @@ async function fetch(){
             for (let i = 0; i < boards.length; i++) {
                 let board_name = boards[i]['board']
                 let search_text = boards[i]['tags']
-        
-                console.log(`\n${i+1} - LOADING /${board_name}/`)
-                let thread_id = await fetch_thread(board_name, search_text)
 
+                if(boards[i]['auto'] || manual_fetch){ //Just a check in case the search 
+        
+                    console.log(`\n${i+1} - LOADING /${board_name}/`)
+                    let thread_id = await fetch_thread(board_name, search_text)
+
+                
+                    if(thread_id != ''){
+                        console.log(`\nThread ID: ${thread_id}\n`)
             
-                if(thread_id != ''){
-                    console.log(`\nThread ID: ${thread_id}\n`)
-        
-                    let posts_response = await GetPostData(thread_id, board_name)
-                    console.log(posts_response)
-        
-                    let download_reponse = await downloadImages(board_name, thread_id)
-                    console.log(download_reponse)
-        
-                    //Now do the loop or check for the next board
-                    //Still need to figure out how that will work
+                        let posts_response = await GetPostData(thread_id, board_name)
+                        console.log(posts_response)
+            
+                        let download_reponse = await downloadImages(board_name, thread_id)
+                        console.log(download_reponse)
+            
+                        //Now do the loop or check for the next board
+                        //Still need to figure out how that will work
 
-                    threads_no_list.push(thread_id)
-                }else{
-                    console.log(`No threads in ${board_name} have ${search_text} as tags`)
+                        threads_no_list.push(thread_id)
+                    }else{
+                        console.log(`No threads in ${board_name} have ${search_text} as tags`)
+                    }
                 }
+
+                await IsThreadInList(threads_no_list)
+
+                console.log(`ALL THREAD IDS: ${threads_no_list}`)
             }
-
-            await IsThreadInList(threads_no_list)
-
-            console.log(`ALL THREAD IDS: ${threads_no_list}`)
-
             resolve({message: 'success', key: true})
         }catch(error){
             reject({message: 'error', key: false})

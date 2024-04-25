@@ -187,9 +187,26 @@ while(true){
         }
     }
 
+    let auto_bool;
+    
+    while(true){
+        let auto_response = prompt("Set to Auto (y/n):");
+
+        auto_bool = ["yes", "y"].includes(auto_response.toLocaleLowerCase());
+
+        console.log(`Auto set to ${auto_bool}. You are ok with this?`)
+
+        let continue_response = prompt(">> ");
+
+        if(['y','yes'].includes(continue_response.toLocaleLowerCase())){
+            break;
+        }
+    }
+
     selected_boards.push({
         board: BOARD_OPTIONS[category_id]['boards'][board_id]['board'],
-        tags: tags
+        tags: tags,
+        auto: auto_bool
     })
     
     let continue_question;
