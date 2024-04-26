@@ -52,6 +52,7 @@ function fetch_thread(board_name, search_text){
     
                         if(await GetThread(threads[e]['no']) == undefined){
                             console.log('Thread does not exist in DB')
+
                             await AddThread({
                                 "t_number": threads[e]['no'],
                                 "t_board": `/${board_name}/`,
@@ -165,7 +166,7 @@ async function fetch(manual_fetch = false){
                 let board_name = boards[i]['board']
                 let search_text = boards[i]['tags']
 
-                if(boards[i]['auto'] || manual_fetch){ //Just a check in case the search 
+                if(boards[i]['auto'] || manual_fetch){ //Just a check in case the search
         
                     console.log(`\n${i+1} - LOADING /${board_name}/`)
                     let thread_id = await fetch_thread(board_name, search_text)

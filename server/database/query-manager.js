@@ -147,7 +147,7 @@ async function AddThread(data){
 
     const thread = await Thread.create({
         t_number: data['t_number'],
-        t_board: data['board_name'],
+        t_board: data['t_board'],
         t_date: data['t_date'],
         t_archived: data['t_archived'],
         t_sub: data['t_sub'],
@@ -210,7 +210,12 @@ async function GetThread(id){
 async function GetAllThreads(){
     const {Thread} = require('./models')
 
-    let output = await Thread.findAll({raw:true});
+    let output = await Thread.findAll({
+        order:[
+            ['t_date', 'ASC']
+        ],
+        raw:true
+    });
 
     return output;
 }
