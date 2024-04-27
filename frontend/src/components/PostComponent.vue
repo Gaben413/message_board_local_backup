@@ -1,7 +1,7 @@
 <template>
     <div class="container" :id="'p'+data.p_number">
         <div class="item1_p">
-            <p class="header-text"> {{ (data.key + 1) }} - {{ data.p_number }} | {{ data.p_name }} | <a v-for="reply in post_reply" :href="reply" class="reply tooltip">@ <span class="tooltiptext">{{ reply }}</span></a></p>
+            <p class="header-text"> {{ (data.key + 1) }} - {{ data.p_number }} | {{ data.p_name }} | <a v-for="reply in post_reply" :href="reply" class="reply tooltip">@<span class="tooltiptext">{{ reply }}</span></a></p>
         </div>
         <img :src="data.img_data.file_path" alt="threadImage" :id="'img_'+data.p_number" class="img-min_p img-max_p item2_p" v-if="data.img_data.has_image" v-on:click="ChangeImageZoom(data.p_number)">
         <div class="item3_p">
@@ -74,8 +74,6 @@ export default{
 
         //console.log(this.data)
 
-
-
         if(this.data.p_com != null){
             //PROCESSED
             let r = /<a(.*?)<\/a>/gs
@@ -114,22 +112,22 @@ export default{
             //PLAINTEXT
             this.plaintext_com = (this.comment.replaceAll(/<a [^>]+>|<\/a>|<span [^>]+>|<\/span>/g, '')).replaceAll("&gt;&gt;", ">>")
 
-            /*
+            
             this.comment = ((this.data.p_com).replace(r, ">>Link to another post<< ")).replaceAll("<br>","\n")
 
             //href treatment
-            let split_com = (this.data.p_com.trim()).split(r)
+            let pt_split_com = (this.data.p_com.trim()).split(r)
 
-            console.log(split_com)
-            console.log(`Replying to: ${(split_com.length-1)/2}`)
+            console.log(pt_split_com)
+            console.log(`Replying to: ${(pt_split_com.length-1)/2}`)
 
-            split_com.forEach(element => {
+            pt_split_com.forEach(element => {
                 if(element.includes('href="#'))
                     this.post_reply.push("#" + element.split(/href="#(.*?)"/g)[1])
             });
 
             console.log(this.post_reply)
-            */
+            
         }
 
         this.border_color = this.colors['border_color'];
@@ -220,10 +218,11 @@ export default{
 
     text-align: left;
 }
+/*
 .item3_p > p{
-    /*margin: 0;*/
+    margin: 0;
 }
-
+*/
 .item4_p{
     display: flex;
     align-content: center;
@@ -278,7 +277,7 @@ export default{
 
 .reply{
     color: rgb(0, 26, 0);
-    margin: 0px 0px 10px 0px;
+    margin: 0px 5px 3px 0px;
 }
 
 .tooltip{
