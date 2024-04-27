@@ -7,7 +7,11 @@
             "border_color": "#007f17",
             "body_color": "#90ee90",
             "bottom_color": "#e2ffe2",
-            "text_color": "black"
+            "text_color": "black",
+            "bg_color": "#ddffda",
+            "button_color": "#006400",
+            "button_color_hover": "#003600",
+            "button_text_color": "white"
         }
         
     },
@@ -19,7 +23,12 @@
             "border_color": "#007f17",
             "body_color": "#90ee90",
             "bottom_color": "#e2ffe2",
-            "text_color": "black"
+            "text_color": "black",
+            "bg_color": "#ddffda",
+            "button_color": "#006400",
+            "button_color_hover": "#003600",
+            "button_text_color": "white"
+        
         }
     },
     "interests": {
@@ -30,7 +39,12 @@
             "border_color": "#007f17",
             "body_color": "#90ee90",
             "bottom_color": "#e2ffe2",
-            "text_color": "black"
+            "text_color": "black",
+            "bg_color": "#ddffda",
+            "button_color": "#006400",
+            "button_color_hover": "#003600",
+            "button_text_color": "white"
+        
         }
     },
     "creative": {
@@ -41,7 +55,12 @@
             "border_color": "#007f17",
             "body_color": "#90ee90",
             "bottom_color": "#e2ffe2",
-            "text_color": "black"
+            "text_color": "black",
+            "bg_color": "#ddffda",
+            "button_color": "#006400",
+            "button_color_hover": "#003600",
+            "button_text_color": "white"
+        
         }
     },
     "other": {
@@ -52,7 +71,12 @@
             "border_color": "#007f17",
             "body_color": "#90ee90",
             "bottom_color": "#e2ffe2",
-            "text_color": "black"
+            "text_color": "black",
+            "bg_color": "#ddffda",
+            "button_color": "#006400",
+            "button_color_hover": "#003600",
+            "button_text_color": "white"
+        
         }
     },
     "misc": {
@@ -63,7 +87,12 @@
             "border_color": "#800000",
             "body_color": "#edbd90",
             "bottom_color": "#fff9e2",
-            "text_color": "white"
+            "text_color": "white",
+            "bg_color": "#fff1da",
+            "button_color": "#641f00",
+            "button_color_hover": "#361000",
+            "button_text_color": "white"
+        
         }
     },
     "adult": {
@@ -74,7 +103,12 @@
             "border_color": "#007f17",
             "body_color": "#90ee90",
             "bottom_color": "#e2ffe2",
-            "text_color": "black"
+            "text_color": "black",
+            "bg_color": "#ddffda",
+            "button_color": "#006400",
+            "button_color_hover": "#003600",
+            "button_text_color": "white"
+        
         }
     }
 }

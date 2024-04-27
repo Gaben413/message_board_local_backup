@@ -57,7 +57,17 @@
   color: #2c3e50;
   margin-bottom: 20px;
 }
+body{
+  background: rgb(221, 255, 218);
+  margin: 0;
 
+  display: flex;
+  flex-direction: column;
+}
+h1{
+  color: darkgreen;
+  background: rgb(57, 196, 57);
+}
 nav {
   padding: 5px;
 }

@@ -28,13 +28,17 @@
 <script>
 export default{
     name: 'PostComponent',
-    props: ['data', 'test_prop'],
+    props: ['data', 'test_prop', 'colors'],
     data(){
         return{
             comment: "",
             post_reply: [],
             com_obj: [],
-            display_date: ""
+            display_date: "",
+            border_color: "#008a22",
+            body_color: "#90ee90",
+            bottom_color: "#e2ffe2",
+            text_color: "black"
         }
     },
     mounted(){
@@ -95,6 +99,11 @@ export default{
 
             this.comment = this.data.p_com.replaceAll("<br>","\n")
 
+            this.border_color = this.colors['border_color'];
+            this.body_color = this.colors['body_color'];
+            this.bottom_color = this.colors['bottom_color'];
+            this.text_color = this.colors['text_color'];
+
             /*
             this.comment = ((this.data.p_com).replace(r, ">>Link to another post<< ")).replaceAll("<br>","\n")
 
@@ -125,7 +134,7 @@ export default{
 }
 </script>
 
-<style>
+<style scoped>
 #raw_content{
     color: black;
 }
@@ -136,11 +145,11 @@ export default{
 
     margin: 15px;
 
-    background: lightgreen;
+    background-color: v-bind(body_color);
 
     border-style: solid;
     border-radius: 10px;
-    border-color: rgb(0, 138, 34);    
+    border-color: v-bind(border_color);    
 
     width: fit-content;    
     /*
@@ -161,7 +170,7 @@ export default{
 }
 
 .header-text{
-    color: black;
+    color: v-bind(text_color);
 
     margin: 0;
 
@@ -177,7 +186,7 @@ export default{
 
     grid-column: 1/5;
 
-    background: rgb(0, 138, 34);
+    background: v-bind(border_color);
     border-radius: 6px 6px 0 0;
 }
 
@@ -208,7 +217,7 @@ export default{
     margin: 0;
     padding-left: 15px;
     padding-right: 10px;
-    background: rgb(226, 255, 226);
+    background: v-bind(bottom_color);
 
     height: fit-content;
 

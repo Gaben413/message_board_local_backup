@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div id="main-thread">
 
     <div id="utilities">
       <!--
@@ -33,7 +33,7 @@
     </h1>
 
     <div v-for="data in post_data" :key="data.key" class="thread-comp">
-      <PostComponent :data="data" :test_prop="raw_model"/>
+      <PostComponent :data="data" :test_prop="raw_model" :colors="{'border_color': border_color,'body_color': body_color,'bottom_color': bottom_color,'text_color': text_color}"/>
     </div>
     <!--
     <div class="threads" v-if="threads_data.length">
@@ -59,6 +59,7 @@ import ThreadComponent from '@/components/ThreadComponent.vue'
 import router from '@/router'
 
 import settings from '../assets/frontend-settings.json'
+import style_sheet from '@/assets/style-sheet.json'
 import axios from 'axios'
 
 import fileDownload from'js-file-download'
@@ -77,7 +78,17 @@ export default {
       post_data_raw: [],
       raw_model: true,
       search_text: "",
-      search_total: 0
+      search_total: 0,
+
+      border_color: "#008a22",
+      body_color: "#90ee90",
+      bottom_color: "#e2ffe2",
+      text_color: "black",
+      bg_color: "#ddffda",
+
+      button_color: "#006400",
+      button_color_hover: "#003600",
+      button_text_color: "white"
     }
   },
   mounted(){
@@ -93,6 +104,29 @@ export default {
       //console.log(res.data.thread)
       console.log(this.thread_data)
       console.log(this.post_data)
+
+      console.log(this.thread_data)
+      
+      for(const key in style_sheet){
+        if(style_sheet[key]["boards"].includes(this.thread_data['t_board'])){
+          this.border_color = style_sheet[key]["style"]['border_color'];
+          this.body_color = style_sheet[key]["style"]['body_color'];
+          this.bottom_color = style_sheet[key]["style"]['bottom_color'];
+          this.text_color = style_sheet[key]["style"]['text_color'];
+          this.bg_color = style_sheet[key]["style"]['bg_color'];
+
+          this.button_color = style_sheet[key]["style"]['button_color'];
+          this.button_color_hover = style_sheet[key]["style"]['button_color_hover'];
+          this.button_text_color = style_sheet[key]["style"]['button_text_color'];
+
+        }
+      }
+
+      console.log(this.border_color)
+      console.log(this.body_color)
+      console.log(this.bottom_color)
+      console.log(this.text_color)
+      console.log(this.bg_color)
     })
     
     console.log(this.t_number)
@@ -154,16 +188,13 @@ export default {
 </script>
 
 <style>
-body{
-  background: rgb(221, 255, 218);
-  margin: 0;
+#main-thread{
+  background-color: v-bind(bg_color);
 
-  display: flex;
-  flex-direction: column;
 }
 h1{
-  color: darkgreen;
-  background: rgb(57, 196, 57);
+  color: v-bind(text_color);
+  background: v-bind(border_color);
 }
 
 #utilities{
@@ -175,7 +206,7 @@ h1{
   height: 40px;
   width: 100%;
 
-  background-color: green;
+  background-color: v-bind(body_color);
 
   justify-content: space-around;
 }
@@ -194,14 +225,14 @@ h1{
 
   margin: 5px 0px;
 
-  color: white;
-  background-color: darkgreen;
+  color: v-bind(button_text_color);
+  background-color: v-bind(button_color);
 
   border-width: 0;
   border-radius: 25%;
 }
 #thread-download:hover{
-  background-color: rgb(0, 54, 0);
+  background-color: v-bind(button_color_hover);
   cursor: pointer;
 }
 </style>

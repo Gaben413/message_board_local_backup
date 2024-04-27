@@ -70,22 +70,12 @@ export default {
 <style>
 #threads-grid{
   display: grid;
+  
   grid-template-columns: auto auto auto auto;
-
+  
   gap: 5px;
 }
 .thread-comp{
   margin: auto;
-}
-body{
-  background: rgb(221, 255, 218);
-  margin: 0;
-
-  display: flex;
-  flex-direction: column;
-}
-h1{
-  color: darkgreen;
-  background: rgb(57, 196, 57);
 }
 </style>
