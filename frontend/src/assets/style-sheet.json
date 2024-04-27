@@ -1,0 +1,80 @@
+{
+    "japanese_culture": {
+        "boards": [
+            "/a/", "/c/","/w/", "/m/","/cgl/","/cm/","/f/", "/n/", "/jp/", "/vt/"
+        ],
+        "style": {
+            "border_color": "#007f17",
+            "body_color": "#90ee90",
+            "bottom_color": "#e2ffe2",
+            "text_color": "black"
+        }
+        
+    },
+    "video_games": {
+        "boards": [
+            "/v/", "/bg/","/vm/","/vmg/","/vp/","/vr/","/vrpg/","/vst/"
+        ],
+        "style": {
+            "border_color": "#007f17",
+            "body_color": "#90ee90",
+            "bottom_color": "#e2ffe2",
+            "text_color": "black"
+        }
+    },
+    "interests": {
+        "boards": [
+            "/co/","/g/","/tv/","/k/","/o/","/an/","/tg/","/sp/","/xs/","/xs/","/pw/","/sci/","/his/","/int/","/out/","/toy/"
+        ],
+        "style": {
+            "border_color": "#007f17",
+            "body_color": "#90ee90",
+            "bottom_color": "#e2ffe2",
+            "text_color": "black"
+        }
+    },
+    "creative": {
+        "boards": [
+            "/i/","/po/","/p/","/ck/","/ic/","/wg/","/lit/","/mu/","/fa/","/3/","/gd/","/diy/","/wsg/","/qst/"
+        ],
+        "style": {
+            "border_color": "#007f17",
+            "body_color": "#90ee90",
+            "bottom_color": "#e2ffe2",
+            "text_color": "black"
+        }
+    },
+    "other": {
+        "boards": [
+            "/biz/","/trv/","/fit/","/x/","/adv/","/lgbt/","/mlp/","/news/","/wsr/","/vip/"
+        ],
+        "style": {
+            "border_color": "#007f17",
+            "body_color": "#90ee90",
+            "bottom_color": "#e2ffe2",
+            "text_color": "black"
+        }
+    },
+    "misc": {
+        "boards": [
+            "/b/","/r9k/","/pol/","/bant/","/soc/","/s4s/","/trash/"
+        ],
+        "style": {
+            "border_color": "#800000",
+            "body_color": "#edbd90",
+            "bottom_color": "#fff9e2",
+            "text_color": "white"
+        }
+    },
+    "adult": {
+        "boards": [
+            "/s/","/hc/","/hm/","/h/","/e/","/u/","/d/","/y/","/t/","/hr/","/gif/","/aco/","/r/"
+        ],
+        "style": {
+            "border_color": "#007f17",
+            "body_color": "#90ee90",
+            "bottom_color": "#e2ffe2",
+            "text_color": "black"
+        }
+    }
+}

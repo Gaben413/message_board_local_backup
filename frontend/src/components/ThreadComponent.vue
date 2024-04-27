@@ -4,28 +4,69 @@
             <p class="header-text">{{ data.t_number }} | {{ data.t_sub }} - {{ data.t_board }}</p>
         </div>
         <img :src="data.filepath" alt="threadImage" class="img-min item2">
-        <p class="item3">{{ data.p_com }}</p>
+        <div class="item3">
+            <p v-for="line in remove_anchor(data.p_com).split('<br>')">{{ line }}</p>
+        </div>
         <div class="item4">
             <p v-if="data.t_archived" class="archived-text">archived</p>
             <p v-else class="archived-text">on going</p>
-
-            <p class="date-text">{{ data.t_date }}</p>
         </div>
     </div>
+
+    <p>{{ display_date }}</p>
     
 </template>
 
 <script>
+import style_sheet from '@/assets/style-sheet.json'
 export default{
     name: 'ThreadComponent',
     props: ['data'],
     data(){
         return{
-            
+            display_date: "",
+            border_color: "#008a22",
+            body_color: "#90ee90",
+            bottom_color: "#e2ffe2",
+            text_color: "black"
         }
     },
     mounted(){
-        
+        let date = new Date(this.data.t_date);
+        let week_day = (() => {
+            if(date.getDay() == 0)
+                return "Sunday";
+            else if(date.getDay() == 1)
+                return "Monday";
+            else if(date.getDay() == 2)
+                return "Tuesday";
+            else if(date.getDay() == 3)
+                return "Wednesday";
+            else if(date.getDay() == 4)
+                return "Thursday";
+            else if(date.getDay() == 5)
+                return "Friday";
+            else if(date.getDay() == 6)
+                return "Sartuday";
+            else return "Error"
+        })();
+        this.display_date = `(${week_day}) ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes().toString().padStart(2,'0')}:${date.getSeconds().toString().padStart(2,'0')}`
+
+        for(const key in style_sheet){
+            if(style_sheet[key]["boards"].includes(this.data.t_board)){
+                this.border_color = style_sheet[key]["style"]['border_color'];
+                this.body_color = style_sheet[key]["style"]['body_color'];
+                this.bottom_color = style_sheet[key]["style"]['bottom_color'];
+                this.text_color = style_sheet[key]["style"]['text_color'];
+            }
+        }
+    },
+    methods:{
+        remove_anchor(str){            
+            let output = (str.replaceAll(/<a [^>]+>|<\/a>/g, '')).replaceAll('&gt;&gt;', '>>');
+
+            return output;
+        }
     }
 }
 </script>
@@ -38,13 +79,14 @@ export default{
 
     margin: 15px;
 
-    background: lightgreen;
+    background: v-bind(body_color);
 
     border-style: solid;
     border-radius: 10px;
-    border-color: rgb(0, 138, 34);    
+    border-color: v-bind(border_color);    
 
     width: fit-content;    
+    max-width: 500px;
     /*
     max-height: 750px;
     max-width: 75%;
@@ -66,6 +108,8 @@ export default{
     margin: 0;
 
     text-align: left;
+
+    color: v-bind(text_color);
 }
 
 .item1{
@@ -77,7 +121,7 @@ export default{
 
     grid-column: 1/5;
 
-    background: rgb(0, 138, 34);
+    background: v-bind(border_color);
     border-radius: 6px 6px 0 0;
 }
 
@@ -96,16 +140,16 @@ export default{
 
     text-align: left;
 }
+.item3 > p{
+    margin-top: 2px;
+    margin-bottom: 5px;
+}
 
 .item4{
-    display: flex;
-    align-content: center;
-    justify-content: space-between;
-
     margin: 0;
     padding-left: 15px;
     padding-right: 10px;
-    background: rgb(226, 255, 226);
+    background: v-bind(bottom_color);
 
     height: fit-content;
 
@@ -116,7 +160,8 @@ export default{
     border-radius: 0 0 6px 6px;
 }
 .item4 > p{
-    text-align: right;
+    width: 100%;
+    text-align: center;
     margin: 0;
 }
 

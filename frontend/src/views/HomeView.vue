@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <h1>Thread Lists</h1>
-    <div class="threads" v-if="threads_data.length">
+    <div class="threads" v-if="threads_data.length" id="threads-grid">
       <div v-for="data in threads_data" :key="data.key" class="thread-comp">
         <ThreadComponent :data="data" @click="test(data.key)"/>
       </div>
@@ -75,6 +75,15 @@ export default {
 </script>
 
 <style>
+#threads-grid{
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+
+  gap: 5px;
+}
+.thread-comp{
+  margin: auto;
+}
 body{
   background: rgb(221, 255, 218);
   margin: 0;
