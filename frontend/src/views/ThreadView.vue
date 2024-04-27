@@ -18,9 +18,17 @@
         <label for="" v-if="search_total != 0"> Posts Found: {{ search_total }}</label>
       </div>
 
-      <div>
+      <div hidden>
         <input type="checkbox" name="raw-content" id="" v-model="raw_model">
         <label for="raw-content">Raw Content</label>
+      </div>
+
+      <div>
+        <select name="" id="com-dropdown" v-model="com_mode">
+          <option value="1">RAW</option>
+          <option value="2">Plain Text</option>
+          <option value="3">Processed (WIP)</option>
+        </select>
       </div>
 
       <button id="thread-download" @click="download_thread">Download</button>
@@ -33,7 +41,7 @@
     </h1>
 
     <div v-for="data in post_data" :key="data.key" class="thread-comp">
-      <PostComponent :data="data" :test_prop="raw_model" :colors="{'border_color': border_color,'body_color': body_color,'bottom_color': bottom_color,'text_color': text_color}"/>
+      <PostComponent :data="data" :test_prop="raw_model" :colors="{'border_color': border_color,'body_color': body_color,'bottom_color': bottom_color,'text_color': text_color}" :com_mode="com_mode"/>
     </div>
     <!--
     <div class="threads" v-if="threads_data.length">
@@ -79,6 +87,8 @@ export default {
       raw_model: true,
       search_text: "",
       search_total: 0,
+
+      com_mode: 1,
 
       border_color: "#008a22",
       body_color: "#90ee90",

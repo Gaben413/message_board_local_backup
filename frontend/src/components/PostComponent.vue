@@ -6,9 +6,11 @@
         <img :src="data.img_data.file_path" alt="threadImage" :id="'img_'+data.p_number" class="img-min_p img-max_p item2_p" v-if="data.img_data.has_image" v-on:click="ChangeImageZoom(data.p_number)">
         <div class="item3_p">
 
-            <p v-if="test_prop" v-for="line in comment.split('\n')" id="raw_content">{{ line }}</p>
+            <p class="regular-com" v-if="com_mode == 1" v-for="line in comment.split('\n')" id="raw_content">{{ line }}</p>
 
-            <div v-else v-for="com in com_obj">
+            <p class="regular-com" v-else-if="com_mode == 2" v-for="text in plaintext_com.split('\n')">{{ text }}</p>
+
+            <div v-else-if="com_mode == 3" v-for="com in com_obj">
                 <a :href="'#'+com.href" v-if="com.type == 'reply'" :class="com.type">{{ com.content }}</a>
                 <p v-else :class="com.type">{{ com.content }}</p>
             </div>
@@ -28,13 +30,19 @@
 <script>
 export default{
     name: 'PostComponent',
-    props: ['data', 'test_prop', 'colors'],
+    props: ['data', 'test_prop', 'colors', 'com_mode'],
     data(){
         return{
             comment: "",
-            post_reply: [],
-            com_obj: [],
+
+            post_reply: [], //Don't remove yet, might be some use later
+
+            plaintext_com: "", //PLAINTEXT
+
+            com_obj: [], //Processed Comment
+
             display_date: "",
+
             border_color: "#008a22",
             body_color: "#90ee90",
             bottom_color: "#e2ffe2",
@@ -66,7 +74,10 @@ export default{
 
         //console.log(this.data)
 
+
+
         if(this.data.p_com != null){
+            //PROCESSED
             let r = /<a(.*?)<\/a>/gs
             let r_href = /href="#(.*?)"/g
             let r_quote = /<span class="quote">(.*?)<\/span>/gs
@@ -97,12 +108,11 @@ export default{
 
             //this.com_obj = split_com
 
+            //RAW
             this.comment = this.data.p_com.replaceAll("<br>","\n")
 
-            this.border_color = this.colors['border_color'];
-            this.body_color = this.colors['body_color'];
-            this.bottom_color = this.colors['bottom_color'];
-            this.text_color = this.colors['text_color'];
+            //PLAINTEXT
+            this.plaintext_com = (this.comment.replaceAll(/<a [^>]+>|<\/a>|<span [^>]+>|<\/span>/g, '')).replaceAll("&gt;&gt;", ">>")
 
             /*
             this.comment = ((this.data.p_com).replace(r, ">>Link to another post<< ")).replaceAll("<br>","\n")
@@ -121,6 +131,11 @@ export default{
             console.log(this.post_reply)
             */
         }
+
+        this.border_color = this.colors['border_color'];
+        this.body_color = this.colors['body_color'];
+        this.bottom_color = this.colors['bottom_color'];
+        this.text_color = this.colors['text_color'];
     },
     methods:{
         ChangeImageZoom(target_id){
@@ -206,7 +221,7 @@ export default{
     text-align: left;
 }
 .item3_p > p{
-    margin: 0;
+    /*margin: 0;*/
 }
 
 .item4_p{
@@ -229,7 +244,7 @@ export default{
 }
 .item4_p > p{
     text-align: right;
-    margin: 0;
+    /*margin: 0;*/
 }
 
 .quote{
@@ -254,6 +269,11 @@ export default{
     margin: 0;
 
     align-self: center;
+}
+
+.regular-com{
+    color: black;
+    margin: 0px 0px 10px 0px;
 }
 
 .reply{

@@ -58,7 +58,7 @@
   margin-bottom: 20px;
 }
 body{
-  background: rgb(221, 255, 218);
+  background: #ddffda;
   margin: 0;
 
   display: flex;
