@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div id="home">
     <h1>Thread Lists</h1>
     <div class="threads" v-if="threads_data.length" id="threads-grid">
       <div v-for="data in threads_data" :key="data.key" class="thread-comp">
@@ -68,12 +68,25 @@ export default {
 </script>
 
 <style>
+#home{
+  padding: 5px;
+  display: fixed;
+
+  top: 0;
+  left: 0;
+
+  background: rgb(255,255,255);
+  background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(221,255,218,1) 100%); 
+  min-height: 100%;
+}
 #threads-grid{
   display: grid;
   
   grid-template-columns: auto auto auto auto;
   
   gap: 5px;
+
+  /*min-height: 87vh;*/
 }
 .thread-comp{
   margin: auto;

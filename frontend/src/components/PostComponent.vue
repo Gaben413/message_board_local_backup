@@ -113,7 +113,8 @@ export default{
             this.plaintext_com = (this.comment.replaceAll(/<a [^>]+>|<\/a>|<span [^>]+>|<\/span>/g, '')).replaceAll("&gt;&gt;", ">>")
 
             
-            this.comment = ((this.data.p_com).replace(r, ">>Link to another post<< ")).replaceAll("<br>","\n")
+            //this.comment = ((this.data.p_com).replace(r, ">>Link to another post<< ")).replaceAll("<br>","\n")
+            this.comment = (this.data.p_com).replaceAll("<br>","\n")
 
             //href treatment
             let pt_split_com = (this.data.p_com.trim()).split(r)

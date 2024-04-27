@@ -33,7 +33,7 @@ app.get('/db', async (req, res) => {
     res.send("DB section!")
 })
 
-//THREADS
+// #region THREADS
 app.get('/db/get_all_threads', async (req, res) => {
     try{
         res.send(await GetAllThreads())
@@ -52,7 +52,9 @@ app.get('/db/get_thread/:id', async (req, res) => {
 })
 //soon add threads in favourites
 
-//POSTS
+// #endregion
+
+// #region POSTS
 app.get('/db/get_all_posts', async (req, res) => {
     res.send(await GetAllPosts())
 })
@@ -73,7 +75,9 @@ app.get('/db/get_thread_posts/:id', async (req, res) => {
     }
 })
 
-//IMAGE
+// #endregion
+
+// #region IMAGE
 app.get('/db/get_all_image', async (req, res) => {
     res.send(await GetAllImages())
 })
@@ -130,7 +134,10 @@ app.get('/db/get_image_file/:id', async (req, res) => {
 
 })
 
-//Vue Return
+// #endregion
+
+// #region Vue Return
+
 app.get('/vue/get_threads/', async (req, res) => {
     try{
         res.send(await GetAllThreadsVue())
@@ -148,7 +155,9 @@ app.get('/vue/get_thread_data/:id', async (req, res) => {
     }
 })
 
-//Status
+// #endregion
+
+// #region Utilities
 app.get('/status', async (req, res) => {
     try{
         let {DirSize} = require('../fetch/download-manager')
@@ -211,6 +220,22 @@ app.get('/file/:id', async (req, res) => {
         res.send(`Error: ${err}`)
     }
 })
+
+//Return file
+app.get('/manual_fetch/', async (req, res) => {
+    try{
+        const {main} = require('../manual_fetch');
+        console.log("Fetching");
+        res.json({
+            "status":'EXECUTING MANUAL FETCH'
+        })
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
+})
+
+// #endregion
 
 app.listen(api_port, () => {
     console.log(`API running on PORT: ${api_port}\nhttp://localhost:${api_port}`)
