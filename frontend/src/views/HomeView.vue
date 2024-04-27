@@ -3,7 +3,7 @@
     <h1>Thread Lists</h1>
     <div class="threads" v-if="threads_data.length" id="threads-grid">
       <div v-for="data in threads_data" :key="data.key" class="thread-comp">
-        <ThreadComponent :data="data" @click="test(data.key)"/>
+        <ThreadComponent :data="data"/>
       </div>
       
       <!--
@@ -62,14 +62,7 @@ export default {
     
   },
   methods: {
-    test(input){
-      //router.push('/about')
-      
-      router.push({name: 'thread', params: this.threads_data[input-1]})
 
-      //console.log(input-1)
-      //console.log(this.threads_data[input-1].t_number);
-    }
   }
 }
 </script>

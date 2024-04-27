@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" @click="to_thread">
         <div class="item1">
             <p class="header-text">{{ data.t_number }} | {{ data.t_sub }} - {{ data.t_board }}</p>
         </div>
@@ -19,6 +19,7 @@
 
 <script>
 import style_sheet from '@/assets/style-sheet.json'
+import router from '@/router'
 export default{
     name: 'ThreadComponent',
     props: ['data'],
@@ -66,6 +67,10 @@ export default{
             let output = (str.replaceAll(/<a [^>]+>|<\/a>/g, '')).replaceAll('&gt;&gt;', '>>');
 
             return output;
+        },
+        to_thread(){
+            router.push({name: 'thread', params: {t_number: this.data.t_number}})
+            console.log(`Moving to Thread Nº ${this.data.t_number}`);
         }
     }
 }
