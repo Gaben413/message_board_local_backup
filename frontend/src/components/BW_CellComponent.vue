@@ -1,14 +1,24 @@
 <template>
     <div>
-        <div v-if="!edit">
+        <div v-if="!edit" id="display-cell-grid" class="cell">
             <button @click="$emit('del', cell_data['bwl_id'])">X</button>
             <label for="">{{ cell_data['bwl_id'] }} - Number: {{ edit_tp_number }} | {{ edit_comm }}</label>
             <button @click="toggle_edit">EDIT</button>
         </div>
-        <div v-else>
-            <label for="">Number: </label> <input type="text" name="" id="" v-model="edit_tp_number">
-            <label for="">Comment</label> <input type="text" name="" id="" v-model="edit_comm">
-            <button @click="save">Save</button>
+        <div v-else id="edit-cell-grid" class="cell">
+            <div>
+                <label for="">Number: </label>
+                <input type="number" name="" id="" v-model="edit_tp_number">
+            </div>
+            <div>
+                <label for="">Comment: </label>
+                <input type="text" name="" id="" v-model="edit_comm">
+            </div>
+            <div>
+                <button @click="save">Save</button>
+                <button @click="toggle_edit">Cancel</button>
+            </div>
+            
         </div>
     </div>
 
@@ -37,7 +47,7 @@
             toggle_edit(){
                 this.edit_tp_number = this.cell_data['tp_number'];
                 this.edit_comm = this.cell_data['comm'];
-                this.edit = true;
+                this.edit = !this.edit;
             },
             async save(){
                 this.edit = false;
@@ -57,3 +67,23 @@
         }
     }
 </script>
+
+<style>
+    #display-cell-grid{
+        display: grid;
+        grid-template-columns: auto 500px auto;
+
+        justify-content: center;
+
+        margin: 10px 25px;
+    }
+    #edit-cell-grid{
+        display: grid;
+        grid-template-columns: auto auto 100px;
+        margin: 10px 25px;
+    }
+    .cell{
+        background: rgb(221,255,218);
+        background: radial-gradient(circle, rgba(221,255,218,1) 0%, rgba(255,255,255,0) 100%); 
+    }
+</style>
