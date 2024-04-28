@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ThreadView from '../views/ThreadView.vue'
+import SettingsView from '@/views/SettingsView.vue'
 
 const routes = [
   {
@@ -26,6 +27,15 @@ const routes = [
     props: true,
     meta: {
       title: 'Thread'
+    }
+  },
+  {
+    path: '/settings',
+    name: 'settings',
+    component: SettingsView,
+    props: true,
+    meta: {
+      title: 'Settings'
     }
   }
 ]

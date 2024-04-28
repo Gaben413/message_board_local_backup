@@ -429,6 +429,82 @@ async function GetThreadDataVue(id){
 }
 // #endregion
 
+// #region Black and White Lists
+
+async function Add_BW_List_Entry(data){
+    const {BW_List} = require('./models')
+
+    const bw_list = await BW_List.create({
+        list_type: data['list_type'],
+        tp_number: data['tp_number'],
+        comm: data['comm'],
+    })
+
+    return bw_list
+    //console.log(`${data['list_type']} list created | DATA:\n ${bw_list}`)
+}
+
+async function GetBlacklist(){
+    const {BW_List} = require('./models')
+
+    let output = await BW_List.findAll({
+        where:{
+            list_type: "black"
+        },
+        raw:true
+    });
+
+    return output;
+}
+
+async function GetWhitelist(){
+    const {BW_List} = require('./models')
+
+    let output = await BW_List.findAll({
+        where:{
+            list_type: "white"
+        },
+        raw:true
+    });
+
+    return output;
+}
+
+async function UpdateBW_List(data, id){
+    const {BW_List} = require('./models')
+
+    await BW_List.update(
+        {
+            tp_number: data['tp_number'],
+            comm: data['comm'],
+        },
+        {
+            where: {
+                bwl_id: id
+            }
+        }
+    );
+
+    return {"status": "success"}
+
+    //console.log(`Updated List of id: ${id}:\nData: ${JSON.stringify(data)}`)
+}
+
+async function Delete_BW_List_Entry(id){
+    const {BW_List} = require('./models')
+
+    await BW_List.destroy({
+        where: {
+            bwl_id: id
+        }
+    })
+
+    return {"message":`Entry ${id} deleted`}
+    //console.log(`${data['list_type']} list created | DATA:\n ${bw_list}`)
+}
+
+// #endregion
+
 //#region Test Area
 //Add Thread to Favourit
 /*
@@ -473,5 +549,6 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 
 module.exports = {
     AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, IsThreadInList, ThreadExists,
+    Add_BW_List_Entry,GetBlacklist,GetWhitelist,UpdateBW_List,Delete_BW_List_Entry,
     AddPost, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllThreadsVue, GetThreadDataVue
 }

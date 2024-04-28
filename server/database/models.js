@@ -112,6 +112,32 @@ const Post = database.define('post', {
 {
     timestamps: false
 })
+
+const BW_List = database.define('bw_list', {
+    bwl_id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    list_type: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            isIn: [['black', 'white']]
+        }
+    },
+    tp_number: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    comm:{
+        type: DataTypes.STRING,
+        allowNull: true
+    }
+},{
+    timestamps: false
+})
+
 /*
 //Most likely unecessary
 const replies = database.define('replies', {
@@ -168,4 +194,4 @@ Image.hasOne(Post, {
 
 //database.sync()
 
-module.exports = { Favourite, Image, Thread, Post, favourite_has_thread };
+module.exports = { Favourite, Image, Thread, Post, BW_List, favourite_has_thread };

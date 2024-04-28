@@ -1,4 +1,8 @@
-const {GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread, GetAllThreadsVue, GetThreadDataVue, ThreadExists} = require('../database/query-manager')
+const {
+    GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread,
+    GetAllThreadsVue, GetThreadDataVue, ThreadExists,Delete_BW_List_Entry,
+    Add_BW_List_Entry,GetBlacklist,GetWhitelist,UpdateBW_List
+} = require('../database/query-manager')
 
 //const settings = require('../settings.json')
 
@@ -24,6 +28,7 @@ let api_start_time = new Date();
 app.use(cors())
 
 app.set('json spaces', 40)
+app.use(express.json())
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/index.html'))
@@ -155,6 +160,67 @@ app.get('/vue/get_thread_data/:id', async (req, res) => {
     }
 })
 
+// #endregion
+
+// #region Black and White lists
+app.post('/bw_lists/create_bw_entry', async (req, res) => {
+    try{
+        console.log(req.body)
+
+        let response = await Add_BW_List_Entry(req.body)
+
+        res.send(response)
+        
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
+})
+app.get('/bw_lists/get_all_blacklist', async (req, res) => {
+    try{
+        res.send(await GetBlacklist())
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
+})
+app.get('/bw_lists/get_all_whitelist', async (req, res) => {
+    try{
+        res.send(await GetWhitelist())
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
+})
+app.put('/bw_lists/update_blacklist', async (req, res) => {
+    try{
+        console.log(req.body)
+
+        //res.send("Data received")
+
+        res.send(await UpdateBW_List({
+            tp_number: req.body['tp_number'],
+            comm: req.body['comm'],
+        }, req.body['id']))
+
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
+})
+app.delete('/bw_lists/delete_entry/:id', async (req, res) => {
+    try{
+        let response = await Delete_BW_List_Entry(parseInt(req.params['id']))
+
+        //res.send("Data received")
+
+        res.send(response)
+
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
+})
 // #endregion
 
 // #region Utilities
