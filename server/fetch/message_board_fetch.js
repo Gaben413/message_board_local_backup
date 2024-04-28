@@ -1,5 +1,5 @@
 const axios = require('axios');
-const {AddImage, AddThread, GetImage, GetThread, UpdateThread, IsThreadInList, AddPost, GetPost, GetAllPosts} = require('../database/query-manager')
+const {AddImage, AddThread, GetImage, GetThread, UpdateThread, IsThreadInList, AddPost, GetPost, GetAllPosts, GetBlacklist,GetWhitelist} = require('../database/query-manager')
 const {downloadImages} = require('./download-manager')
 
 const settings = require('../settings.json')
@@ -17,9 +17,21 @@ function fetch_thread(board_name, search_text){
         axios.get(url).then(async res => {
             for (let i = 0; i < res.data.length; i++) {
                 let threads = res.data[i]['threads']
+
+                let blacklist_no = [];
+                for(entry in await GetBlacklist()){
+                    blacklist_no.push(entry['tp_number'])
+                }
+                //Use white list later. Full make sure that Download will only pull images and no video or files
+                /*
+                let whitelist = [];
+                for(entry in await GetWhitelist()){
+                    whitelist.push(entry['tp_number'])
+                }
+                */
         
                 for (let e = 0; e < threads.length; e++) {
-                    if(check_data(threads[e]['sub'], search_text)){
+                    if(check_data(threads[e]['sub'], search_text) && !blacklist_no.includes(threads[e]['no'])){
                         if(logBool){
                             console.log(`Page ${i+1} | ID: ${threads[e]['no']} | ARCHVIED: ${check_if_closed(threads[e]['closed'])} | DATE: ${threads[e]['now']}`);
                         }else{
@@ -85,63 +97,70 @@ function fetch_thread(board_name, search_text){
 
 async function GetPostData(input, board_name){
     let thread_url = `https://a.4cdn.org/${board_name}/thread/${input}.json`
-    
+
+    let blacklist_no = [];
+    for(entry in await GetBlacklist()){
+        blacklist_no.push(entry['tp_number'])
+    }
+
     return new Promise((resolve, reject) => {
         let imageCount = 0;
         console.log(thread_url)
         axios.get(thread_url).then(async res => {
             for (let i = 0; i < res.data['posts'].length; i++) {
+                if(!blacklist_no.includes(res.data['posts'][i]['no'])){
+                    //if(i == 253) break;
 
-                //if(i == 253) break;
+                    if(res.data['posts'][i]['fsize'] != undefined){
+                        imageCount++;
 
-                if(res.data['posts'][i]['fsize'] != undefined){
-                    imageCount++;
+                        let filename = res.data['posts'][i]['filename'].replace(/[^a-zA-Z ]/g, "")
+                        if(filename == ""){
+                            filename = "file"
+                        }
 
-                    let filename = res.data['posts'][i]['filename'].replace(/[^a-zA-Z ]/g, "")
-                    if(filename == ""){
-                        filename = "file"
+                        let image_obj = {
+                            "tim": res.data['posts'][i]['tim'],
+                            "filename": filename,
+                            "filesize": res.data['posts'][i]['fsize'],
+                            "ext": res.data['posts'][i]['ext'],
+                        }
+
+                        if(await GetImage(image_obj['tim']) == "404"){
+                            await AddImage(image_obj)
+                        }
                     }
 
-                    let image_obj = {
-                        "tim": res.data['posts'][i]['tim'],
-                        "filename": filename,
-                        "filesize": res.data['posts'][i]['fsize'],
-                        "ext": res.data['posts'][i]['ext'],
-                    }
+                    if(await GetPost(res.data['posts'][i]['no']) == undefined){
+                        console.log('Post does not exist in DB\n')
+                        
+                        if(logBool){
+                            console.log(`POST ${i+1} | NO: ${res.data['posts'][i]['no']} | TIM: ${res.data['posts'][i]['tim']} | ${res.data['posts'][i]['now']}`)
+                        }else{
+                            console.log(`@@@@@@@@@@@@@@@@@@@@`)
+                            console.log(`${i+1} - ${res.data['posts'][i]['no']} - ${res.data['posts'][i]['name']} | ${res.data['posts'][i]['now']}`)
+                            console.log(`${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']} | ${res.data['posts'][i]['fsize']}B`)
+                            console.log(`Post Comment: ${res.data['posts'][i]['com']}`)
+                        }
 
-                    if(await GetImage(image_obj['tim']) == "404"){
-                        await AddImage(image_obj)
+                        let date = new Date(res.data['posts'][i]['time']*1000)
+                        let formatedDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+                        console.log(`Formated Date: ${formatedDate}`)
+
+                        await AddPost({
+                            "p_number": res.data['posts'][i]['no'],
+                            "p_date": formatedDate,
+                            "p_name": res.data['posts'][i]['name'],
+                            "p_tag": res.data['posts'][i]['tag'],
+                            "p_replies": res.data['posts'][i]['replies'],
+                            "p_link": `https://i.4cdn.org/${board_name}/${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']}`,
+                            "p_com": res.data['posts'][i]['com'],
+                            "i_tim": res.data['posts'][i]['tim'],
+                            "t_number": input,
+                        })
                     }
                 }
-
-                if(await GetPost(res.data['posts'][i]['no']) == undefined){
-                    console.log('Post does not exist in DB\n')
-                    
-                    if(logBool){
-                        console.log(`POST ${i+1} | NO: ${res.data['posts'][i]['no']} | TIM: ${res.data['posts'][i]['tim']} | ${res.data['posts'][i]['now']}`)
-                    }else{
-                        console.log(`@@@@@@@@@@@@@@@@@@@@`)
-                        console.log(`${i+1} - ${res.data['posts'][i]['no']} - ${res.data['posts'][i]['name']} | ${res.data['posts'][i]['now']}`)
-                        console.log(`${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']} | ${res.data['posts'][i]['fsize']}B`)
-                        console.log(`Post Comment: ${res.data['posts'][i]['com']}`)
-                    }
-
-                    let date = new Date(res.data['posts'][i]['time']*1000)
-                    let formatedDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-                    console.log(`Formated Date: ${formatedDate}`)
-
-                    await AddPost({
-                        "p_number": res.data['posts'][i]['no'],
-                        "p_date": formatedDate,
-                        "p_name": res.data['posts'][i]['name'],
-                        "p_tag": res.data['posts'][i]['tag'],
-                        "p_replies": res.data['posts'][i]['replies'],
-                        "p_link": `https://i.4cdn.org/${board_name}/${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']}`,
-                        "p_com": res.data['posts'][i]['com'],
-                        "i_tim": res.data['posts'][i]['tim'],
-                        "t_number": input,
-                    })
-                }
+                
             }
             console.log(`\nIMAGE COUNT: ${imageCount}`)
 
