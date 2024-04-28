@@ -17,7 +17,7 @@
             <div id="devider"></div>
             <div id="white-list">
                 <h4>Whitelist</h4>
-                <BW_CellComponent v-for="entry in whitelist" :cell_data="entry" />
+                <BW_CellComponent v-for="entry in whitelist" :cell_data="entry" @del="delete_entry" />
                 <button @click="create_entry('white')" v-if="!new_white_entry">NEW ENTRY</button>
                 <div v-else>
                     <label for="">Number: </label> <input type="text" name="" id="" v-model="new_white_tp_number">

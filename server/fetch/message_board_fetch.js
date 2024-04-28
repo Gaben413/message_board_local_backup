@@ -19,19 +19,24 @@ function fetch_thread(board_name, search_text){
                 let threads = res.data[i]['threads']
 
                 let blacklist_no = [];
-                for(entry in await GetBlacklist()){
-                    blacklist_no.push(entry['tp_number'])
+                let bl_raw = await GetBlacklist();
+                for(let i = 0; i < bl_raw.length; i++){
+                    blacklist_no.push(bl_raw[i]['tp_number']);
                 }
                 //Use white list later. Full make sure that Download will only pull images and no video or files
-                /*
+                
                 let whitelist = [];
-                for(entry in await GetWhitelist()){
-                    whitelist.push(entry['tp_number'])
+                let wl_raw = await GetWhitelist();
+                for (let i = 0; i < wl_raw.length; i++) {
+                    whitelist.push(wl_raw[i]['tp_number']);
+                    
                 }
-                */
-        
+                
                 for (let e = 0; e < threads.length; e++) {
-                    if(check_data(threads[e]['sub'], search_text) && !blacklist_no.includes(threads[e]['no'])){
+
+                    //console.log(`MAJOR TEST ${threads[e]['no']} | ${whitelist.includes(threads[e]['no'])}`)
+
+                    if((check_data(threads[e]['sub'], search_text) && !blacklist_no.includes(threads[e]['no']) || whitelist.includes(threads[e]['no']))){
                         if(logBool){
                             console.log(`Page ${i+1} | ID: ${threads[e]['no']} | ARCHVIED: ${check_if_closed(threads[e]['closed'])} | DATE: ${threads[e]['now']}`);
                         }else{
@@ -111,7 +116,7 @@ async function GetPostData(input, board_name){
                 if(!blacklist_no.includes(res.data['posts'][i]['no'])){
                     //if(i == 253) break;
 
-                    if(res.data['posts'][i]['fsize'] != undefined){
+                    if(res.data['posts'][i]['fsize'] != undefined && ['.png', '.jpg', 'jpeg', 'gif'].includes(res.data['posts'][i]['ext'])){
                         imageCount++;
 
                         let filename = res.data['posts'][i]['filename'].replace(/[^a-zA-Z ]/g, "")
