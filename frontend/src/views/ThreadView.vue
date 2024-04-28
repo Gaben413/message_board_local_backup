@@ -23,7 +23,8 @@
         <label for="raw-content">Raw Content</label>
       </div>
 
-      <div>
+      <div id="dp-div">
+        <label for="search">Comm Type: </label>
         <select name="" id="com-dropdown" v-model="com_mode">
           <option value="1">RAW</option>
           <option value="2">Plain Text</option>
@@ -221,7 +222,7 @@ h1{
   justify-content: space-around;
 }
 #utilities > div{
-  margin: 10px 0px;
+  margin: auto;
 }
 #utilities > div > label{
   color: black;
@@ -244,5 +245,20 @@ h1{
 #thread-download:hover{
   background-color: v-bind(button_color_hover);
   cursor: pointer;
+}
+#dp-div{
+    margin: auto;
+  }
+@media only screen and (max-width: 600px) {
+  #utilities{
+    height: 80px;
+  }
+  #utilities > div > input{
+    width: 125px;
+  }
+  #thread-download{
+    margin: auto;
+    height: 50px;
+  }
 }
 </style>

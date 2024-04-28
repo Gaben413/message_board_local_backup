@@ -91,4 +91,15 @@ export default {
 .thread-comp{
   margin: auto;
 }
+
+@media only screen and (max-width: 600px) {
+  #threads-grid{
+    display: block;
+    /*
+    grid-template-columns: auto auto auto auto;
+    
+    gap: 5px;
+    */
+  }
+}
 </style>

@@ -180,4 +180,32 @@ export default{
 
     align-self: center;
 }
+@media only screen and (max-width: 600px) {
+    .container{ 
+        margin: 5px;
+        max-width: 95%;
+
+    }
+    .item1{
+        padding-left: 2px;
+
+        width: 100%;
+
+    }
+    .item3{
+        min-width: 50px;
+
+        text-align: left;
+    }
+    .item3 > p{
+        margin-top: 2px;
+        margin-bottom: 5px;
+
+        width: 200px;
+        overflow-wrap: break-word;
+    }
+    .header-text{
+        overflow-wrap: break-word;
+    }
+}
 </style>

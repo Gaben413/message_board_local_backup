@@ -321,4 +321,27 @@ export default{
     visibility: visible;
     opacity: 1;
 }
+
+@media only screen and (max-width: 600px) {
+    .container{
+        margin: 5px;
+
+        overflow: hidden;
+    }
+    .item1_p{
+        padding-left: 2px;
+
+        overflow: hidden;
+    }
+    .item2_p{
+        overflow-x: scroll;
+    }
+    .item3_p{
+        margin: 2px;
+    }
+    .item3_p > p{
+        width: 200px;
+        overflow-wrap: break-word;
+    }
+}
 </style>

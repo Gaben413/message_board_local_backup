@@ -80,4 +80,17 @@
 .timerLabel{
     padding-right: 25px;
 }
+
+@media only screen and (max-width: 600px) {
+    .footerContainer{
+        border-top-right-radius: 15px;
+        border-top-left-radius: 15px;
+
+        width: auto;
+        height: 40px;
+    }
+    .footerContainer > label{
+        overflow-wrap: break-word;
+    }
+}
 </style>
