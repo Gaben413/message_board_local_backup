@@ -7,7 +7,6 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
-    "manual_fetch": "node manual_fetch.js",
     "sync": "node database/sync-db.js",
     "sync2": "node database/models.js",
     "fetch": "node fetch/message_board_local_backup.js",

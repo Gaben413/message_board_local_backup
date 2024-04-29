@@ -292,6 +292,7 @@ app.get('/manual_fetch/', async (req, res) => {
     try{
         const {main} = require('../manual_fetch');
         console.log("Fetching");
+        main()
         res.json({
             "status":'EXECUTING MANUAL FETCH'
         })

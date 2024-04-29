@@ -29,7 +29,6 @@ function fetch_thread(board_name, search_text){
                 let wl_raw = await GetWhitelist();
                 for (let i = 0; i < wl_raw.length; i++) {
                     whitelist.push(wl_raw[i]['tp_number']);
-                    
                 }
                 
                 for (let e = 0; e < threads.length; e++) {
