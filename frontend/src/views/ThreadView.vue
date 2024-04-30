@@ -38,25 +38,24 @@
 
     <h1 id="TopMain">
       Thread - {{ this.thread_data['t_number'] }} - {{ this.thread_data['t_sub'] }} - {{ this.thread_data['t_board'] }} |
-       <a v-if="this.thread_data['t_archived']" :href="this.thread_data['t_link']" target="_blank">Archived</a> <a :href="this.thread_data['t_link']"  target="_blank" v-else>On Going</a>
+
+      <a :href="this.thread_data['t_link']" target="_blank">
+        <span v-if="this.thread_data['t_archived']">Archived</span>
+        <span v-else>On Going</span>
+      </a>
+
     </h1>
 
-    <div v-for="data in post_data" :key="data.key" class="thread-comp">
-      <PostComponent :data="data" :test_prop="raw_model" :colors="{'border_color': border_color,'body_color': body_color,'bottom_color': bottom_color,'text_color': text_color}" :com_mode="com_mode"/>
-    </div>
-    <!--
-    <div class="threads" v-if="threads_data.length">
-      <div v-for="data in threads_data" :key="data.key" class="thread-comp">
-        <ThreadComponent :data="data" @click="test(data.key)"/>
-      </div>
-      
-      
-      <PostComponent />
-      <PostComponent />
-      <PostComponent />
-      
-    </div>
-    -->
+    <PostComponent class="post-comp" v-for="data in post_data" :key="data.key"
+      :data="data" :test_prop="raw_model"
+      :colors="{
+        'border_color': border_color,
+        'body_color': body_color,
+        'bottom_color': bottom_color,
+        'text_color': text_color
+        }"
+      :com_mode="com_mode"
+    />
   </div>
 </template>
 
@@ -203,7 +202,7 @@ export default {
 <style>
 #main-thread{
   background-color: v-bind(bg_color);
-
+  padding-bottom: 10px;
 }
 h1{
   color: v-bind(text_color);
@@ -229,14 +228,14 @@ h1{
 #utilities > div > label{
   color: black;
 }
+
 #TopMain{
   margin-top: 0px;
 }
 
 #thread-download{
-  /*height: 37px;*/
 
-  margin: 5px 0px;
+  margin: 5px auto;
 
   color: v-bind(button_text_color);
   background-color: v-bind(button_color);
@@ -247,20 +246,5 @@ h1{
 #thread-download:hover{
   background-color: v-bind(button_color_hover);
   cursor: pointer;
-}
-#dp-div{
-    margin: auto;
-  }
-@media only screen and (max-width: 600px) {
-  #utilities{
-    height: 80px;
-  }
-  #utilities > div > input{
-    width: 125px;
-  }
-  #thread-download{
-    margin: auto;
-    height: 50px;
-  }
 }
 </style>

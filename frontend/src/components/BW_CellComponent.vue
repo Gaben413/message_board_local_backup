@@ -70,6 +70,7 @@
 </script>
 
 <style>
+
     #display-cell-grid{
         display: grid;
         grid-template-columns: auto 500px auto;
@@ -87,4 +88,5 @@
         background: rgb(221,255,218);
         background: radial-gradient(circle, rgba(221,255,218,1) 0%, rgba(255,255,255,0) 100%); 
     }
+    
 </style>

@@ -12,6 +12,7 @@
   </div>
   
   <router-view/>
+
   <button id="fetchbutton" v-on:click="manual_fetch">Manual Fetch</button>
   <button id="scrollbutton" v-on:click="topFunction">Top</button>
   <FooterComponent/>
@@ -78,7 +79,6 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-bottom: 20px;
 }
 body{
   background-color: white;
@@ -107,7 +107,6 @@ nav a.router-link-exact-active {
 }
 
 #nav-div{
-  /*background-color: red;*/
   background: rgb(255,255,255);
   background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(221,255,218,1) 100%); 
   height: 50px;

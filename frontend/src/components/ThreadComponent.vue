@@ -1,20 +1,29 @@
 <template>
-    <div class="container" @click="to_thread">
-        <div class="item1">
-            <p class="header-text">{{ data.t_number }} | {{ data.t_sub }} - {{ data.t_board }}</p>
-        </div>
-        <img :src="data.filepath" alt="threadImage" class="img-min item2">
-        <div class="item3">
-            <p v-for="line in remove_anchor(data.p_com).split('<br>')">{{ line }}</p>
-        </div>
-        <div class="item4">
-            <p v-if="data.t_archived" class="archived-text">archived</p>
-            <p v-else class="archived-text">on going</p>
-        </div>
-    </div>
+    <div>
+        <div id="container" @click="to_thread">
+            <!--
+            <div class="item1">
+                <p class="header-text">{{ data.t_number }} | {{ data.t_sub }} - {{ data.t_board }}</p>
+            </div>
+            -->
 
-    <p>{{ display_date }}</p>
-    
+            <p id="header-text">{{ data.t_number }} | {{ data.t_sub }} - {{ data.t_board }}</p>
+
+            <div id="content">
+                <img :src="data.filepath" alt="threadImage" class="img-min image-item">
+                <p v-for="line in remove_anchor(data.p_com).split('<br>')" class="content-p">{{ line }}</p>
+            </div>
+            
+
+            <p id="bottom-content">
+                <span v-if="data.t_archived" >archived</span>
+                <span v-else>on going</span>
+            </p>
+
+        </div>
+
+        <p>{{ display_date }}</p>
+    </div>
 </template>
 
 <script>
@@ -77,10 +86,11 @@ export default{
 </script>
 
 <style>
-.container{
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-    gap: 0px 0px;
+#container{
+
+    /*padding: 5px;*/
+
+    overflow: hidden;
 
     margin: 15px;
 
@@ -92,16 +102,37 @@ export default{
 
     width: fit-content;    
     max-width: 500px;
-    /*
-    max-height: 750px;
-    max-width: 75%;
-    */
 }
-/*
-.container:hover{
-    border-color: rgb(63, 255, 111);
+
+#header-text{
+    margin: 0px;
+
+    text-align: center;
+
+    color: v-bind(text_color);
+    background-color: v-bind(border_color);
 }
-*/
+
+#content{
+    min-height: 150px;
+    padding: 5px;
+}
+
+.content-p{
+    margin: 5px;
+    text-align: left;
+}
+
+#bottom-content{
+    margin: 0px;
+    background-color: v-bind(bottom_color);
+}
+
+.image-item{
+    float: left;
+    margin-right: 15px;
+}
+
 .img-min{
     height: 150px;
 }
@@ -109,103 +140,4 @@ export default{
     height: 350px;
 }
 
-.header-text{
-    margin: 0;
-
-    text-align: left;
-
-    color: v-bind(text_color);
-}
-
-.item1{
-    margin: 0;
-
-    padding-left: 15px;
-
-    height: fit-content;
-
-    grid-column: 1/5;
-
-    background: v-bind(border_color);
-    border-radius: 6px 6px 0 0;
-}
-
-.item2{
-    margin: 0;
-    padding: 0;
-}
-
-.item3{
-    margin: 0px 0px 0px 10px;
-    padding: 0;
-
-    grid-column: 2/5;
-
-    min-width: 250px;
-
-    text-align: left;
-}
-.item3 > p{
-    margin-top: 2px;
-    margin-bottom: 5px;
-}
-
-.item4{
-    margin: 0;
-    padding-left: 15px;
-    padding-right: 10px;
-    background: v-bind(bottom_color);
-
-    height: fit-content;
-
-    grid-column: 1/5;
-
-    align-content: center;
-
-    border-radius: 0 0 6px 6px;
-}
-.item4 > p{
-    width: 100%;
-    text-align: center;
-    margin: 0;
-}
-
-.archived-text{
-    float: left;
-}
-.date-text{
-    font-size: 10px;
-
-    margin: 0;
-
-    align-self: center;
-}
-@media only screen and (max-width: 600px) {
-    .container{ 
-        margin: 5px;
-        max-width: 95%;
-
-    }
-    .item1{
-        padding-left: 2px;
-
-        width: 100%;
-
-    }
-    .item3{
-        min-width: 50px;
-
-        text-align: left;
-    }
-    .item3 > p{
-        margin-top: 2px;
-        margin-bottom: 5px;
-
-        width: 200px;
-        overflow-wrap: break-word;
-    }
-    .header-text{
-        overflow-wrap: break-word;
-    }
-}
 </style>

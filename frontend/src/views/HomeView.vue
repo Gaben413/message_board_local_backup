@@ -13,9 +13,9 @@
     <h1>Thread Lists</h1>
 
     <div class="threads" v-if="threads_data.length" id="threads-grid">
-      <div v-for="data in threads_data" :key="data.key" class="thread-comp">
-        <ThreadComponent :data="data"/>
-      </div>
+
+      <ThreadComponent v-for="data in threads_data" :key="data.key" class="thread-comp" :data="data"/>
+
     </div>
     
   </div>
@@ -99,6 +99,7 @@ export default {
   
   background-color: #90ee90;
 }
+
 #home{
   padding: 5px;
   display: fixed;
@@ -110,6 +111,7 @@ export default {
   background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(221,255,218,1) 100%); 
   min-height: 100%;
 }
+
 #threads-grid{
   display: grid;
   
@@ -117,20 +119,9 @@ export default {
   
   gap: 5px;
 
-  /*min-height: 87vh;*/
+
 }
 .thread-comp{
   margin: auto;
-}
-
-@media only screen and (max-width: 600px) {
-  #threads-grid{
-    display: block;
-    /*
-    grid-template-columns: auto auto auto auto;
-    
-    gap: 5px;
-    */
-  }
 }
 </style>

@@ -1,10 +1,12 @@
 <template>
-    <div class="container" :id="'p'+data.p_number">
-        <div class="item1_p">
-            <p class="header-text"> {{ (data.key + 1) }} - {{ data.p_number }} | {{ data.p_name }} | <a v-for="reply in post_reply" :href="reply" class="reply tooltip">@<span class="tooltiptext">{{ reply }}</span></a></p>
-        </div>
-        <img :src="data.img_data.file_path" alt="threadImage" :id="'img_'+data.p_number" class="img-min_p img-max_p item2_p" v-if="data.img_data.has_image" v-on:click="ChangeImageZoom(data.p_number)">
-        <div class="item3_p">
+    <div class="post-container" :id="'p'+data.p_number">
+
+        <p id="post-header-text">
+             {{ (data.key + 1) }} - {{ data.p_number }} | {{ data.p_name }} | <a v-for="reply in post_reply" :href="reply" class="reply tooltip">@<span class="tooltiptext">{{ reply }}</span></a>
+        </p>
+
+        <div id="post-contents">
+            <img :src="data.img_data.file_path" alt="threadImage" :id="'img_'+data.p_number" class="img-min_p img-max_p post-image" v-if="data.img_data.has_image" v-on:click="ChangeImageZoom(data.p_number)">
 
             <p class="regular-com" v-if="com_mode == 1" v-for="line in comment.split('\n')" id="raw_content">{{ line }}</p>
 
@@ -14,14 +16,9 @@
                 <a :href="'#'+com.href" v-if="com.type == 'reply'" :class="com.type">{{ com.content }}</a>
                 <p v-else :class="com.type">{{ com.content }}</p>
             </div>
-            
         </div>
-        <!--
-        <a href="#141291547">Go Top</a>
-        -->
-        <div class="item4_p">
-            <p class="date-text">{{ display_date }}</p>
-        </div>
+
+        <p id="date-text">{{ display_date }}</p>
         
     </div>
     
@@ -148,15 +145,8 @@ export default{
 }
 </script>
 
-<style scoped>
-#raw_content{
-    color: black;
-}
-.container{
-    display: grid;
-    grid-template-columns: auto auto auto auto;
-    gap: 0px 0px;
-
+<style>
+.post-container{
     margin: 15px;
 
     background-color: v-bind(body_color);
@@ -165,115 +155,47 @@ export default{
     border-radius: 10px;
     border-color: v-bind(border_color);    
 
-    width: fit-content;    
-    /*
-    max-height: 750px;
-    max-width: 75%;
-    */
-}
-/*
-.container:hover{
-    border-color: rgb(63, 255, 111);
-}
-*/
-.img-min_p{
-    width: 150px;
-}
-.img-max_p{
-    max-width: 750px;
+    width: fit-content;
+
+    overflow: hidden;
 }
 
-.header-text{
+#post-header-text{
     color: v-bind(text_color);
 
     margin: 0;
-
-    text-align: left;
-}
-
-.item1_p{
-    margin: 0;
-
-    padding-left: 10px;
-
-    height: fit-content;
-
-    grid-column: 1/5;
-
-    background: v-bind(border_color);
-    border-radius: 6px 6px 0 0;
-}
-
-.item2_p{
-    margin: 0;
-    padding: 0;
-}
-
-.item3_p{
-    margin: 10px 10px 5px 10px;
-    padding: 0;
-
-    grid-column: 2/5;
-
-    min-width: 250px;
-
-    text-align: left;
-}
-/*
-.item3_p > p{
-    margin: 0;
-}
-*/
-.item4_p{
-    display: flex;
-    align-content: center;
-    justify-content: space-between;
-
-    margin: 0;
     padding-left: 15px;
-    padding-right: 10px;
-    background: v-bind(bottom_color);
+    text-align: left;
 
+    background-color: v-bind(border_color);
+}
+
+#post-contents{
+    display: flow-root;
     height: fit-content;
-
-    grid-column: 1/5;
-
-    align-content: center;
-
-    border-radius: 0 0 6px 6px;
+    margin: 5px;
 }
-.item4_p > p{
-    text-align: right;
-    /*margin: 0;*/
-}
+.post-image{
+    float: left;
 
-.quote{
-    color: darkolivegreen;
+    margin-right: 15px;
+    margin-bottom: 5px;
 }
-
-.com{
-    color: black;
+.regular-com{
+    margin: 5px;
     text-align: left;
 }
 
-.p-com{
-    margin: 5px 0px 5px 0px;
-}
+#date-text{
+    margin: 0px;
 
-.archived-text{
-    float: left;
-}
-.date-text{
-    font-size: 10px;
+    background-color: v-bind(bottom_color);
 
-    margin: 0;
+    font-size: 12px;
+    padding-right: 15px;
+    text-align: right;
 
-    align-self: center;
-}
-
-.regular-com{
-    color: black;
-    margin: 0px 0px 10px 0px;
+    bottom: 0px;
 }
 
 .reply{
@@ -322,26 +244,10 @@ export default{
     opacity: 1;
 }
 
-@media only screen and (max-width: 600px) {
-    .container{
-        margin: 5px;
-
-        overflow: hidden;
-    }
-    .item1_p{
-        padding-left: 2px;
-
-        overflow: hidden;
-    }
-    .item2_p{
-        overflow-x: scroll;
-    }
-    .item3_p{
-        margin: 2px;
-    }
-    .item3_p > p{
-        width: 200px;
-        overflow-wrap: break-word;
-    }
+.img-min_p{
+    width: 150px;
+}
+.img-max_p{
+    max-width: 750px;
 }
 </style>

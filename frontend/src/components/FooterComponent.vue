@@ -58,6 +58,7 @@
 </script>
 
 <style>
+
 .footerContainer{
     position: fixed;
     left: 0;
@@ -95,4 +96,5 @@
         overflow-wrap: break-word;
     }
 }
+
 </style>

@@ -150,6 +150,7 @@
 </script>
 
 <style>
+
     #bw-grid{
         display: grid;
         grid-template-columns: 49% 1px 49%;
@@ -157,4 +158,5 @@
     #devider{
         background-color: black;
     }
+    
 </style>
