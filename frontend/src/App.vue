@@ -50,13 +50,14 @@
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
       },
       manual_fetch(){
+        this.token = localStorage.getItem("board-access-token") || ""
         let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
     
         axios.get(`${axios_link}manual_fetch/`, {headers: {'board-access-token': this.token}})
         .then((res) => {
 
           console.log(res.data.status)
-        })
+        }).catch(err => console.log(`Error: ${err}`));
       }
     },
     watch: {

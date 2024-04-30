@@ -2,7 +2,7 @@
     <h1>SETTINGS</h1>
     <div id="bw-div">
         <h2>Black and White LIST</h2>
-        <div id="bw-grid">
+        <div id="bw-grid" v-if="authenticated">
             <div id="black-list">
                 <h4>Blacklist</h4>
                 <BW_CellComponent v-for="entry in blacklist" :cell_data="entry" @del="delete_entry" />
@@ -54,8 +54,10 @@
                 new_white_tp_number: "",
                 new_white_comm: "",
 
+                authenticated: false,
+
                 axios_link: `http://${settings['axios_ip']}:${settings['axios_port']}/`,
-                
+
                 token: localStorage.getItem("board-access-token") || ""
             }
         },
@@ -68,13 +70,25 @@
                 console.log("Reload")
                 axios.get(`${this.axios_link}bw_lists/get_all_blacklist`, {headers: {'board-access-token': this.token}})
                 .then((res) => {
+                    this.authenticated = true;
+
                     this.blacklist = res.data
                     console.log(this.blacklist)
+                }).catch(err => {
+                    this.authenticated = false;
+
+                    console.log(`Error: ${err}`)
                 })
+                
                 axios.get(`${this.axios_link}bw_lists/get_all_whitelist`, {headers: {'board-access-token': this.token}})
                 .then((res) => {
+                    this.authenticated = true;
+
                     this.whitelist = res.data
                     console.log(this.whitelist)
+                }).catch(err => {
+                    this.authenticated = false;
+                    console.log(`Error: ${err}`)
                 })
             },
 

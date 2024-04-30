@@ -8,13 +8,16 @@
         <input type="password" name="" id="" v-model="password">
         <br><br>
         <button @click="submit">Submit</button>
+        <!--
         <button @click="check">CHECK</button>
+        -->
     </div>
     <p>{{ token }}</p>
 </template>
 
 <script>
     import axios from 'axios'
+    import router from '@/router'
 
     import settings from '../assets/frontend-settings.json'
 
@@ -44,6 +47,8 @@
                 axios.post(`${this.axios_link}login`, login).then(res => {
                     localStorage.setItem("board-access-token", res.data.token)
                     console.log(res.data);
+
+                    router.push({path: '/'})
                 })
 
                 console.log(login);

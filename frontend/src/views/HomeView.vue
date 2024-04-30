@@ -1,16 +1,21 @@
 <template>
+
+    <div id="error-div" v-if="!autheticated">
+      <div id="error-body">
+        <h1>Failed to Authenticate</h1>
+        <h2>Please login to access site's contents</h2>
+
+        <a href="/login">LOGIN</a>
+      </div>
+    </div>
+
   <div id="home">
     <h1>Thread Lists</h1>
+
     <div class="threads" v-if="threads_data.length" id="threads-grid">
       <div v-for="data in threads_data" :key="data.key" class="thread-comp">
         <ThreadComponent :data="data"/>
       </div>
-      
-      <!--
-      <PostComponent />
-      <PostComponent />
-      <PostComponent />
-      -->
     </div>
     
   </div>
@@ -40,7 +45,9 @@ export default {
         {name: "name2", t_number: "20", t_archived: 0, key: 2},
         {name: "name3", t_number: "30", t_archived: 1, key: 3},
       ],
-      
+
+      autheticated: false,
+
       token: localStorage.getItem("board-access-token") || ""
     }
   },
@@ -49,7 +56,7 @@ export default {
     
     axios.get(`${axios_link}vue/get_threads/`,  {headers: {'board-access-token': this.token}})
     .then((res) => {
-
+      this.autheticated = true;
       let keyNumber = 1;
 
       res.data.forEach(data => {
@@ -60,6 +67,9 @@ export default {
       });
 
       console.log(this.threads_data)
+    }).catch(err => {
+      this.autheticated = false;
+      console.log(`Error: ${err}`)
     })
     
   },
@@ -70,6 +80,25 @@ export default {
 </script>
 
 <style>
+#error-div{
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  background-color: #0000005d;
+}
+#error-body{
+  margin: 100px auto auto auto;
+
+  width: 25%;
+
+  padding: 25px;
+
+  border-radius: 15px;
+  
+  background-color: #90ee90;
+}
 #home{
   padding: 5px;
   display: fixed;
