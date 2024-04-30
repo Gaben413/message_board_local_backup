@@ -1,9 +1,9 @@
 <template>
     <div>
         <div v-if="!edit" id="display-cell-grid" class="cell">
-            <button @click="$emit('del', cell_data['bwl_id'])">X</button>
+            <button class="cell-button" @click="$emit('del', cell_data['bwl_id'])">X</button>
             <label for="">{{ cell_data['bwl_id'] }} - Number: {{ edit_tp_number }} | {{ edit_comm }}</label>
-            <button @click="toggle_edit">EDIT</button>
+            <button class="cell-button" @click="toggle_edit">EDIT</button>
         </div>
         <div v-else id="edit-cell-grid" class="cell">
             <div>
@@ -15,8 +15,8 @@
                 <input type="text" name="" id="" v-model="edit_comm">
             </div>
             <div>
-                <button @click="save">Save</button>
-                <button @click="toggle_edit">Cancel</button>
+                <button class="cell-button" @click="save">Save</button>
+                <button class="cell-button" @click="toggle_edit">Cancel</button>
             </div>
             
         </div>
@@ -70,23 +70,40 @@
 </script>
 
 <style>
-
     #display-cell-grid{
         display: grid;
         grid-template-columns: auto 500px auto;
 
         justify-content: center;
 
-        margin: 10px 25px;
+        margin: 10px 15px;
     }
     #edit-cell-grid{
         display: grid;
-        grid-template-columns: auto auto 100px;
+        grid-template-columns: auto auto 200px;
         margin: 10px 25px;
     }
     .cell{
+        padding: 5px;
+
         background: rgb(221,255,218);
         background: radial-gradient(circle, rgba(221,255,218,1) 0%, rgba(255,255,255,0) 100%); 
+    }
+
+    .cell-button{
+        margin: 0px 5px;
+        padding: 5px 10px;
+
+        background-color: rgb(0, 180, 0);
+
+        border-radius: 5px;
+        border-style: none;
+    }
+    .cell-button:hover{
+        background-color: darkgreen;
+    }
+    .cell-button:active{
+        background-color: rgb(0, 58, 0);
     }
     
 </style>
