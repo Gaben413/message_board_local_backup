@@ -16,8 +16,9 @@
             
 
             <p id="bottom-content">
-                <span v-if="data.t_archived" >archived</span>
-                <span v-else>on going</span>
+                <span v-if="data.t_archived" >Archived</span>
+                <span v-else>On Going</span>
+                - Posts: {{ data.t_replies_amount }}
             </p>
 
         </div>

@@ -12,6 +12,18 @@
   <div id="home">
     <h1>Thread Lists</h1>
 
+    <label for="">Organize: </label>
+    <select name="" id="" @change="organize" v-model="organize_index">
+      <option value="1">Archived/Ongoing</option>
+      <option value="2">Date: Oldest</option>
+      <option value="3">Date: Newest</option>
+      <option value="4">By Board</option>
+      <option value="5">By Thread Number</option>
+      <option value="6">By Title</option>
+      <option value="7">Replies: Ascending</option>
+      <option value="8">Replies: Descending</option>
+    </select>
+
     <div class="threads" v-if="threads_data.length" id="threads-grid">
 
       <ThreadComponent v-for="data in threads_data" :key="data.key" class="thread-comp" :data="data"/>
@@ -40,6 +52,7 @@ export default {
   data(){
     return{
       threads_data: [],
+      organize_index: 1,
       dummy_data: [
         {name: "name1", t_number: "10", t_archived: 1, key: 1},
         {name: "name2", t_number: "20", t_archived: 0, key: 2},
@@ -66,6 +79,8 @@ export default {
         keyNumber++;
       });
 
+      this.organize()
+
       console.log(this.threads_data)
     }).catch(err => {
       this.autheticated = false;
@@ -74,7 +89,40 @@ export default {
     
   },
   methods: {
+    organize(){
+      console.log(`Organizing Thread: ${this.organize_index}`)
 
+      this.threads_data.sort((a,b) => {
+        //Later replace with a switch
+        if(this.organize_index == 1){
+          //Archived
+          return a["t_archived"] - b["t_archived"]
+        }else if(this.organize_index == 2){
+          //Oldest
+          return parseFloat(new Date(a["t_date"]).getTime()) - parseFloat(new Date(b["t_date"]).getTime())
+        }else if(this.organize_index == 3){
+          //Newest
+          return parseFloat(new Date(b["t_date"]).getTime()) - parseFloat(new Date(a["t_date"]).getTime())
+        }else if(this.organize_index == 4){
+          //Board
+          let text_a = a["t_board"].toLowerCase();
+          let text_b = b["t_board"].toLowerCase();
+          return (text_a < text_b) ? -1 : (text_a > text_b) ? 1 : 0;
+        }else if(this.organize_index == 5){
+          //Number
+          return parseFloat(a["t_number"]) - parseFloat(b["t_number"])
+        }else if(this.organize_index == 6){
+          //Title
+          let text_a = a["t_sub"].toLowerCase();
+          let text_b = b["t_sub"].toLowerCase();
+          return (text_a < text_b) ? -1 : (text_a > text_b) ? 1 : 0;
+        }else if(this.organize_index == 7){
+          return parseFloat(a["t_replies_amount"]) - parseFloat(b["t_replies_amount"])
+        }else if(this.organize_index == 8){
+          return parseFloat(b["t_replies_amount"]) - parseFloat(a["t_replies_amount"])
+        }
+      })
+    }
   }
 }
 </script>

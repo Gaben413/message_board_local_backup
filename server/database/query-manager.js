@@ -415,6 +415,7 @@ async function GetAllThreadsVue(){
             't_date': threads[i]['t_date'],
             't_link': threads[i]['t_link'],
             'p_com': post[0]['p_com'],
+            't_replies_amount': threads[i]['t_replies'],
             'filepath': file_path
         }
         
@@ -442,6 +443,7 @@ async function GetThreadDataVue(id){
         't_archived': thread['t_archived'],
         't_sub': thread['t_sub'],
         't_link': thread['t_link'],
+        't_replies_amount': thread['t_replies']
     }
 
     let posts = await Post.findAll({
