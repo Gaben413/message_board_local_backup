@@ -1,4 +1,6 @@
+require('dotenv').config()
 const {
+    AddUser, GetUser, UsernameExists,
     GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread,
     GetAllThreadsVue, GetThreadDataVue, ThreadExists,Delete_BW_List_Entry,
     Add_BW_List_Entry,GetBlacklist,GetWhitelist,UpdateBW_List
@@ -11,6 +13,7 @@ const {root_path, thread_folder, folder_name, api_port} = require('../settings')
 let AdmZip = require('adm-zip');
 
 const express = require('express')
+const jwt = require('jsonwebtoken')
 //const fs = require('fs')
 const path = require('path')
 const cors = require('cors');
@@ -22,6 +25,7 @@ const app = express()
 //let root_path = settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'];
 //let thread_folder = root_path + settings['settings']['folder_name'] + '';
 
+const SECRET = process.env.SECRET;
 
 let api_start_time = new Date();
 
@@ -38,8 +42,37 @@ app.get('/db', async (req, res) => {
     res.send("DB section!")
 })
 
+function verifyJWT(req, res, next){
+    const token = req.headers['board-access-token'];
+    jwt.verify(token, SECRET, (err, decoded) => {
+        if(err) return res.status(401).end();
+
+        req.userId = decoded.userId;
+        next();
+    })
+}
+
+app.get('/test', verifyJWT, (req, res) => {
+    console.log(req.userId + ' made the call');
+    res.json({status: "It worked"});
+})
+
+// #region USER
+app.post('/login', async (req, res) => {
+    if(await UsernameExists(req.body['username'])){
+        const user = await GetUser(req.body['username']);
+
+        if(user['username'] === req.body['username'] && user['password'] === req.body['password']){
+            const token = jwt.sign({userId: 1}, SECRET, {});
+            return res.json({auth: true, token});
+        }
+    }
+    res.status(401).end();
+})
+// #endregion
+
 // #region THREADS
-app.get('/db/get_all_threads', async (req, res) => {
+app.get('/db/get_all_threads', verifyJWT, async (req, res) => {
     try{
         res.send(await GetAllThreads())
     }catch(err){
@@ -47,7 +80,7 @@ app.get('/db/get_all_threads', async (req, res) => {
         res.send('error')
     }
 })
-app.get('/db/get_thread/:id', async (req, res) => {
+app.get('/db/get_thread/:id', verifyJWT, async (req, res) => {
     try{
         res.send(await GetThread(parseInt(req.params['id'])))
     }catch(err){
@@ -60,7 +93,7 @@ app.get('/db/get_thread/:id', async (req, res) => {
 // #endregion
 
 // #region POSTS
-app.get('/db/get_all_posts', async (req, res) => {
+app.get('/db/get_all_posts', verifyJWT, async (req, res) => {
     res.send(await GetAllPosts())
 })
 app.get('/db/get_post/:id', async (req, res) => {
@@ -71,7 +104,7 @@ app.get('/db/get_post/:id', async (req, res) => {
         res.send(`Error: ${err}`)
     }
 })
-app.get('/db/get_thread_posts/:id', async (req, res) => {
+app.get('/db/get_thread_posts/:id', verifyJWT, async (req, res) => {
     try{
         res.send(await GetAllPostsFromThread(parseInt(req.params['id'])))
     }catch(err){
@@ -143,7 +176,7 @@ app.get('/db/get_image_file/:id', async (req, res) => {
 
 // #region Vue Return
 
-app.get('/vue/get_threads/', async (req, res) => {
+app.get('/vue/get_threads/', verifyJWT, async (req, res) => {
     try{
         res.send(await GetAllThreadsVue())
     }catch(err){
@@ -151,7 +184,7 @@ app.get('/vue/get_threads/', async (req, res) => {
         res.send(`Error: ${err}`)
     }
 })
-app.get('/vue/get_thread_data/:id', async (req, res) => {
+app.get('/vue/get_thread_data/:id', verifyJWT, async (req, res) => {
     try{
         res.send(await GetThreadDataVue(parseInt(req.params['id'])))
     }catch(err){
@@ -163,7 +196,7 @@ app.get('/vue/get_thread_data/:id', async (req, res) => {
 // #endregion
 
 // #region Black and White lists
-app.post('/bw_lists/create_bw_entry', async (req, res) => {
+app.post('/bw_lists/create_bw_entry', verifyJWT, async (req, res) => {
     try{
         console.log(req.body)
 
@@ -176,7 +209,7 @@ app.post('/bw_lists/create_bw_entry', async (req, res) => {
         res.send(`Error: ${err}`)
     }
 })
-app.get('/bw_lists/get_all_blacklist', async (req, res) => {
+app.get('/bw_lists/get_all_blacklist', verifyJWT, async (req, res) => {
     try{
         res.send(await GetBlacklist())
     }catch(err){
@@ -184,7 +217,7 @@ app.get('/bw_lists/get_all_blacklist', async (req, res) => {
         res.send(`Error: ${err}`)
     }
 })
-app.get('/bw_lists/get_all_whitelist', async (req, res) => {
+app.get('/bw_lists/get_all_whitelist', verifyJWT, async (req, res) => {
     try{
         res.send(await GetWhitelist())
     }catch(err){
@@ -192,7 +225,7 @@ app.get('/bw_lists/get_all_whitelist', async (req, res) => {
         res.send(`Error: ${err}`)
     }
 })
-app.put('/bw_lists/update_blacklist', async (req, res) => {
+app.put('/bw_lists/update_blacklist', verifyJWT, async (req, res) => {
     try{
         console.log(req.body)
 
@@ -208,7 +241,7 @@ app.put('/bw_lists/update_blacklist', async (req, res) => {
         res.send(`Error: ${err}`)
     }
 })
-app.delete('/bw_lists/delete_entry/:id', async (req, res) => {
+app.delete('/bw_lists/delete_entry/:id', verifyJWT, async (req, res) => {
     try{
         let response = await Delete_BW_List_Entry(parseInt(req.params['id']))
 
@@ -245,7 +278,7 @@ app.get('/status', async (req, res) => {
 })
 
 //Return file
-app.get('/file/:id', async (req, res) => {
+app.get('/file/:id', verifyJWT, async (req, res) => {
     try{
         let thread_id = req.params['id'];
 
@@ -288,7 +321,7 @@ app.get('/file/:id', async (req, res) => {
 })
 
 //Return file
-app.get('/manual_fetch/', async (req, res) => {
+app.get('/manual_fetch/', verifyJWT, async (req, res) => {
     try{
         const {main} = require('../manual_fetch');
         console.log("Fetching");

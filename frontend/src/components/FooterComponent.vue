@@ -18,7 +18,9 @@
                 api_data: {
                     "api_running": false,
                 },
-                time: "00:00:00"
+                time: "00:00:00",
+                
+                token: localStorage.getItem("board-access-token") || ""
             }
         },
         mounted(){
@@ -35,7 +37,7 @@
             let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
             //console.log(axios_link)
 
-            axios.get(`${axios_link}status`)
+            axios.get(`${axios_link}status`, {headers: {'board-access-token': this.token}})
             .then((res) => {
                 this.api_data = res.data
             }).catch((err) => {

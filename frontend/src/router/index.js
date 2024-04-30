@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import ThreadView from '../views/ThreadView.vue'
 import SettingsView from '@/views/SettingsView.vue'
+import LoginView from '@/views/LoginView.vue'
 
 const routes = [
   {
@@ -36,6 +37,15 @@ const routes = [
     props: true,
     meta: {
       title: 'Settings'
+    }
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView,
+    props: true,
+    meta: {
+      title: 'Login'
     }
   }
 ]

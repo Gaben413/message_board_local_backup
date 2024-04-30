@@ -39,13 +39,15 @@ export default {
         {name: "name1", t_number: "10", t_archived: 1, key: 1},
         {name: "name2", t_number: "20", t_archived: 0, key: 2},
         {name: "name3", t_number: "30", t_archived: 1, key: 3},
-      ]
+      ],
+      
+      token: localStorage.getItem("board-access-token") || ""
     }
   },
   mounted(){
     let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
     
-    axios.get(`${axios_link}vue/get_threads/`)
+    axios.get(`${axios_link}vue/get_threads/`,  {headers: {'board-access-token': this.token}})
     .then((res) => {
 
       let keyNumber = 1;

@@ -35,8 +35,9 @@
                 edit: false,
                 edit_tp_number: 0,
                 edit_comm: "",
-                axios_link: `http://${settings['axios_ip']}:${settings['axios_port']}/`
+                axios_link: `http://${settings['axios_ip']}:${settings['axios_port']}/`,
 
+                token: localStorage.getItem("board-access-token") || ""
             }
         },
         mounted(){
@@ -59,7 +60,7 @@
                     comm: this.edit_comm
                 }
                 
-                axios.put(`${this.axios_link}bw_lists/update_blacklist`, request_obj).then((res) => {
+                axios.put(`${this.axios_link}bw_lists/update_blacklist`, request_obj, {headers: {'board-access-token': this.token}}).then((res) => {
                     console.log(res)
                     this.refresh()
                 })

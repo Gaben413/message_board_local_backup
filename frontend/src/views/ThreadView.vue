@@ -99,13 +99,15 @@ export default {
 
       button_color: "#006400",
       button_color_hover: "#003600",
-      button_text_color: "white"
+      button_text_color: "white",
+      
+      token: localStorage.getItem("board-access-token") || ""
     }
   },
   mounted(){
     
     let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
-    axios.get(`${axios_link}vue/get_thread_data/${this.t_number}`)
+    axios.get(`${axios_link}vue/get_thread_data/${this.t_number}`, {headers: {'board-access-token': this.token}})
     .then((res) => {
       this.thread_data = res.data.thread
       this.post_data_raw = res.data.posts

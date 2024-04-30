@@ -54,7 +54,9 @@
                 new_white_tp_number: "",
                 new_white_comm: "",
 
-                axios_link: `http://${settings['axios_ip']}:${settings['axios_port']}/`
+                axios_link: `http://${settings['axios_ip']}:${settings['axios_port']}/`,
+                
+                token: localStorage.getItem("board-access-token") || ""
             }
         },
         mounted() {
@@ -64,12 +66,12 @@
         methods:{
             async get_list_data(){
                 console.log("Reload")
-                axios.get(`${this.axios_link}bw_lists/get_all_blacklist`)
+                axios.get(`${this.axios_link}bw_lists/get_all_blacklist`, {headers: {'board-access-token': this.token}})
                 .then((res) => {
                     this.blacklist = res.data
                     console.log(this.blacklist)
                 })
-                axios.get(`${this.axios_link}bw_lists/get_all_whitelist`)
+                axios.get(`${this.axios_link}bw_lists/get_all_whitelist`, {headers: {'board-access-token': this.token}})
                 .then((res) => {
                     this.whitelist = res.data
                     console.log(this.whitelist)
@@ -103,7 +105,7 @@
                     comm: comm
                 }
 
-                axios.post(`${this.axios_link}bw_lists/create_bw_entry`, post_obj).then((res) => {
+                axios.post(`${this.axios_link}bw_lists/create_bw_entry`, post_obj, {headers: {'board-access-token': this.token}}).then((res) => {
                     console.log(res)
                     this.cancel(type)
                     this.get_list_data()
@@ -123,7 +125,7 @@
                 }
             },
             async delete_entry(id){
-                axios.delete(`${this.axios_link}bw_lists/delete_entry/${id}`).then((res) => {
+                axios.delete(`${this.axios_link}bw_lists/delete_entry/${id}`, {headers: {'board-access-token': this.token}}).then((res) => {
                     console.log(res)
                     this.get_list_data()
                 })

@@ -2,6 +2,7 @@
   <div id="nav-div">
     <nav>
       <router-link to="/">Home</router-link>
+      <router-link to="/login">Login</router-link>
       <router-link to="/settings">Settings</router-link>
       <!--|    
       <router-link to="/about">About</router-link>
@@ -23,6 +24,11 @@
   export default{
     components: {
       FooterComponent,
+    },
+    data(){
+      return{
+        token: localStorage.getItem("board-access-token") || ""
+      }
     },
     mounted(){
       let mybutton = document.getElementById("scrollbutton");
@@ -46,7 +52,7 @@
       manual_fetch(){
         let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
     
-        axios.get(`${axios_link}manual_fetch/`)
+        axios.get(`${axios_link}manual_fetch/`, {headers: {'board-access-token': this.token}})
         .then((res) => {
 
           console.log(res.data.status)
@@ -92,11 +98,11 @@ nav {
 nav a {
   font-weight: bold;
   color: #2c3e50;
+  margin: 0px 10px;
 }
 
 nav a.router-link-exact-active {
   color: #42b983;
-  margin: 0px 15px;
 }
 
 #nav-div{
