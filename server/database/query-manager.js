@@ -7,6 +7,57 @@ const {local_api, api_port} = require('../settings');
 
 //const sequelize = require('./database-manager');
 
+// #region USER functions
+async function AddUser(data){
+    const {User} = require('./models');
+
+    const user = await User.create({
+        username: data['username'],
+        password: data['password'],
+        admin: data['admin'],
+        verified: data['verified'],
+    })
+
+    return {
+        status: "User Successfully Created",
+        data: {
+            username: user['username'],
+            password: user['password'],
+            admin: user['admin'],
+            verified: user['verified'],
+        }
+    }
+}
+
+async function GetUser(username){
+    const {User} = require('./models');
+
+    const user = await User.findOne({
+        where:{
+            username: username
+        },
+        raw:true
+        
+    });
+
+    return user;
+}
+
+async function UsernameExists(username){
+    const {User} = require('./models');
+
+    const user = await User.findOne({
+        where:{
+            username: username
+        },
+        raw:true
+        
+    });
+
+    return user != null;
+}
+// #endregion
+
 // #region Favourites functions
 
 async function AddFavourite(data){
@@ -548,6 +599,7 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 //#endregion
 
 module.exports = {
+    AddUser, GetUser, UsernameExists,
     AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, IsThreadInList, ThreadExists,
     Add_BW_List_Entry,GetBlacklist,GetWhitelist,UpdateBW_List,Delete_BW_List_Entry,
     AddPost, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllThreadsVue, GetThreadDataVue

@@ -1,6 +1,31 @@
 const { Sequelize, DataTypes } = require('sequelize');
 const database = require('./database-manager');
 
+const User = database.define('user', {
+    user_id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    username: {
+        type: DataTypes.TEXT,
+        allowNull: false,
+        unique: true
+    },
+    password: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    admin: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
+    verified:{
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    }
+})
+
 const Favourite = database.define('favourite', {
     f_id: {
         type: DataTypes.INTEGER,
@@ -194,4 +219,4 @@ Image.hasOne(Post, {
 
 //database.sync()
 
-module.exports = { Favourite, Image, Thread, Post, BW_List, favourite_has_thread };
+module.exports = { User, Favourite, Image, Thread, Post, BW_List, favourite_has_thread };
