@@ -59,9 +59,12 @@ app.get('/test', verifyJWT, (req, res) => {
 
 // #region USER
 app.post('/login', async (req, res) => {
+    console.log("Checking if user exists");
     if(await UsernameExists(req.body['username'])){
+        console.log("Getting user");
         const user = await GetUser(req.body['username']);
 
+        console.log("Checkking if credentials are right");
         if(user['username'] === req.body['username'] && user['password'] === req.body['password']){
             const token = jwt.sign({userId: 1}, SECRET, {});
             return res.json({auth: true, token});
