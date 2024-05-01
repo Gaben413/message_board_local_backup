@@ -24,9 +24,12 @@
       <option value="8">Replies: Descending</option>
     </select>
 
+    <label for=""> NSFW</label>
+    <input type="checkbox" name="" id="" v-model="nsfw_toggle">
+
     <div class="threads" v-if="threads_data.length" id="threads-grid">
 
-      <ThreadComponent v-for="data in threads_data" :key="data.key" class="thread-comp" :data="data"/>
+      <ThreadComponent v-for="data in threads_data" :key="data.key" class="thread-comp" :data="data" :hidden="!nsfw_toggle && data.t_board == '/trash/'" />
 
     </div>
     
@@ -53,6 +56,7 @@ export default {
     return{
       threads_data: [],
       organize_index: 1,
+      nsfw_toggle: true,
       dummy_data: [
         {name: "name1", t_number: "10", t_archived: 1, key: 1},
         {name: "name2", t_number: "20", t_archived: 0, key: 2},
