@@ -7,7 +7,7 @@
         <h4>PASSWORD</h4>
         <input type="password" name="" id="" v-model="password">
         <br><br>
-        <button @click="submit">Submit</button>
+        <button @click="submit">Login</button>
         <!--
         <button @click="check">CHECK</button>
         -->

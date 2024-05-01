@@ -194,7 +194,6 @@ async function fetch(manual_fetch = false){
                     console.log(`\n${i+1} - LOADING /${board_name}/`)
                     let thread_id = await fetch_thread(board_name, search_text)
 
-                
                     if(thread_id != ''){
                         console.log(`\nThread ID: ${thread_id}\n`)
             
@@ -212,11 +211,10 @@ async function fetch(manual_fetch = false){
                         console.log(`No threads in ${board_name} have ${search_text} as tags`)
                     }
                 }
-
-                await IsThreadInList(threads_no_list)
-
                 console.log(`ALL THREAD IDS: ${threads_no_list}`)
             }
+
+            await IsThreadInList(threads_no_list)
             resolve({message: 'success', key: true})
         }catch(error){
             reject({message: 'error', key: false})

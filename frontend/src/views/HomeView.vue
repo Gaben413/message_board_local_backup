@@ -9,7 +9,7 @@
       </div>
     </div>
 
-  <div id="home">
+  <div id="home" v-else >
     <h1>Thread Lists</h1>
 
     <label for="">Organize: </label>
@@ -31,6 +31,9 @@
 
       <ThreadComponent v-for="data in threads_data" :key="data.key" class="thread-comp" :data="data" :hidden="!nsfw_toggle && data.t_board == '/trash/'" />
 
+    </div>
+    <div v-else >
+      <h3>No Threads in the Database</h3>
     </div>
     
   </div>
@@ -63,7 +66,7 @@ export default {
         {name: "name3", t_number: "30", t_archived: 1, key: 3},
       ],
 
-      autheticated: false,
+      autheticated: true,
 
       token: localStorage.getItem("board-access-token") || ""
     }
