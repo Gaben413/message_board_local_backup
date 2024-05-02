@@ -1,5 +1,6 @@
-const fs = require('fs')
-const Axios = require('axios')
+const fs = require('fs');
+const clc = require('cli-color');
+const Axios = require('axios');
 
 const {GetAllImages, GetAllImagesFromThread} = require('../database/query-manager')
 
@@ -14,7 +15,7 @@ async function downloadImages(board_name, thread_id){
 
         let processed_obj = [];
 
-        console.log(`Download Amount: ${download_data.length}`)
+        console.log(clc.green("Images in Thread: ") + clc.yellow(`${download_data.length}\n`));
 
         download_data.forEach(element => {
             let obj = {
@@ -29,19 +30,29 @@ async function downloadImages(board_name, thread_id){
         check_dir(thread_id)
 
         for (let i = 0; i < processed_obj.length; i++) {
+            console.log(
+                clc.blue("Downloading image ") + clc.yellow.underline(`${i+1}/${processed_obj.length}`)
+                + clc.blue(" - ") + clc.green(`${calculate_percentage(processed_obj.length, i+1).toFixed(2)}%`)
+            );
+
             if(!fs.existsSync(filepath+processed_obj[i]['filename'])){
                 //Calculate file size: (byteSize/1*Math.pow(10, 6))
-                console.log(`Downloading ${i+1} image out of ${processed_obj.length}`)
+                
                 await download_image(processed_obj[i])
-                console.log(`Download of ${processed_obj[i]['filename']} complete - ${calculate_percentage(processed_obj.length, i+1).toFixed(2)}%`)
+                //console.log(`Download of ${processed_obj[i]['filename']} complete - ${calculate_percentage(processed_obj.length, i+1).toFixed(2)}%`)
             }else{
-                console.log(`Image ${i+1} out of ${processed_obj.length} (${processed_obj[i]['filename']}) is already downloaded - ${calculate_percentage(processed_obj.length, i+1).toFixed(2)}%`)
+                //console.log(`Image ${i+1} out of ${processed_obj.length} (${processed_obj[i]['filename']}) is already downloaded - ${calculate_percentage(processed_obj.length, i+1).toFixed(2)}%`)
             }
+
+            if(i+1 != processed_obj.length)process.stdout.write(clc.move.up(1));
         }
 
-        console.log(`\nDownload done, images location:\n${filepath}`)
+        console.log(`\nDownload Complete | Images Location:\n${filepath}`)
 
-        resolve("Download was an successs!")
+        resolve({
+            status: "success",
+            message: "Download was an successs!"
+        })
     });
     
 }

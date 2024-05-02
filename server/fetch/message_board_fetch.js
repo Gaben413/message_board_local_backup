@@ -1,4 +1,6 @@
 const axios = require('axios');
+const clc = require('cli-color');
+
 const {AddImage, AddThread, GetImage, GetThread, UpdateThread, IsThreadInList, AddPost, GetPost, GetAllPosts, GetBlacklist,GetWhitelist} = require('../database/query-manager')
 const {downloadImages} = require('./download-manager')
 
@@ -36,6 +38,7 @@ function fetch_thread(board_name, search_text){
                     //console.log(`MAJOR TEST ${threads[e]['no']} | ${whitelist.includes(threads[e]['no'])}`)
 
                     if((check_data(threads[e]['sub'], search_text) && !blacklist_no.includes(threads[e]['no']) || whitelist.includes(threads[e]['no']))){
+                        /*
                         if(logBool){
                             console.log(`Page ${i+1} | ID: ${threads[e]['no']} | ARCHVIED: ${check_if_closed(threads[e]['closed'])} | DATE: ${threads[e]['now']}`);
                         }else{
@@ -46,6 +49,21 @@ function fetch_thread(board_name, search_text){
                             console.log(`Thread last_modified: ${threads[e]['last_modified']}`);
                             console.log(`Thread Link: https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}`);
                         }
+                        */
+
+                        console.log(clc.green("########## ") + clc.green.underline(`PAGE ${i+1}`) + clc.green(" ##########"));
+                        console.log(clc.blue("ID: ") + clc.yellow.underline(`${threads[e]['no']}`)
+                            + clc.blue(" - Thread Name: ") + clc.yellow.underline(`${threads[e]['name']}`)
+                            + clc.blue(" | Thread Sub: ") + clc.yellow.underline(`${threads[e]['sub']}`)
+                        );
+                        //console.log(`Thread File Link: https://i.4cdn.org/${board_name}/${threads[e]['tim'] + threads[e]['ext']}`);
+                        //console.log(`${threads[e]['tim']} - Thread Filename: ${threads[e]['filename'] + threads[e]['ext']} | ${threads[e]['fsize']}B`);
+                        console.log(clc.blue("File Name: ") + clc.yellow.underline(`${threads[e]['filename'] + threads[e]['ext']}`)
+                            + clc.blue(" ID: ") + clc.yellow.underline(`${threads[e]['tim']}`)
+                            + " | " + clc.green(`${threads[e]['fsize']} Bytes`)
+                        );
+                        console.log(clc.blue("Thread last_modified: ") + clc.yellow.underline(`${threads[e]['last_modified']}`));
+                        console.log(clc.blue(`Thread Link: `) + `https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}\n`);
 
                         output = threads[e]['no'];
                         
@@ -67,7 +85,7 @@ function fetch_thread(board_name, search_text){
                         //console.log(formatedDate)
     
                         if(await GetThread(threads[e]['no']) == undefined){
-                            console.log('Thread does not exist in DB')
+                            console.log(clc.green('Adding Thread to DB\n'));
 
                             await AddThread({
                                 "t_number": threads[e]['no'],
@@ -80,7 +98,7 @@ function fetch_thread(board_name, search_text){
                                 "t_link": `https://boards.4channel.org/${board_name}/thread/${threads[e]['no']}`,
                             })
                         }else{
-                            console.log('Thread does exist in DB')
+                            console.log(clc.green('Updating Thread'));
                             await UpdateThread({
                                 "t_archived": threads[e]['closed'],
                                 "t_replies": threads[e]['replies'],
@@ -109,7 +127,7 @@ async function GetPostData(input, board_name){
 
     return new Promise((resolve, reject) => {
         let imageCount = 0;
-        console.log(thread_url)
+        //console.log(thread_url)
         axios.get(thread_url).then(async res => {
             for (let i = 0; i < res.data['posts'].length; i++) {
                 if(!blacklist_no.includes(res.data['posts'][i]['no'])){
@@ -136,8 +154,8 @@ async function GetPostData(input, board_name){
                     }
 
                     if(await GetPost(res.data['posts'][i]['no']) == undefined){
-                        console.log('Post does not exist in DB\n')
-                        
+                        console.log(clc.green('• New Post\n'));
+                        /*
                         if(logBool){
                             console.log(`POST ${i+1} | NO: ${res.data['posts'][i]['no']} | TIM: ${res.data['posts'][i]['tim']} | ${res.data['posts'][i]['now']}`)
                         }else{
@@ -146,10 +164,29 @@ async function GetPostData(input, board_name){
                             console.log(`${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']} | ${res.data['posts'][i]['fsize']}B`)
                             console.log(`Post Comment: ${res.data['posts'][i]['com']}`)
                         }
+                        */
+
+                        console.log(
+                            clc.green(`${i+1} - `)
+                            + clc.yellow(`${res.data['posts'][i]['no']}`)
+                            + clc.green(" - ")
+                            + clc.yellow(`${res.data['posts'][i]['name']}`)
+                        );
+                        if(res.data['posts'][i]['fsize'] != undefined)
+                            console.log(
+                                clc.green("File: ")
+                                + clc.yellow(`${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']}`)
+                                + clc.green(" | ")
+                                + clc.yellow(`${res.data['posts'][i]['fsize']} Bytes`)
+                            );
+                        else console.log(clc.green("No attached file"));
+
+                        console.log(clc.green("Post comm: ") + clc.yellow(`${res.data['posts'][i]['com'].substring(0, 25)}\n`));
 
                         let date = new Date(res.data['posts'][i]['time']*1000)
                         let formatedDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
-                        console.log(`Formated Date: ${formatedDate}`)
+
+                        console.log(clc.green("Formated Date: ") + clc.yellow.underline(`${formatedDate}\n`));
 
                         await AddPost({
                             "p_number": res.data['posts'][i]['no'],
@@ -166,9 +203,13 @@ async function GetPostData(input, board_name){
                 }
                 
             }
-            console.log(`\nIMAGE COUNT: ${imageCount}`)
 
-            resolve('Post Data Fetch Success')
+            console.log(clc.green("\nIMAGE COUNT: ") + clc.yellow.underline(`${imageCount}`));
+
+            resolve({
+                status: "success",
+                message: 'Post Data Fetch Success'
+            })
 
         }).catch(error => {
             console.log(error);
@@ -191,7 +232,8 @@ async function fetch(manual_fetch = false){
 
                 if(boards[i]['auto'] || manual_fetch){ //Just a check in case the search
         
-                    console.log(`\n${i+1} - LOADING /${board_name}/`)
+                    console.log(clc.underline(`\n${i+1} - LOADING /${board_name}/\n`));
+
                     let thread_id = await fetch_thread(board_name, search_text)
 
                     if(thread_id != ''){
@@ -208,10 +250,10 @@ async function fetch(manual_fetch = false){
 
                         threads_no_list.push(thread_id)
                     }else{
-                        console.log(`No threads in ${board_name} have ${search_text} as tags`)
+                        console.log("No threads in " + clc.underline(`/${board_name}/`) + " have " + clc.underline(`${search_text}`) + " as tags\n")
                     }
+                    console.log(clc.green("\nALL THREAD IDS: ") + clc.yellow(`${threads_no_list}`));
                 }
-                console.log(`ALL THREAD IDS: ${threads_no_list}`)
             }
 
             await IsThreadInList(threads_no_list)
@@ -219,9 +261,7 @@ async function fetch(manual_fetch = false){
         }catch(error){
             reject({message: 'error', key: false})
             console.log(error)
-    
         }
-        
     })
 }
 

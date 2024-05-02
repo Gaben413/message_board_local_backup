@@ -225,7 +225,7 @@ async function UpdateThread(update_data, id){
         }
     );
     
-    console.log(`Updated Thread of id: ${id}:\nData: ${JSON.stringify(update_data)}`)
+    console.log(`Updated Thread of id: ${id}\nData: ${JSON.stringify(update_data)}`)
 }
 
 async function ArchiveThread(id){

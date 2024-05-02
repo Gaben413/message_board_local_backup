@@ -1,4 +1,6 @@
 //const api = require('./api/api')
+const clc = require('cli-color');
+
 const {fetch} = require('./fetch/message_board_fetch');
 const {interval} = require('./settings');
 
@@ -7,22 +9,24 @@ start_time = new Date()
 let first = true;
 let auto;
 
-async function go() {
+async function fetch_thread_data() {
     try {
-        console.log("Running main script")
+        console.log(clc.green("• Running main script"))
         let response = await fetch(!auto);
     
         let date = new Date(new Date().getTime() + interval);
-        let date_formated = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+        let date_formated = `${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
 
         if(auto){
-            console.log(`\n########## Response: ${response['message']} ##########`)
-            console.log(`Next check will be in ${interval/1000}s(${interval}ms) | At ${date_formated}`)
+            //console.log(`\n########## Response: ${response['message']} ##########`)
+            //console.log(`Next check will be in ${interval/1000}s(${interval}ms) | At ${date_formated}`)
+            console.log(`\nOperation was a ${response['message']} ` + clc.blue.bold(`${interval/1000}s(${interval}ms)`) + ` | At ${date_formated}`);
 
             main()
         }else{
-            console.log(`\n########## Response: ${response['message']} ##########`)
-            console.log(`\n########## Fetch Finished ##########`)
+            //console.log(`\n########## Response: ${response['message']} ##########`)
+            //console.log(`\n########## Fetch Finished ##########`)
+            console.log("\nFetch status: " + `${clc.yellow.bold(response['message'])}` + " Fetch date: " + clc.yellow.bold(date_formated));
         }
 
     }catch(error){
@@ -41,11 +45,11 @@ async function delay(timeDelay){
 async function main(){
 
     if(first){
-        go()
+        fetch_thread_data()
         first = false
     }else{
         await delay(interval)
-        go()
+        fetch_thread_data()
     }
 }
 
