@@ -338,9 +338,11 @@ app.get('/manual_fetch/', verifyJWT, async (req, res) => {
     try{
         const {main} = require('../manual_fetch');
         console.log("Fetching");
-        main()
+        let response = await main();
+
         res.json({
-            "status":'EXECUTING MANUAL FETCH'
+            "status":'EXECUTING MANUAL FETCH',
+            "response": response
         })
     }catch(err){
         console.log(err)

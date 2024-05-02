@@ -180,8 +180,12 @@ async function GetPostData(input, board_name){
                                 + clc.yellow(`${res.data['posts'][i]['fsize']} Bytes`)
                             );
                         else console.log(clc.green("No attached file"));
-
-                        console.log(clc.green("Post comm: ") + clc.yellow(`${res.data['posts'][i]['com'].substring(0, 25)}\n`));
+                        
+                        if(res.data['posts'][i]['com'] != undefined){
+                            let stringtrim = res.data['posts'][i]['com'].toString().substring(0, 25)
+                            console.log(clc.green("Post comm: ") + clc.yellow(`${stringtrim}\n`));
+                        }
+                        
 
                         let date = new Date(res.data['posts'][i]['time']*1000)
                         let formatedDate = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`

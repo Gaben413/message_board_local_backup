@@ -13,6 +13,13 @@
   
   <router-view/>
 
+  <div id="notification-div" :class="showing_noti ? 'show-notification' : ''">
+    <h3>{{ notification_text }}</h3>
+  </div>
+
+  <!--
+  <button @click="notification">trigger notification</button>
+  -->
   <button id="fetchbutton" v-on:click="manual_fetch">Manual Fetch</button>
   <button id="scrollbutton" v-on:click="topFunction">Top</button>
   <FooterComponent/>
@@ -28,7 +35,11 @@
     },
     data(){
       return{
-        token: localStorage.getItem("board-access-token") || ""
+        token: localStorage.getItem("board-access-token") || "",
+        fetching: false,
+        noti_class: "",
+        notification_text: "NOTIFICATION",
+        showing_noti: false
       }
     },
     mounted(){
@@ -51,14 +62,38 @@
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
       },
       manual_fetch(){
-        this.token = localStorage.getItem("board-access-token") || ""
+        if(this.fetching) return;
+
+        this.notification("Fetching Notification");
+
+        this.fetching = true;
+
+        this.token = localStorage.getItem("board-access-token") || "";
         let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
-    
+        
+        console.log("Now manually Fetching Thread Data");
+
         axios.get(`${axios_link}manual_fetch/`, {headers: {'board-access-token': this.token}})
         .then((res) => {
-
-          console.log(res.data.status)
+          this.fetching = false;
+          console.log(res.data)
+          this.notification("Data Fetch Completed", true);
         }).catch(err => console.log(`Error: ${err}`));
+      },
+      async delay(timeDelay){
+        return new Promise(resolve => {
+          setTimeout(resolve, timeDelay)
+        })
+      },
+      async notification(text, override = false){
+
+        this.notification_text = text;
+
+        if(this.showing_noti && !override) return;
+        else if(override) this.showing_noti = false;
+        this.showing_noti = true;
+        await this.delay(6000);
+        this.showing_noti = false;
       }
     },
     watch: {
@@ -113,11 +148,51 @@ nav a.router-link-exact-active {
   margin-bottom: 0px;
 }
 
+#notification-div{
+  position: fixed;
+
+  width: 70%;
+
+  left: 25px;
+  bottom: 25px;
+
+  border-radius: 15px;
+
+  background-color: green;
+
+  opacity: 0%;
+
+}
+#notification-div > h3{
+  color: black;
+}
+
+.show-notification{
+  opacity: 100%;
+
+  animation-duration: 6s;
+  animation-name: fadinout;
+}
+@keyframes fadinout{
+  from{
+    opacity: 0%;
+  }
+  25%{
+    opacity: 100%;
+  }
+  75%{
+    opacity: 100%;
+  }
+  to{
+    opacity: 0%;
+  }
+}
+
 #fetchbutton {
 
   position: fixed;
 
-  opacity: 50%;
+  opacity: 75%;
 
   bottom: 50px;
   right: 120px;
@@ -142,7 +217,7 @@ nav a.router-link-exact-active {
   display: none;
   position: fixed;
 
-  opacity: 50%;
+  opacity: 75%;
 
   bottom: 50px;
   right: 30px;
