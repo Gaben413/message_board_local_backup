@@ -72,6 +72,16 @@ app.post('/login', async (req, res) => {
     }
     res.status(401).end();
 })
+app.get('/is_logged', verifyJWT, async (req, res) => {
+    try{
+        return res.json({auth: true, status: "Success"});
+    }catch(err){
+        return res.json({auth: false, status: "Failure"})
+    }
+})
+app.post('/logout', (req, res) => {
+    
+})
 // #endregion
 
 // #region THREADS

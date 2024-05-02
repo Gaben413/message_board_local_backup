@@ -12,21 +12,22 @@
   <div id="home" v-else >
     <h1>Thread Lists</h1>
 
-    <label for="">Organize: </label>
-    <select name="" id="" @change="organize" v-model="organize_index">
-      <option value="1">Archived/Ongoing</option>
-      <option value="2">Date: Oldest</option>
-      <option value="3">Date: Newest</option>
-      <option value="4">By Board</option>
-      <option value="5">By Thread Number</option>
-      <option value="6">By Title</option>
-      <option value="7">Replies: Ascending</option>
-      <option value="8">Replies: Descending</option>
-    </select>
-
-    <label for=""> NSFW</label>
-    <input type="checkbox" name="" id="" v-model="nsfw_toggle">
-
+    <div id="org-div">
+      <label for="">Organize by: </label>
+      <select name="" id="" @change="organize" v-model="organize_index">
+        <option value="1">Archived/Ongoing</option>
+        <option value="2">Date: Oldest</option>
+        <option value="3">Date: Newest</option>
+        <option value="4">Board</option>
+        <option value="5">Thread Number</option>
+        <option value="6">Title</option>
+        <option value="7">Replies: Ascending</option>
+        <option value="8">Replies: Descending</option>
+      </select>
+      <label for="">NSFW</label>
+      <input type="checkbox" name="" id="" v-model="nsfw_toggle">
+    </div>
+    
     <div class="threads" v-if="threads_data.length" id="threads-grid">
 
       <ThreadComponent v-for="data in threads_data" :key="data.key" class="thread-comp" :data="data" :hidden="!nsfw_toggle && data.t_board == '/trash/'" />
@@ -165,6 +166,17 @@ export default {
   background: rgb(255,255,255);
   background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(221,255,218,1) 100%); 
   min-height: 100%;
+}
+
+#org-div{
+  padding: 10px;
+
+  border-width: 0px 0px 2px 0px;
+  border-style: double;
+  border-color: black;
+}
+#org-div > label{
+  margin-left: 20px;
 }
 
 #threads-grid{

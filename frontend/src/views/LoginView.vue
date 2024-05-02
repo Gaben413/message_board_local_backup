@@ -1,7 +1,7 @@
 <template>
     <h1>Login</h1>
 
-    <div>
+    <div v-if="!logged">
         <h4>USERNAME</h4>
         <input type="text" name="" id="" v-model="username">
         <h4>PASSWORD</h4>
@@ -12,7 +12,13 @@
         <button @click="check">CHECK</button>
         -->
     </div>
-    <p>{{ token }}</p>
+    <div v-else>
+        <h3>You are already logged</h3>
+        <p>Logout (WIP)</p>
+    </div>
+    <!--
+    <p>{{ logged }}</p>
+    -->
 </template>
 
 <script>
@@ -26,12 +32,18 @@
             return{
                 username: "",
                 password: "",
+                logged: true,
                 axios_link: `http://${settings['axios_ip']}:${settings['axios_port']}/`,
                 token: localStorage.getItem("board-access-token") || ""
             }
         },
         mounted(){
             //console.log(`Token: ${this.token}`)
+            axios.get(`${this.axios_link}is_logged`, {headers: {'board-access-token': this.token}}).then(res => {
+                this.logged = true;
+            }).catch(err => {
+                this.logged = false;
+            })
         },
         methods:{
             async submit(){

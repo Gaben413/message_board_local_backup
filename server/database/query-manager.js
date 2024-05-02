@@ -283,7 +283,7 @@ async function IsThreadInList(threads_no_list){
 
     threads.forEach(async element => {
         let result = threads_no_list.includes(element['t_number'])
-        console.log(`Thread NO: ${element['t_number']} | Archived: ${element['t_archived']} | Result: ${result}`)
+        //console.log(`Thread NO: ${element['t_number']} | Archived: ${element['t_archived']} | Result: ${result}`)
 
         if(!result){
             await ArchiveThread(element['t_number'])
