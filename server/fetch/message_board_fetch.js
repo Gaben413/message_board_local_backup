@@ -133,7 +133,7 @@ async function GetPostData(input, board_name){
                 if(!blacklist_no.includes(res.data['posts'][i]['no'])){
                     //if(i == 253) break;
 
-                    if(res.data['posts'][i]['fsize'] != undefined && ['.png', '.jpg', 'jpeg', 'gif'].includes(res.data['posts'][i]['ext'])){
+                    if(res.data['posts'][i]['fsize'] != undefined && ['.png', '.jpg', '.jpeg', '.gif'].includes(res.data['posts'][i]['ext'])){
                         imageCount++;
 
                         let filename = res.data['posts'][i]['filename'].replace(/[^a-zA-Z ]/g, "")
