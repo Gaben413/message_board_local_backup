@@ -133,8 +133,12 @@ async function GetPostData(input, board_name){
                 if(!blacklist_no.includes(res.data['posts'][i]['no'])){
                     //if(i == 253) break;
 
+                    let i_tim = undefined;
+
                     if(res.data['posts'][i]['fsize'] != undefined && ['.png', '.jpg', '.jpeg', '.gif'].includes(res.data['posts'][i]['ext'])){
                         imageCount++;
+
+                        i_tim = res.data['posts'][i]['tim'];
 
                         let filename = res.data['posts'][i]['filename'].replace(/[^a-zA-Z ]/g, "")
                         if(filename == ""){
@@ -200,7 +204,7 @@ async function GetPostData(input, board_name){
                             "p_replies": res.data['posts'][i]['replies'],
                             "p_link": `https://i.4cdn.org/${board_name}/${res.data['posts'][i]['tim'] + res.data['posts'][i]['ext']}`,
                             "p_com": res.data['posts'][i]['com'],
-                            "i_tim": res.data['posts'][i]['tim'],
+                            "i_tim": i_tim,
                             "t_number": input,
                         })
                     }
