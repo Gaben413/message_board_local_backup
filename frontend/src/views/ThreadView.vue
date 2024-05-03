@@ -14,7 +14,7 @@
 
       <div>
         <label for="search">Search: </label>
-        <input type="text" name="search" @keyup="search" v-model="search_text">
+        <input type="text" name="search" @keyup="organize" v-model="search_text">
         <label for="" v-if="search_total != 0"> Posts Found: {{ search_total }}</label>
       </div>
 
@@ -25,7 +25,7 @@
 
       <div id="dp-div">
         <label for="search">Comm Type: </label>
-        <select name="" id="com-dropdown" v-model="com_mode">
+        <select name="" id="com-dropdown" v-model="com_mode" @change="organize">
           <option value="1">RAW</option>
           <option value="2">Plain Text</option>
           <option value="3">Processed (WIP)</option>
@@ -65,6 +65,7 @@
 import PostComponent from '@/components/PostComponent.vue'
 import ThreadComponent from '@/components/ThreadComponent.vue'
 import router from '@/router'
+import { useRouter, useRoute } from 'vue-router'
 
 import settings from '../assets/frontend-settings.json'
 import style_sheet from '@/assets/style-sheet.json'
@@ -81,6 +82,9 @@ export default {
   props: ['t_number'],
   data(){
     return{
+      router: useRouter(),
+      route: useRoute(),
+      
       thread_data: 'empty',
       post_data: [],
       post_data_raw: [],
@@ -102,6 +106,11 @@ export default {
       
       token: localStorage.getItem("board-access-token") || ""
     }
+  },
+  beforeMount(){
+    if(this.route.query.com_mode == undefined) return;
+
+    this.com_mode = this.route.query.com_mode;
   },
   mounted(){
     
@@ -179,10 +188,13 @@ export default {
       }
       
       this.post_data = this.post_data_raw.filter(post => {
+        //console.log(`POST: ${post[target_tag]}`);
+        if(post[target_tag] == null) return;
+
         if(this.search_text.trim() == "" || !tags.includes(target_tag)){
           return post;
         }else{
-          if(post[target_tag].includes(search_content.trim())){
+          if(post[target_tag].toString().includes(search_content.trim())){
             return post;
           }
         }
@@ -194,6 +206,15 @@ export default {
         this.search_total = this.post_data.length;
 
       console.log(this.post_data_raw[0]);
+    },
+    organize(){
+      router.push({
+        query: {
+          com_mode: this.com_mode
+        }
+      });
+
+      this.search()
     }
   }
 }
