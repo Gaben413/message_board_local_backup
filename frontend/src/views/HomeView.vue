@@ -14,7 +14,7 @@
 
     <div id="org-div">
       <label for="">Organize by: </label>
-      <select name="" id="" @change="organize" v-model="organize_index">
+      <select name="" id="" @change="handle_change" v-model="organize_index">
         <option value="1">Archived/Ongoing</option>
         <option value="2">Date: Oldest</option>
         <option value="3">Date: Newest</option>
@@ -25,12 +25,12 @@
         <option value="8">Replies: Descending</option>
       </select>
       <label for="">NSFW</label>
-      <input type="checkbox" name="" id="" v-model="nsfw_toggle">
+      <input type="checkbox" name="" id="" @change="handle_change" v-model="nsfw_toggle">
     </div>
     
-    <div class="threads" v-if="threads_data.length" id="threads-grid">
+    <div class="threads" v-if="display_threads_data.length" id="threads-grid">
 
-      <ThreadComponent v-for="data in threads_data" :key="data.key" class="thread-comp" :data="data" :hidden="!nsfw_toggle && data.t_board == '/trash/'" />
+      <ThreadComponent v-for="data in display_threads_data" :key="data.key" class="thread-comp" :data="data" />
 
     </div>
     <div v-else >
@@ -46,6 +46,7 @@
 import PostComponent from '@/components/PostComponent.vue'
 import ThreadComponent from '@/components/ThreadComponent.vue'
 import router from '@/router'
+import { useRouter, useRoute } from 'vue-router'
 
 import settings from '../assets/frontend-settings.json'
 import axios from 'axios'
@@ -58,6 +59,9 @@ export default {
   },
   data(){
     return{
+      router: useRouter(),
+      route: useRoute(),
+      display_threads_data: [],
       threads_data: [],
       organize_index: 1,
       nsfw_toggle: true,
@@ -72,8 +76,16 @@ export default {
       token: localStorage.getItem("board-access-token") || ""
     }
   },
+  beforeMount(){
+    this.organize_index = this.route.query.organize;
+    this.nsfw_toggle = (this.route.query.nsfw == 'true');
+
+    console.log(`ORG: ${this.organize_index} | NSFW: ${this.nsfw_toggle} - ${typeof this.nsfw_toggle}`)
+    this.organize()
+  },
   mounted(){
     let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
+
     
     axios.get(`${axios_link}vue/get_threads/`,  {headers: {'board-access-token': this.token}})
     .then((res) => {
@@ -87,9 +99,11 @@ export default {
         keyNumber++;
       });
 
+      this.display_threads_data = this.threads_data;
+
       this.organize()
 
-      console.log(this.threads_data)
+      console.log(this.display_threads_data)
     }).catch(err => {
       this.autheticated = false;
       console.log(`Error: ${err}`)
@@ -98,9 +112,11 @@ export default {
   },
   methods: {
     organize(){
-      console.log(`Organizing Thread: ${this.organize_index}`)
+      console.log(`Organizing Thread: ${this.organize_index} | NSFW: ${this.nsfw_toggle} - ${typeof this.nsfw_toggle}`)
 
-      this.threads_data.sort((a,b) => {
+      this.display_threads_data = this.threads_data;
+
+      this.display_threads_data.sort((a,b) => {
         //Later replace with a switch
         if(this.organize_index == 1){
           //Archived
@@ -130,6 +146,22 @@ export default {
           return parseFloat(b["t_replies_amount"]) - parseFloat(a["t_replies_amount"])
         }
       })
+
+      //NSFW TOGGLE
+      this.display_threads_data = this.threads_data.filter((element) => {
+        if(element.t_board != '/trash/' || (element.t_board == '/trash/' && this.nsfw_toggle)){
+          return element
+        }
+      })
+    },
+    handle_change(){
+      router.push({
+        query: {
+          organize: this.organize_index,
+          nsfw: this.nsfw_toggle
+        }
+      });
+      this.organize()
     }
   }
 }
