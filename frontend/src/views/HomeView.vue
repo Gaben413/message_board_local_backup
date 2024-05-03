@@ -77,16 +77,16 @@ export default {
     }
   },
   beforeMount(){
+    if(this.route.query.organize == undefined && this.route.query.nsfw == undefined) return;
     this.organize_index = this.route.query.organize;
     this.nsfw_toggle = (this.route.query.nsfw == 'true');
 
-    console.log(`ORG: ${this.organize_index} | NSFW: ${this.nsfw_toggle} - ${typeof this.nsfw_toggle}`)
+    //console.log(`ORG: ${this.organize_index} | NSFW: ${this.nsfw_toggle} - ${typeof this.nsfw_toggle}`)
     this.organize()
   },
   mounted(){
     let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
 
-    
     axios.get(`${axios_link}vue/get_threads/`,  {headers: {'board-access-token': this.token}})
     .then((res) => {
       this.autheticated = true;
