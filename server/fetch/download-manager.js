@@ -32,7 +32,7 @@ async function downloadImages(board_name, thread_id){
         for (let i = 0; i < processed_obj.length; i++) {
             console.log(
                 clc.blue("Downloading image ") + clc.yellow.underline(`${i+1}/${processed_obj.length}`)
-                + clc.blue(" - ") + clc.green(`${calculate_percentage(processed_obj.length, i+1).toFixed(2)}%`)
+                + clc.blue(" - ") + clc.green(`${calculate_percentage(processed_obj.length, i).toFixed(2)}%`)
             );
 
             if(!fs.existsSync(filepath+processed_obj[i]['filename'])){
@@ -44,8 +44,12 @@ async function downloadImages(board_name, thread_id){
                 //console.log(`Image ${i+1} out of ${processed_obj.length} (${processed_obj[i]['filename']}) is already downloaded - ${calculate_percentage(processed_obj.length, i+1).toFixed(2)}%`)
             }
 
-            if(i+1 != processed_obj.length)process.stdout.write(clc.move.up(1));
+            process.stdout.write(clc.move.up(1));
         }
+
+        console.log(
+            clc.blue("Downloading Complete - ") + clc.green(`100%`)
+        );
 
         console.log(`\nDownload Complete | Images Location:\n${filepath}`)
 
