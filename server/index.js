@@ -2,6 +2,7 @@
 const clc = require('cli-color');
 
 const {fetch} = require('./fetch/message_board_fetch');
+const {AutoDeleteTokenBlacklist} = require('./database/query-manager');
 const {interval} = require('./settings');
 
 start_time = new Date()
@@ -12,6 +13,7 @@ let auto;
 async function fetch_thread_data() {
     try {
         console.log(clc.green("• Running main script"))
+
         let response = await fetch(!auto);
     
         let date = new Date(new Date().getTime() + interval);
@@ -59,6 +61,9 @@ async function main(){
     const flag = (
         process.argv.indexOf('-auto') > -1
     );
+    const clear_flag = (
+        process.argv.indexOf('--clear') > -1
+    );
     
     if(flag){
         console.log("Automatic Fetch");
@@ -68,5 +73,12 @@ async function main(){
         auto = false;
         console.log("Manual Fetch");
         main()
+    }
+
+    if(clear_flag){
+        console.log(clc.yellow.underline("Cleaning DB"));
+        let overtime = await AutoDeleteTokenBlacklist();
+        if(overtime != null)
+            console.log(clc.yellow(`ROWs cleaned: ${overtime.length}`));
     }
 })();

@@ -58,20 +58,90 @@ async function UsernameExists(username){
 }
 // #endregion
 
+// #region Blacklist
+async function AddTokenBlacklist(token){
+    const {Token_Blacklist} = require('./models');
+
+    let date = new Date();
+
+    const token_blacklist = await Token_Blacklist.create({
+        token: token,
+        creation_date: date
+    })
+
+    return token_blacklist;
+}
+async function GetAllTokenBlacklist(){
+    const {Token_Blacklist} = require('./models');
+
+    const blacklist_array = await Token_Blacklist.findAll({
+        raw: true
+    })
+
+    return blacklist_array;
+}
+async function GetTokenBlacklist(id){
+    const {Token_Blacklist} = require('./models');
+
+    const blacklist_row = await Token_Blacklist.findOne({
+        where: {
+            blacklist_id: id
+        },
+        raw: true
+    })
+
+    return blacklist_row;
+}
+async function AutoDeleteTokenBlacklist(){
+    const {Token_Blacklist} = require('./models');
+    const WEEK_MS = 1209600000; //This should be about two weeks in mileseconds
+
+    let overtime_array = [];
+
+    const tb = await GetAllTokenBlacklist();
+    let current_date = new Date().getTime();
+
+    //console.log(`Current Date: ${current_date}`);
+
+    tb.forEach(async row => {
+        let time_difference = new Date().getTime() - new Date(row['creation_date']).getTime();
+        /*
+        console.log(`Row Date:     ${new Date(row['creation_date']).getTime()}`);
+        console.log(`Diference Date: ${time_difference}`);
+        */
+        if(time_difference >= WEEK_MS){
+            overtime_array.push(row['blacklist_id']);
+
+            await Token_Blacklist.destroy({
+                where: {
+                    blacklist_id: row['blacklist_id']
+                }
+            })
+        }
+    })
+
+    if(overtime_array.length > 0)
+        return overtime_array
+    else
+        return null;
+}
+// #endregion
+
 // #region Favourites functions
 
 async function AddFavourite(data){
     const {Favourite} = require('./models')
-        let date = new Date()
 
-        let formatedDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+    let date = new Date()
+
+    let formatedDate = `${date.getFullYear()}-${date.getMonth()}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`
+
+    console.log(formatedDate)
     
-        console.log(formatedDate)
-        
-        const favourite = await Favourite.create({
-            f_date: formatedDate,
-            f_name: 'Favourite 2'
-        })
+    const favourite = await Favourite.create({
+        f_date: formatedDate,
+        f_name: 'Favourite 2'
+    })
 }
 
 async function GetFavourite(primarykey){
@@ -602,6 +672,7 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 
 module.exports = {
     AddUser, GetUser, UsernameExists,
+    AddTokenBlacklist, GetAllTokenBlacklist, GetTokenBlacklist, AutoDeleteTokenBlacklist,
     AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, IsThreadInList, ThreadExists,
     Add_BW_List_Entry,GetBlacklist,GetWhitelist,UpdateBW_List,Delete_BW_List_Entry,
     AddPost, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllThreadsVue, GetThreadDataVue

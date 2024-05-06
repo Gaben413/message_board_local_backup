@@ -26,6 +26,23 @@ const User = database.define('user', {
     }
 })
 
+const Token_Blacklist = database.define('token_blacklist', {
+    blacklist_id: {
+        type: DataTypes.INTEGER,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    token: {
+        type: DataTypes.TEXT,
+        allowNull: false
+    },
+    creation_date:{
+        type: DataTypes.DATE
+    }
+}, {
+    timestamps: false
+});
+
 const Favourite = database.define('favourite', {
     f_id: {
         type: DataTypes.INTEGER,
@@ -219,4 +236,4 @@ Image.hasOne(Post, {
 
 //database.sync()
 
-module.exports = { User, Favourite, Image, Thread, Post, BW_List, favourite_has_thread };
+module.exports = { User, Token_Blacklist, Favourite, Image, Thread, Post, BW_List, favourite_has_thread };
