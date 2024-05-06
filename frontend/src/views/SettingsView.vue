@@ -158,5 +158,19 @@
     #devider{
         background-color: black;
     }
+
+    @media only screen and (max-width: 600px){
+        #bw-div{
+            padding-bottom: 200px;
+        }
+        #bw-grid{
+            display: block
+        }
+        #devider{
+            margin-top: 10px;
+            height: 2px;
+            width: 100%;
+        }
+    }
     
 </style>

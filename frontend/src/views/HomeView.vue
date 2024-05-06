@@ -24,6 +24,7 @@
         <option value="7">Replies: Ascending</option>
         <option value="8">Replies: Descending</option>
       </select>
+
       <label for="">NSFW</label>
       <input type="checkbox" name="" id="" @change="handle_change" v-model="nsfw_toggle">
     </div>
@@ -217,10 +218,17 @@ export default {
   grid-template-columns: auto auto auto auto;
   
   gap: 5px;
-
-
 }
 .thread-comp{
   margin: auto;
+}
+
+@media only screen and (max-width: 600px) {
+  #threads-grid{
+    display: block;
+  }
+  #org-div{
+    margin: 0px 15px;
+  }
 }
 </style>

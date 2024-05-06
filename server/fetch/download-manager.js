@@ -45,6 +45,7 @@ async function downloadImages(board_name, thread_id){
             }
 
             process.stdout.write(clc.move.up(1));
+            process.stdout.write(clc.erase.lineRight);
         }
 
         console.log(

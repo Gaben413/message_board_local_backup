@@ -14,7 +14,7 @@
     </div>
     <div v-else>
         <h3>You are already logged</h3>
-        <p>Logout (WIP)</p>
+        <button @click="logout">Logout</button>
     </div>
     <!--
     <p>{{ logged }}</p>
@@ -69,6 +69,16 @@
                 axios.get(`${this.axios_link}test`, {headers: {'board-access-token': this.token}}).then(res => {
                     console.log(res)
                 })
+            },
+            async logout(){
+                console.log(`Logging out token: ${this.token}`)
+                axios.post(`${this.axios_link}logout`, {body: "Test body"}, {headers: {'board-access-token': this.token}}).then(res => {
+                    console.log(res);
+                    localStorage.setItem("board-access-token", "")
+                    this.token = ""
+                    this.logged = false;
+                })
+
             }
         }
     }

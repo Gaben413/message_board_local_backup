@@ -1,6 +1,7 @@
 require('dotenv').config()
 const {
     AddUser, GetUser, UsernameExists,
+    AddTokenBlacklist, GetAllTokenBlacklist, GetTokenBlacklist,
     GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread,
     GetAllThreadsVue, GetThreadDataVue, ThreadExists,Delete_BW_List_Entry,
     Add_BW_List_Entry,GetBlacklist,GetWhitelist,UpdateBW_List
@@ -42,8 +43,17 @@ app.get('/db', async (req, res) => {
     res.send("DB section!")
 })
 
-function verifyJWT(req, res, next){
+async function verifyJWT(req, res, next){
     const token = req.headers['board-access-token'];
+
+    const blacklist = await GetAllTokenBlacklist();
+    const index = blacklist.find(row => {
+        return row['token'] == token;
+    })
+
+    console.log(index)
+    if(index !== undefined) return res.status(401).end();
+
     jwt.verify(token, SECRET, (err, decoded) => {
         if(err) return res.status(401).end();
 
@@ -79,8 +89,24 @@ app.get('/is_logged', verifyJWT, async (req, res) => {
         return res.json({auth: false, status: "Failure"})
     }
 })
-app.post('/logout', (req, res) => {
-    
+app.post('/logout', async (req, res) => {
+    const token = req.headers['board-access-token'];
+
+    //console.log(req.headers)
+    //console.log(req.body)
+
+    console.log(`Logging out Token: ${token}`);
+
+    if(token === undefined) return res.json({success: false, response: "Headers empty"});
+
+    let response = await AddTokenBlacklist(token);
+
+    console.log(response);
+
+    return res.json({
+        success: true,
+        response: response
+    })
 })
 // #endregion
 

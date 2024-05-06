@@ -1,9 +1,9 @@
 <template>
     <div class="footerContainer">
-        <label>API Status: <span v-if="api_data.api_running">🟢</span><span v-else>🔴</span></label>
-        <label>{{ api_data.total_threads }} <span v-if="api_data.total_threads == 1">Thread</span> <span v-else>Threads</span></label>
-        <label>Space in use: {{ api_data.used_space }}</label>
-        <label class="timerLabel">Running for: {{ time }}</label>
+        <label class="footer-labels">API Status: <span v-if="api_data.api_running">🟢</span><span v-else>🔴</span></label>
+        <label class="footer-labels">{{ api_data.total_threads }} <span v-if="api_data.total_threads == 1">Thread</span> <span v-else>Threads</span></label>
+        <label class="footer-labels">Space in use: {{ api_data.used_space }}</label>
+        <label class="timerLabel footer-labels">Running for: {{ time }}</label>
     </div>
 </template>
 
@@ -18,7 +18,7 @@
                 api_data: {
                     "api_running": false,
                 },
-                time: "00:00:00",
+                time: "0 days - 00:00:00",
                 
                 token: localStorage.getItem("board-access-token") || ""
             }
@@ -50,8 +50,9 @@
                 let seconds = Math.floor(timestamp/1000)
                 let minutes = Math.floor(seconds/60)
                 let hours = Math.floor(minutes/60)
+                let days = Math.floor(hours/24);
 
-                this.time = `${hours}:${(minutes%60).toString().padStart(2,"0")}:${(seconds%60).toString().padStart(2, "0")}`
+                this.time = `${days} days - ${hours%24}:${(minutes%60).toString().padStart(2,"0")}:${(seconds%60).toString().padStart(2, "0")}`
             }, 1000);
         }
     }
@@ -83,6 +84,9 @@
 .timerLabel{
     padding-right: 25px;
 }
+.footer-labels{
+    font-size: inherit;
+}
 
 @media only screen and (max-width: 600px) {
     .footerContainer{
@@ -94,6 +98,13 @@
     }
     .footerContainer > label{
         overflow-wrap: break-word;
+    }
+    .footer-labels{
+        margin-top: 5px;
+        font-size: 10px;
+    }
+    .timerLabel{
+        padding-right: 0px;
     }
 }
 

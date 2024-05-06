@@ -20,8 +20,9 @@
   <!--
   <button @click="notification">trigger notification</button>
   -->
-  <button id="fetchbutton" v-on:click="manual_fetch">Manual Fetch</button>
+  <button id="fetchbutton" class="system-button" v-on:click="manual_fetch">Manual Fetch</button>
   <button id="scrollbutton" v-on:click="topFunction">Top</button>
+  <button id="scroll-bottom-button" v-on:click="bottomFunction">bottom</button>
   <FooterComponent/>
 </template>
 
@@ -43,15 +44,25 @@
       }
     },
     mounted(){
-      let mybutton = document.getElementById("scrollbutton");
+      let scroll_top = document.getElementById("scrollbutton");
+      let scroll_bottom = document.getElementById("scroll-bottom-button");
       // When the user scrolls down 20px from the top of the document, show the button
       window.onscroll = function() {scrollFunction()};
 
       function scrollFunction() {
         if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
-          mybutton.style.display = "block";
+          scroll_top.style.display = "block";
         } else {
-          mybutton.style.display = "none";
+          scroll_top.style.display = "none";
+        }
+      }
+      function scrollBottomFunction() {
+        const CAP = document.documentElement.scrollTop - 1106;
+
+        if (document.body.scrollTop > CAP || document.documentElement.scrollTop > CAP) {
+          scroll_bottom.style.display = "none";
+        } else {
+          scroll_bottom.style.display = "block";
         }
       }
     },
@@ -60,6 +71,10 @@
       topFunction() {
         document.body.scrollTop = 0; // For Safari
         document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+      },
+      bottomFunction(){
+        document.body.scrollTop = document.body.scrollHeight; // For Safari
+        document.documentElement.scrollTop = document.body.scrollHeight; // For Chrome, Firefox, IE and Opera
       },
       manual_fetch(){
         if(this.fetching) return;
@@ -92,7 +107,7 @@
         if(this.showing_noti && !override) return;
         else if(override) this.showing_noti = false;
         this.showing_noti = true;
-        await this.delay(6000);
+        await this.delay(3000);
         this.showing_noti = false;
       }
     },
@@ -170,17 +185,17 @@ nav a.router-link-exact-active {
 .show-notification{
   opacity: 100%;
 
-  animation-duration: 6s;
+  animation-duration: 3s;
   animation-name: fadinout;
 }
 @keyframes fadinout{
   from{
     opacity: 0%;
   }
-  25%{
+  10%{
     opacity: 100%;
   }
-  75%{
+  90%{
     opacity: 100%;
   }
   to{
@@ -236,5 +251,59 @@ nav a.router-link-exact-active {
 }
 #scrollbutton:hover {
   background-color: rgb(0, 37, 0);
+}
+#scrollbutton {
+  display: none;
+  position: fixed;
+
+  opacity: 75%;
+
+  bottom: 100px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: green;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 18px;
+
+  font-size: 15px;
+  font-weight: 250;
+}
+#scrollbutton:hover {
+  background-color: rgb(0, 37, 0);
+}
+#scroll-bottom-button {
+  display: block;
+  position: fixed;
+
+  opacity: 75%;
+
+  bottom: 50px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: green;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 18px;
+
+  font-size: 15px;
+  font-weight: 250;
+}
+#scroll-bottom-button:hover {
+  background-color: rgb(0, 37, 0);
+}
+@media only screen and (max-width: 600px){
+  #notification-div{
+    left: 5px;
+    bottom: 100px;
+  }
 }
 </style>

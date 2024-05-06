@@ -105,5 +105,26 @@
     .cell-button:active{
         background-color: rgb(0, 58, 0);
     }
-    
+    @media only screen and (max-width: 600px){
+        #display-cell-grid{
+            grid-template-columns: auto;
+        }
+        .cell-button{
+            width: 50px;
+            margin: 5px auto;
+        }
+
+        #edit-cell-grid{
+            grid-template-columns: auto;
+            gap: 5px;
+        }
+        #edit-cell-grid > div{
+            grid-template-columns: auto;
+            gap: 5px;
+        }
+        #edit-cell-grid .cell-button{
+            margin: 0px 5px;
+            width: 75px;
+        }
+    }
 </style>

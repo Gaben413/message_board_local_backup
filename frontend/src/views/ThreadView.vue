@@ -32,7 +32,7 @@
         </select>
       </div>
 
-      <button id="thread-download" @click="download_thread">Download</button>
+      <button id="thread-download" @click="download_thread"><img src="../assets/download.svg" alt="Download" id="download-svg"></button>
 
     </div>
 
@@ -236,7 +236,7 @@ h1{
   margin: 20px 0px 0px 0px;
   padding: 0px 0px;
 
-  height: 40px;
+  height: fit-content;
   width: 100%;
 
   background-color: v-bind(body_color);
@@ -255,7 +255,8 @@ h1{
 }
 
 #thread-download{
-
+  height: fit-content;
+  width: fit-content;
   margin: 5px auto;
 
   color: v-bind(button_text_color);
@@ -267,5 +268,21 @@ h1{
 #thread-download:hover{
   background-color: v-bind(button_color_hover);
   cursor: pointer;
+}
+#download-svg{
+  margin: 5px;
+
+  width: 25px;
+  height: 25px;
+}
+
+
+@media only screen and (max-width: 600px){
+  #utilities{
+    padding: 10px 0px;
+  }
+  #main-thread{
+    padding-bottom: 35px;
+  }
 }
 </style>
