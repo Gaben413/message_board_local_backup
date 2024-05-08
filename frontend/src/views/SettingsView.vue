@@ -6,24 +6,24 @@
             <div id="black-list">
                 <h4>Blacklist</h4>
                 <BW_CellComponent v-for="entry in blacklist" :cell_data="entry" @del="delete_entry" />
-                <button @click="create_entry('black')" v-if="!new_black_entry">NEW ENTRY</button>
+                <button class="scum-button" @click="create_entry('black')" v-if="!new_black_entry">NEW ENTRY</button>
                 <div v-else>
                     <label for="">Number: </label> <input type="text" name="" id="" v-model="new_black_tp_number">
                     <label for="">Comment</label> <input type="text" name="" id="" v-model="new_black_comm">
-                    <button @click="save('black')">Save</button>
-                    <button @click="cancel('black')">Cancel</button>
+                    <button class="scum-button" @click="save('black')">Save</button>
+                    <button class="scum-button" @click="cancel('black')">Cancel</button>
                 </div>
             </div>
             <div id="devider"></div>
             <div id="white-list">
                 <h4>Whitelist</h4>
                 <BW_CellComponent v-for="entry in whitelist" :cell_data="entry" @del="delete_entry" />
-                <button @click="create_entry('white')" v-if="!new_white_entry">NEW ENTRY</button>
+                <button class="scum-button" @click="create_entry('white')" v-if="!new_white_entry">NEW ENTRY</button>
                 <div v-else>
                     <label for="">Number: </label> <input type="text" name="" id="" v-model="new_white_tp_number">
                     <label for="">Comment</label> <input type="text" name="" id="" v-model="new_white_comm">
-                    <button @click="save('white')">Save</button>
-                    <button @click="cancel('white')">Cancel</button>
+                    <button class="scum-button" @click="save('white')">Save</button>
+                    <button class="scum-button" @click="cancel('white')">Cancel</button>
                 </div>
             </div>
         </div>
@@ -157,6 +157,22 @@
     }
     #devider{
         background-color: black;
+    }
+
+    .scum-button{
+        background-color: #00b400;
+
+        padding: 5px;
+
+        border-width: 0px;
+        border-style: none;
+        border-radius: 5px;
+    }
+    .scum-button:hover{
+        background-color: darkgreen;
+    }
+    .scum-button:active{
+        background-color: #003a00;
     }
 
     @media only screen and (max-width: 600px){

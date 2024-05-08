@@ -230,5 +230,9 @@ export default {
   #org-div{
     margin: 0px 15px;
   }
+
+  #error-body{
+    width: 75%;
+  }
 }
 </style>
