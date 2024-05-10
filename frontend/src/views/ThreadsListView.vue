@@ -46,24 +46,24 @@
     </div>
     
     <div>
-    <!--
-    <a :class="(parseInt(page) > 1) ? '' : 'hide-anchor'" href="/threads/1" class="page-anchor">FIRST</a>
-    <a :class="(parseInt(page) > 1) ? '' : 'hide-anchor'" :href="`/threads/${parseInt(page)-1}`" class="page-anchor">PREVIOUS</a>
-    -->
+        <!--
+        <a :class="(parseInt(page) > 1) ? '' : 'hide-anchor'" href="/threads/1" class="page-anchor">FIRST</a>
+        <a :class="(parseInt(page) > 1) ? '' : 'hide-anchor'" :href="`/threads/${parseInt(page)-1}`" class="page-anchor">PREVIOUS</a>
+        -->
+        
+        <button :disabled="page <= 1" @click="go_to_page('first')">FIRST</button>
+        <button :disabled="page <= 1" @click="go_to_page('previous')">PREVIOUS</button>
 
-    <button :disabled="page <= 1" @click="go_to_page('first')">FIRST</button>
-    <button :disabled="page <= 1" @click="go_to_page('previous')">PREVIOUS</button>
+        <label>PAGE: {{ page }}</label>
 
-    <label>PAGE: {{ page }}</label>
+        <button @click="go_to_page('next')">NEXT</button>
+        <button disabled>LAST</button>
 
-    <button @click="go_to_page('next')">NEXT</button>
-    <button disabled>LAST</button>
-
-    <!--
-    <a :href="`/threads/${parseInt(page)+1}`" class="page-anchor">NEXT</a>
-    <a class="page-anchor">LAST</a>
-    -->
-  </div>
+        <!--
+        <a :href="`/threads/${parseInt(page)+1}`" class="page-anchor">NEXT</a>
+        <a class="page-anchor">LAST</a>
+        -->
+    </div>
 
   </div>
 
@@ -142,6 +142,13 @@ export default {
 
             this.display_threads_data = this.threads_data;
 
+            //NSFW TOGGLE
+            this.display_threads_data = this.threads_data.filter((element) => {
+                if(element.t_board != '/trash/' || (element.t_board == '/trash/' && this.nsfw_toggle)){
+                    return element
+                }
+            })
+
             //this.organize()
 
             console.log(this.display_threads_data)
@@ -152,48 +159,7 @@ export default {
     },
     organize(){
         console.log(`Organizing Thread: ${this.organize_index} | NSFW: ${this.nsfw_toggle} - ${typeof this.nsfw_toggle} | AMOUNT: ${this.display_amount}`)
-        this.getThreadData()
-        /*
-        this.display_threads_data = this.threads_data;
-
-        this.display_threads_data.sort((a,b) => {
-            //Later replace with a switch
-            if(this.organize_index == 1){
-            //Archived
-            return a["t_archived"] - b["t_archived"]
-            }else if(this.organize_index == 2){
-            //Oldest
-            return parseFloat(new Date(a["t_date"]).getTime()) - parseFloat(new Date(b["t_date"]).getTime())
-            }else if(this.organize_index == 3){
-            //Newest
-            return parseFloat(new Date(b["t_date"]).getTime()) - parseFloat(new Date(a["t_date"]).getTime())
-            }else if(this.organize_index == 4){
-            //Board
-            let text_a = a["t_board"].toLowerCase();
-            let text_b = b["t_board"].toLowerCase();
-            return (text_a < text_b) ? -1 : (text_a > text_b) ? 1 : 0;
-            }else if(this.organize_index == 5){
-            //Number
-            return parseFloat(a["t_number"]) - parseFloat(b["t_number"])
-            }else if(this.organize_index == 6){
-            //Title
-            let text_a = a["t_sub"].toLowerCase();
-            let text_b = b["t_sub"].toLowerCase();
-            return (text_a < text_b) ? -1 : (text_a > text_b) ? 1 : 0;
-            }else if(this.organize_index == 7){
-            return parseFloat(a["t_replies_amount"]) - parseFloat(b["t_replies_amount"])
-            }else if(this.organize_index == 8){
-            return parseFloat(b["t_replies_amount"]) - parseFloat(a["t_replies_amount"])
-            }
-        })
-
-        //NSFW TOGGLE
-        this.display_threads_data = this.threads_data.filter((element) => {
-            if(element.t_board != '/trash/' || (element.t_board == '/trash/' && this.nsfw_toggle)){
-            return element
-            }
-        })
-        */
+        this.getThreadData();
     },
     handle_change(){
       router.push({

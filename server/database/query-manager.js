@@ -453,7 +453,42 @@ async function GetAllThreadsVue(page = 1, display_amount = 5, order_organize = '
 
     let output = []
 
+    let order_arr = []
+
+    switch(order_organize){
+        case 1:
+            order_arr = ['t_archived', 'ASC']
+            break;
+        case 2:
+            order_arr = ['t_date', 'ASC']
+            break;
+        case 3:
+            order_arr = ['t_date', 'DESC']
+            break;
+        case 4:
+            order_arr = ['t_board', 'ASC']
+            break;
+        case 5:
+            order_arr = ['t_number', 'ASC']
+            break;
+        case 6:
+            order_arr = ['t_sub', 'ASC']
+            break;
+        case 7:
+            order_arr = ['t_replies', 'ASC']
+            break;
+        case 8:
+            order_arr = ['t_replies', 'DESC']
+            break;
+        default:
+            order_arr = []
+    }
+    
+
     let threads = await Thread.findAll({
+        order:[
+            order_arr
+        ],
         offset: ((page-1)*display_amount),
         limit: display_amount,
         raw:true
@@ -463,7 +498,7 @@ async function GetAllThreadsVue(page = 1, display_amount = 5, order_organize = '
         let post = await Post.findAll({
             attributes: ['i_tim', 'p_com'],
             where: {
-                t_number: threads[i]['t_number']
+                t_number: threads[i]['t_number'] //LATER ADD ORDER BY
             },
             raw:true
         });

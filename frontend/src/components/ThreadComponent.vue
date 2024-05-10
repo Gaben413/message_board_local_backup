@@ -43,7 +43,9 @@ export default{
         }
     },
     mounted(){
+        /*
         let date = new Date(this.data.t_date);
+
         let week_day = (() => {
             if(date.getDay() == 0)
                 return "Sunday";
@@ -61,6 +63,39 @@ export default{
                 return "Sartuday";
             else return "Error"
         })();
+
+        this.display_date = `(${week_day}) ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes().toString().padStart(2,'0')}:${date.getSeconds().toString().padStart(2,'0')}`
+        for(const key in style_sheet){
+            if(style_sheet[key]["boards"].includes(this.data.t_board)){
+                this.border_color = style_sheet[key]["style"]['border_color'];
+                this.body_color = style_sheet[key]["style"]['body_color'];
+                this.bottom_color = style_sheet[key]["style"]['bottom_color'];
+                this.text_color = style_sheet[key]["style"]['text_color'];
+            }
+        }
+        */
+    },
+    updated(){
+        let date = new Date(this.data.t_date);
+
+        let week_day = (() => {
+            if(date.getDay() == 0)
+                return "Sunday";
+            else if(date.getDay() == 1)
+                return "Monday";
+            else if(date.getDay() == 2)
+                return "Tuesday";
+            else if(date.getDay() == 3)
+                return "Wednesday";
+            else if(date.getDay() == 4)
+                return "Thursday";
+            else if(date.getDay() == 5)
+                return "Friday";
+            else if(date.getDay() == 6)
+                return "Sartuday";
+            else return "Error"
+        })();
+
         this.display_date = `(${week_day}) ${date.getDate()}/${date.getMonth()+1}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes().toString().padStart(2,'0')}:${date.getSeconds().toString().padStart(2,'0')}`
 
         for(const key in style_sheet){
