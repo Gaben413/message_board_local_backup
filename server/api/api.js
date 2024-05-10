@@ -51,7 +51,7 @@ async function verifyJWT(req, res, next){
         return row['token'] == token;
     })
 
-    console.log(index)
+    console.log(`Index: ${index}`)
     if(index !== undefined) return res.status(401).end();
 
     jwt.verify(token, SECRET, (err, decoded) => {

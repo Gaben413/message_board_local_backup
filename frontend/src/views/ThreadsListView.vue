@@ -195,7 +195,7 @@ export default {
                     nsfw: this.nsfw_toggle,
                     amount: this.display_amount
                 }
-            }).then(()=>{
+            }).then(() => {
                 this.getThreadData()
             })
 

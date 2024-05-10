@@ -103,7 +103,7 @@
         background-color: darkgreen;
     }
     .cell-button:active{
-        background-color: rgb(0, 58, 0);
+        background-color: #003a00;
     }
     @media only screen and (max-width: 600px){
         #display-cell-grid{

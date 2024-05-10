@@ -1,5 +1,4 @@
 <template>
-
     <div id="error-div" v-if="!autheticated">
       <div id="error-body">
         <h1>Failed to Authenticate</h1>
@@ -8,162 +7,35 @@
         <a href="/login">LOGIN</a>
       </div>
     </div>
-
-  <div id="home" v-else >
-    <h1>Thread Lists</h1>
-
-    <div id="org-div">
-      <label for="">Organize by: </label>
-      <select name="" id="" @change="handle_change" v-model="organize_index">
-        <option value="1">Archived/Ongoing</option>
-        <option value="2">Date: Oldest</option>
-        <option value="3">Date: Newest</option>
-        <option value="4">Board</option>
-        <option value="5">Thread Number</option>
-        <option value="6">Title</option>
-        <option value="7">Replies: Ascending</option>
-        <option value="8">Replies: Descending</option>
-      </select>
-
-      <label for="">NSFW</label>
-      <input type="checkbox" name="" id="" @change="handle_change" v-model="nsfw_toggle">
+    <div v-else>
+      <h2>HOME</h2>
+      <p>Welcome to Message Board Backup Library</p>
+      <p>Soon youll be able to read some extra data in this page, but for now, please go to Threads to see all of the data</p>
     </div>
-    
-    <div class="threads" v-if="display_threads_data.length" id="threads-grid">
-
-      <ThreadComponent v-for="data in display_threads_data" :key="data.key" class="thread-comp" :data="data" />
-
-    </div>
-    <div v-else >
-      <h3>No Threads in the Database</h3>
-    </div>
-    
-  </div>
 </template>
 
 <script>
 // @ is an alias to /src
-//import HelloWorld from '@/components/HelloWorld.vue'
-import PostComponent from '@/components/PostComponent.vue'
-import ThreadComponent from '@/components/ThreadComponent.vue'
-import router from '@/router'
-import { useRouter, useRoute } from 'vue-router'
-
 import settings from '../assets/frontend-settings.json'
 import axios from 'axios'
 
 export default {
   name: 'HomeView',
-  components: {
-    PostComponent,
-    ThreadComponent
-  },
   data(){
     return{
-      router: useRouter(),
-      route: useRoute(),
-      display_threads_data: [],
-      threads_data: [],
-      organize_index: 1,
-      nsfw_toggle: true,
-      dummy_data: [
-        {name: "name1", t_number: "10", t_archived: 1, key: 1},
-        {name: "name2", t_number: "20", t_archived: 0, key: 2},
-        {name: "name3", t_number: "30", t_archived: 1, key: 3},
-      ],
-
       autheticated: true,
 
       token: localStorage.getItem("board-access-token") || ""
     }
   },
   beforeMount(){
-    if(this.route.query.organize == undefined && this.route.query.nsfw == undefined) return;
-    this.organize_index = this.route.query.organize;
-    this.nsfw_toggle = (this.route.query.nsfw == 'true');
-
-    //console.log(`ORG: ${this.organize_index} | NSFW: ${this.nsfw_toggle} - ${typeof this.nsfw_toggle}`)
-    this.organize()
-  },
-  mounted(){
     let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
-
-    axios.get(`${axios_link}vue/get_threads/`,  {headers: {'board-access-token': this.token}})
-    .then((res) => {
+    axios.get(`${axios_link}is_logged`, {headers: {'board-access-token': this.token}}).then((res) => {
       this.autheticated = true;
-      let keyNumber = 1;
-
-      res.data.forEach(data => {
-        Object.assign(data, {key: keyNumber})
-        this.threads_data.push(data)
-
-        keyNumber++;
-      });
-
-      this.display_threads_data = this.threads_data;
-
-      this.organize()
-
-      console.log(this.display_threads_data)
-    }).catch(err => {
+    }).catch((error) => {
+      console.log(error)
       this.autheticated = false;
-      console.log(`Error: ${err}`)
     })
-    
-  },
-  methods: {
-    organize(){
-      console.log(`Organizing Thread: ${this.organize_index} | NSFW: ${this.nsfw_toggle} - ${typeof this.nsfw_toggle}`)
-
-      this.display_threads_data = this.threads_data;
-
-      this.display_threads_data.sort((a,b) => {
-        //Later replace with a switch
-        if(this.organize_index == 1){
-          //Archived
-          return a["t_archived"] - b["t_archived"]
-        }else if(this.organize_index == 2){
-          //Oldest
-          return parseFloat(new Date(a["t_date"]).getTime()) - parseFloat(new Date(b["t_date"]).getTime())
-        }else if(this.organize_index == 3){
-          //Newest
-          return parseFloat(new Date(b["t_date"]).getTime()) - parseFloat(new Date(a["t_date"]).getTime())
-        }else if(this.organize_index == 4){
-          //Board
-          let text_a = a["t_board"].toLowerCase();
-          let text_b = b["t_board"].toLowerCase();
-          return (text_a < text_b) ? -1 : (text_a > text_b) ? 1 : 0;
-        }else if(this.organize_index == 5){
-          //Number
-          return parseFloat(a["t_number"]) - parseFloat(b["t_number"])
-        }else if(this.organize_index == 6){
-          //Title
-          let text_a = a["t_sub"].toLowerCase();
-          let text_b = b["t_sub"].toLowerCase();
-          return (text_a < text_b) ? -1 : (text_a > text_b) ? 1 : 0;
-        }else if(this.organize_index == 7){
-          return parseFloat(a["t_replies_amount"]) - parseFloat(b["t_replies_amount"])
-        }else if(this.organize_index == 8){
-          return parseFloat(b["t_replies_amount"]) - parseFloat(a["t_replies_amount"])
-        }
-      })
-
-      //NSFW TOGGLE
-      this.display_threads_data = this.threads_data.filter((element) => {
-        if(element.t_board != '/trash/' || (element.t_board == '/trash/' && this.nsfw_toggle)){
-          return element
-        }
-      })
-    },
-    handle_change(){
-      router.push({
-        query: {
-          organize: this.organize_index,
-          nsfw: this.nsfw_toggle
-        }
-      });
-      this.organize()
-    }
   }
 }
 </script>
@@ -189,48 +61,7 @@ export default {
   background-color: #90ee90;
 }
 
-#home{
-  padding: 5px;
-  display: fixed;
-
-  top: 0;
-  left: 0;
-
-  background: rgb(255,255,255);
-  background: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(221,255,218,1) 100%); 
-  min-height: 100%;
-}
-
-#org-div{
-  padding: 10px;
-
-  border-width: 0px 0px 2px 0px;
-  border-style: double;
-  border-color: black;
-}
-#org-div > label{
-  margin-left: 20px;
-}
-
-#threads-grid{
-  display: grid;
-  
-  grid-template-columns: auto auto auto auto;
-  
-  gap: 5px;
-}
-.thread-comp{
-  margin: auto;
-}
-
 @media only screen and (max-width: 600px) {
-  #threads-grid{
-    display: block;
-  }
-  #org-div{
-    margin: 0px 15px;
-  }
-
   #error-body{
     width: 75%;
   }
