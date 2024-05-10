@@ -11,11 +11,6 @@
             <p class="regular-com" v-if="com_mode == 1" v-for="line in comment.split('\n')" id="raw_content">{{ line }}</p>
 
             <p class="regular-com" v-else-if="com_mode == 2" v-for="text in plaintext_com.split('\n')">{{ text }}</p>
-
-            <div v-else-if="com_mode == 3" v-for="com in com_obj">
-                <a :href="'#'+com.href" v-if="com.type == 'reply'" :class="com.type">{{ com.content }}</a>
-                <p v-else :class="com.type">{{ com.content }}</p>
-            </div>
         </div>
 
         <p id="date-text">{{ display_date }}</p>
@@ -107,7 +102,7 @@ export default{
             this.comment = this.data.p_com.replaceAll("<br>","\n")
 
             //PLAINTEXT
-            this.plaintext_com = (this.comment.replaceAll(/<a [^>]+>|<\/a>|<span [^>]+>|<\/span>/g, '')).replaceAll("&gt;&gt;", ">>")
+            this.plaintext_com = (this.comment.replaceAll(/<a [^>]+>|<\/a>|<span [^>]+>|<\/span>/g, '')).replaceAll("&gt;", ">")
 
             
             //this.comment = ((this.data.p_com).replace(r, ">>Link to another post<< ")).replaceAll("<br>","\n")

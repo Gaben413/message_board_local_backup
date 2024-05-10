@@ -457,7 +457,7 @@ async function GetAllThreadsVue(page = 1, display_amount = 5, order_organize = '
 
     switch(order_organize){
         case 1:
-            order_arr = ['t_number', 'ASC'], ['t_archived', 'ASC']
+            order_arr = ['t_number', 'DESC'], ['t_archived', 'ASC']
             break;
         case 2:
             order_arr = ['t_date', 'ASC']
@@ -498,8 +498,11 @@ async function GetAllThreadsVue(page = 1, display_amount = 5, order_organize = '
         let post = await Post.findAll({
             attributes: ['i_tim', 'p_com'],
             where: {
-                t_number: threads[i]['t_number'] //LATER ADD ORDER BY
+                t_number: threads[i]['t_number']
             },
+            order:[
+                ['p_date', 'ASC']
+            ],
             raw:true
         });
 
@@ -559,6 +562,9 @@ async function GetThreadDataVue(id){
         where: {
             t_number: thread['t_number']
         },
+        order:[
+            ['p_date', 'ASC']
+        ],
         raw:true
     });
 
