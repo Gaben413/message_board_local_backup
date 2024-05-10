@@ -12,7 +12,7 @@
     <h1>Thread Lists</h1>
 
     <div id="org-div">
-      <label for="">Organize by: </label>
+      <label for="">Organize by:</label>
       <select name="" id="" @change="handle_change" v-model="organize_index">
         <option value="1">Archived/Ongoing</option>
         <option value="2">Date: Oldest</option>
@@ -51,13 +51,13 @@
         <a :class="(parseInt(page) > 1) ? '' : 'hide-anchor'" :href="`/threads/${parseInt(page)-1}`" class="page-anchor">PREVIOUS</a>
         -->
         
-        <button :disabled="page <= 1" @click="go_to_page('first')">FIRST</button>
-        <button :disabled="page <= 1" @click="go_to_page('previous')">PREVIOUS</button>
+        <button class="page-button" :disabled="page <= 1" @click="go_to_page('first')">FIRST</button>
+        <button class="page-button" :disabled="page <= 1" @click="go_to_page('previous')">PREVIOUS</button>
 
         <label>PAGE: {{ page }}</label>
 
-        <button @click="go_to_page('next')">NEXT</button>
-        <button disabled>LAST</button>
+        <button class="page-button" :disabled="(Math.floor(page_amount/display_amount)+1) == page" @click="go_to_page('next')">NEXT</button>
+        <button class="page-button" :disabled="(Math.floor(page_amount/display_amount)+1) == page" @click="go_to_page('last')">LAST</button>
 
         <!--
         <a :href="`/threads/${parseInt(page)+1}`" class="page-anchor">NEXT</a>
@@ -98,6 +98,8 @@ export default {
       nsfw_toggle: true,
       display_amount: 5,
 
+      page_amount: 0,
+
       autheticated: true,
 
       token: localStorage.getItem("board-access-token") || ""
@@ -114,6 +116,7 @@ export default {
   },
   mounted(){
     this.getThreadData()
+    this.get_page_amount()
   },
   updated(){
     console.log("Update")
@@ -157,9 +160,20 @@ export default {
             console.log(`Error: ${err}`)
         })
     },
+    get_page_amount(){
+        let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
+
+        axios.get(`${axios_link}page_amount`,  {headers: {'board-access-token': this.token}})
+        .then((res) => {
+            this.page_amount = res.data.pages_amount;
+        }).catch(err => {
+            console.log(`Error: ${err}`)
+        })
+    },
     organize(){
         console.log(`Organizing Thread: ${this.organize_index} | NSFW: ${this.nsfw_toggle} - ${typeof this.nsfw_toggle} | AMOUNT: ${this.display_amount}`)
         this.getThreadData();
+        this.get_page_amount()
     },
     handle_change(){
       router.push({
@@ -181,6 +195,9 @@ export default {
         }
         else if(page_key == 'next'){
             target_page = (parseInt(this.page)+1)
+        }
+        else if(page_key == 'last'){
+            target_page = (Math.floor(this.page_amount/this.display_amount)+1);
         }
 
         console.log(`${page_key} | Going to Page ${target_page}`);
@@ -238,6 +255,25 @@ export default {
 
     border-radius: 15px;
 }
+.page-button{
+    margin: 5px;
+    padding: 10px;
+
+    color: white;
+    background-color: darkgreen;
+
+    cursor: pointer;
+
+    border-style: none;
+    border-radius: 15px;
+}
+.page-button:hover{
+    background-color: rgb(0, 48, 0);
+}
+.page-button:disabled{
+    cursor: auto;
+    background-color: rgb(38, 73, 38);
+}
 
 #thread-home{
   padding: 5px;
@@ -259,6 +295,9 @@ export default {
   border-style: double;
   border-color: black;
 }
+#org-div > select{
+    margin-left: 15px;
+}
 #org-div > label{
   margin-left: 20px;
 }
@@ -275,15 +314,18 @@ export default {
 }
 
 @media only screen and (max-width: 600px) {
-  #threads-grid{
-    display: block;
-  }
-  #org-div{
-    margin: 0px 15px;
-  }
+    #thread-home{
+        padding-bottom: 45px;
+    }
+    #threads-grid{
+        display: block;
+    }
+    #org-div{
+        margin: 0px 15px;
+    }
 
-  #error-body{
-    width: 75%;
-  }
+    #error-body{
+        width: 75%;
+    }
 }
 </style>

@@ -308,5 +308,15 @@ nav a.router-link-exact-active {
     left: 5px;
     bottom: 100px;
   }
+  
+  #fetchbutton{
+    bottom: 100px;
+  }
+  #scrollbutton{
+    bottom: 150px;
+  }
+  #scroll-bottom-button{
+    bottom: 100px;
+  }
 }
 </style>

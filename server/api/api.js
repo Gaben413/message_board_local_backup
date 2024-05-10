@@ -392,6 +392,26 @@ app.get('/manual_fetch/', verifyJWT, async (req, res) => {
     }
 })
 
+//PAGE AMOUNT
+app.get('/page_amount', verifyJWT, async (req, res) => {
+    try{
+        let array = await GetAllThreads();
+
+        res.send({
+            status: 'success',
+            message: 'GET was an SUCCESS',
+            pages_amount: array.length
+        })
+    }catch(err){
+        console.log(err)
+        res.send({
+            status: 'failure',
+            message: err,
+            pages_amount: 0
+        })
+    }
+})
+
 // #endregion
 
 app.listen(api_port, () => {
