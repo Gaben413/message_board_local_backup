@@ -9,7 +9,7 @@
       <router-link to="/about">About</router-link>
       <router-link to="/thread">Thread</router-link>
       -->
-  </nav>
+    </nav>
   </div>
   
   <router-view/>
@@ -21,9 +21,15 @@
   <!--
   <button @click="notification">trigger notification</button>
   -->
-  <button id="fetchbutton" class="system-button" v-on:click="manual_fetch">Manual Fetch</button>
-  <button id="scrollbutton" v-on:click="topFunction">Top</button>
-  <button id="scroll-bottom-button" v-on:click="bottomFunction">bottom</button>
+  <div id="utilities-div" :class="show_utils ? 'show-utils' : 'hide-utils'">
+    <button id="tab-button" @click="toggle_tab"><img id="right-arrow-svg" src="./assets/right-arrow.svg" alt=""></button>
+    <div>
+      <button id="scrollbutton" v-on:click="topFunction">Top</button>
+      <button id="scroll-bottom-button" v-on:click="bottomFunction">bottom</button>
+      <button id="fetchbutton" class="system-button" v-on:click="manual_fetch">Manual Fetch</button>
+    </div>
+  </div>
+  
   <FooterComponent/>
 </template>
 
@@ -38,7 +44,15 @@
     data(){
       return{
         token: localStorage.getItem("board-access-token") || "",
+
         fetching: false,
+
+        show_utils: false,
+        util_posX: '-125px',
+        util_posY: '50px',
+
+        arrow_invert: 1,
+
         noti_class: "",
         notification_text: "NOTIFICATION",
         showing_noti: false
@@ -100,6 +114,20 @@
         return new Promise(resolve => {
           setTimeout(resolve, timeDelay)
         })
+      },
+      toggle_tab(){
+        console.log("TAB");
+
+        this.show_utils = !this.show_utils;
+
+        if(this.show_utils){
+          this.util_posX = 0;
+          this.arrow_invert = -1
+        }else{
+          this.util_posX = '-125px';
+          this.arrow_invert = 1
+          
+        }
       },
       async notification(text, override = false){
 
@@ -204,6 +232,14 @@ nav a.router-link-exact-active {
   }
 }
 
+#tab-button{
+  display: none;
+}
+#right-arrow-svg{
+  width: 50px;
+  transform: scaleX(v-bind(arrow_invert));
+}
+
 #fetchbutton {
 
   position: fixed;
@@ -306,15 +342,54 @@ nav a.router-link-exact-active {
     left: 5px;
     bottom: 100px;
   }
+
+  #utilities-div{
+    position: fixed;
+
+    bottom: v-bind(util_posY);
+
+    padding: 0px 5px 0px 20px;
+
+    height: max-content;
+    width: fit-content;
+
+    background-color: rgba(70, 202, 70, 0.788);
+
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+  }
+  .show-utils{
+    right: 0px;
+
+    transition: right 0.5s;
+  }
+  .hide-utils{
+    right: -125px;
+
+    transition: right 0.5s;
+  }
+
+  #tab-button{
+    display: block;
+    position: absolute;
+
+    left: -65px;
+
+    background-color: darkgreen;
+
+    border-style: none;
+    border-radius: 15px;
+  }
   
   #fetchbutton{
-    bottom: 100px;
+    display: block;
   }
-  #scrollbutton{
-    bottom: 150px;
-  }
-  #scroll-bottom-button{
-    bottom: 100px;
+  #fetchbutton,#scrollbutton,#scroll-bottom-button{
+    position: relative;
+    bottom: inherit;
+    right: inherit;
+
+    margin: 5px auto;
   }
 }
 </style>
