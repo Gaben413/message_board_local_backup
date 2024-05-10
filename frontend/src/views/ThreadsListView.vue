@@ -29,10 +29,7 @@
 
       <label for="">Display Amount</label>
       <select name="" id="" @change="handle_change" v-model="display_amount">
-        <option value="5">5</option>
-        <option value="10">10</option>
-        <option value="20">20</option>
-        <option value="40">40</option>
+        <option v-for="option in dropbox_options" :value="option">{{ option }}</option>
       </select>
     </div>
     
@@ -96,7 +93,8 @@ export default {
 
       organize_index: 1,
       nsfw_toggle: true,
-      display_amount: 5,
+      dropbox_options: [4,8,26,24,32,40],
+      display_amount: 24,
 
       page_amount: 0,
 
