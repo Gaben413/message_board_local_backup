@@ -14,7 +14,7 @@
   
   <router-view/>
 
-  <div id="notification-div" :class="showing_noti ? 'show-notification' : ''">
+  <div id="notification-div" :hidden="!showing_noti" :class="showing_noti ? 'show-notification' : ''">
     <h3>{{ notification_text }}</h3>
   </div>
 
@@ -165,7 +165,6 @@ nav a.router-link-exact-active {
 }
 
 #notification-div{
-  display: none;
   position: fixed;
 
   width: 70%;
@@ -185,7 +184,6 @@ nav a.router-link-exact-active {
 }
 
 .show-notification{
-  display: block;
   opacity: 100%;
 
   animation-duration: 3s;
