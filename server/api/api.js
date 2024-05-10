@@ -223,6 +223,21 @@ app.get('/vue/get_threads/', verifyJWT, async (req, res) => {
         res.send(`Error: ${err}`)
     }
 })
+app.get('/vue/get_threads/:page', verifyJWT, async (req, res) => {
+    try{
+
+        let page = parseInt(req.params['page']);
+        let display_amount = req.headers['display-amount'];
+        let order_organize = parseInt(req.headers['order-organize']);
+
+        console.log(`PAGE: ${page}\nDisplay Amount: ${display_amount}\nOrder Organize: ${order_organize}`);
+
+        res.send(await GetAllThreadsVue(page, display_amount, order_organize))
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
+})
 app.get('/vue/get_thread_data/:id', verifyJWT, async (req, res) => {
     try{
         res.send(await GetThreadDataVue(parseInt(req.params['id'])))
@@ -231,6 +246,7 @@ app.get('/vue/get_thread_data/:id', verifyJWT, async (req, res) => {
         res.send(`Error: ${err}`)
     }
 })
+
 
 // #endregion
 

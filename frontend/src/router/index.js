@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import ThreadsListView from '@/views/ThreadsListView.vue'
 import ThreadView from '../views/ThreadView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import LoginView from '@/views/LoginView.vue'
@@ -11,6 +12,15 @@ const routes = [
     component: HomeView,
     meta: {
       title: 'Home Page'
+    }
+  },
+  {
+    path: '/threads/:page',
+    name: 'threads',
+    component: ThreadsListView,
+    props: true,
+    meta: {
+      title: 'Threads List'
     }
   },
   {

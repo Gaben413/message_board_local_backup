@@ -3,6 +3,7 @@
     <nav>
       <router-link to="/">Home</router-link>
       <router-link to="/login">Login</router-link>
+      <router-link to="/threads/1">Threads</router-link>
       <router-link to="/settings">Settings</router-link>
       <!--|    
       <router-link to="/about">About</router-link>
@@ -164,6 +165,7 @@ nav a.router-link-exact-active {
 }
 
 #notification-div{
+  display: none;
   position: fixed;
 
   width: 70%;
@@ -183,6 +185,7 @@ nav a.router-link-exact-active {
 }
 
 .show-notification{
+  display: block;
   opacity: 100%;
 
   animation-duration: 3s;

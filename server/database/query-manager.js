@@ -448,12 +448,16 @@ async function GetPostThread(id){
 //#endregion
 
 // #region Vue Return functions
-async function GetAllThreadsVue(){
+async function GetAllThreadsVue(page = 1, display_amount = 5, order_organize = '1'){
     const {Thread, Post} = require('./models')
 
     let output = []
 
-    let threads = await Thread.findAll({raw:true});
+    let threads = await Thread.findAll({
+        offset: ((page-1)*display_amount),
+        limit: display_amount,
+        raw:true
+    });
 
     for (let i = 0; i < threads.length; i++) {
         let post = await Post.findAll({
