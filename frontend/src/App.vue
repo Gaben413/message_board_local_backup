@@ -37,13 +37,14 @@
   import FooterComponent from '@/components/FooterComponent.vue'
   import axios from 'axios'
   import settings from '@/assets/frontend-settings.json'
+
   export default{
     components: {
       FooterComponent,
     },
     data(){
       return{
-        token: localStorage.getItem("board-access-token") || "",
+        //token: localStorage.getItem("board-access-token") || "",
 
         fetching: false,
 
@@ -58,7 +59,19 @@
         showing_noti: false
       }
     },
+    beforeMount(){
+      this.$store.commit('storageSetToken', (localStorage.getItem("board-access-token") || ""))
+      //console.log(`Token: ${this.$store.state.token}`)
+      this.$store.commit('storageSetAxiosLink', `http://${settings['axios_ip']}:${settings['axios_port']}/`);
+      //console.log(this.$store.state.axios_link)
+    },
     mounted(){
+      /*
+      this.$store.commit('storeCountIncrement')
+      this.$store.dispatch('storeCount', 9)
+      console.log(this.$store.state.count)
+      */
+     
       let scroll_top = document.getElementById("scrollbutton");
       let scroll_bottom = document.getElementById("scroll-bottom-button");
       // When the user scrolls down 20px from the top of the document, show the button
@@ -98,12 +111,12 @@
 
         this.fetching = true;
 
-        this.token = localStorage.getItem("board-access-token") || "";
-        let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
+        //this.token = localStorage.getItem("board-access-token") || "";
+        //let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
         
         console.log("Now manually Fetching Thread Data");
 
-        axios.get(`${axios_link}manual_fetch/`, {headers: {'board-access-token': this.token}})
+        axios.get(`${this.$store.state.axios_link}manual_fetch/`, {headers: {'board-access-token': this.$store.state.token}})
         .then((res) => {
           this.fetching = false;
           console.log(res.data)

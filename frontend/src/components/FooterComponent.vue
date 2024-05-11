@@ -9,7 +9,7 @@
 
 <script>
     import axios from 'axios'
-    import settings from '../assets/frontend-settings.json'
+    //import settings from '../assets/frontend-settings.json'
 
     export default{
         name: 'FooterComponent',
@@ -20,7 +20,7 @@
                 },
                 time: "0 days - 00:00:00",
                 
-                token: localStorage.getItem("board-access-token") || ""
+                //token: localStorage.getItem("board-access-token") || ""
             }
         },
         mounted(){
@@ -34,10 +34,10 @@
                 })
             }, 1000);
             */
-            let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
+            //let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
             //console.log(axios_link)
 
-            axios.get(`${axios_link}status`, {headers: {'board-access-token': this.token}})
+            axios.get(`${this.$store.state.axios_link}status`, {headers: {'board-access-token': this.$store.state.token}})
             .then((res) => {
                 this.api_data = res.data
             }).catch((err) => {

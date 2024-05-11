@@ -25,7 +25,7 @@
     import axios from 'axios'
     import router from '@/router'
 
-    import settings from '../assets/frontend-settings.json'
+    //import settings from '../assets/frontend-settings.json'
 
     export default{
         data(){
@@ -33,13 +33,13 @@
                 username: "",
                 password: "",
                 logged: true,
-                axios_link: `http://${settings['axios_ip']}:${settings['axios_port']}/`,
-                token: localStorage.getItem("board-access-token") || ""
+                //axios_link: `http://${settings['axios_ip']}:${settings['axios_port']}/`,
+                //token: localStorage.getItem("board-access-token") || ""
             }
         },
         mounted(){
             //console.log(`Token: ${this.token}`)
-            axios.get(`${this.axios_link}is_logged`, {headers: {'board-access-token': this.token}}).then(res => {
+            axios.get(`${this.$store.state.axios_link}is_logged`, {headers: {'board-access-token': this.$store.state.token}}).then(res => {
                 this.logged = true;
             }).catch(err => {
                 this.logged = false;
@@ -54,10 +54,11 @@
                     password: this.password
                 }
 
-                console.log(this.axios_link)
+                console.log(this.$store.state.axios_link)
 
-                axios.post(`${this.axios_link}login`, login).then(res => {
-                    localStorage.setItem("board-access-token", res.data.token)
+                axios.post(`${this.$store.state.axios_link}login`, login).then(res => {
+                    //localStorage.setItem("board-access-token", res.data.token)
+                    this.$store.commit('storageSetToken', res.data.token);
                     console.log(res.data);
 
                     router.push({path: '/'})
@@ -66,16 +67,17 @@
                 console.log(login);
             },
             async check(){
-                axios.get(`${this.axios_link}test`, {headers: {'board-access-token': this.token}}).then(res => {
+                axios.get(`${this.$store.state.axios_link}test`, {headers: {'board-access-token': this.$store.state.token}}).then(res => {
                     console.log(res)
                 })
             },
             async logout(){
-                console.log(`Logging out token: ${this.token}`)
-                axios.post(`${this.axios_link}logout`, {body: "Test body"}, {headers: {'board-access-token': this.token}}).then(res => {
+                console.log(`Logging out token: ${this.$store.state.token}`)
+                axios.post(`${this.$store.state.axios_link}logout`, {body: "Test body"}, {headers: {'board-access-token': this.$store.state.token}}).then(res => {
                     console.log(res);
-                    localStorage.setItem("board-access-token", "")
-                    this.token = ""
+                    //localStorage.setItem("board-access-token", "")
+                    //this.token = ""
+                    this.$store.commit('storageSetToken', "");
                     this.logged = false;
                 })
 

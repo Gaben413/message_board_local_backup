@@ -31,7 +31,7 @@
 </template>
 
 <script>
-    import settings from '@/assets/frontend-settings.json'
+    //import settings from '@/assets/frontend-settings.json'
 
     import BW_CellComponent from '@/components/BW_CellComponent.vue'
     import axios from 'axios'
@@ -56,9 +56,9 @@
 
                 authenticated: false,
 
-                axios_link: `http://${settings['axios_ip']}:${settings['axios_port']}/`,
+                //axios_link: `http://${settings['axios_ip']}:${settings['axios_port']}/`,
 
-                token: localStorage.getItem("board-access-token") || ""
+                //token: localStorage.getItem("board-access-token") || ""
             }
         },
         mounted() {
@@ -68,7 +68,7 @@
         methods:{
             async get_list_data(){
                 console.log("Reload")
-                axios.get(`${this.axios_link}bw_lists/get_all_blacklist`, {headers: {'board-access-token': this.token}})
+                axios.get(`${this.$store.state.axios_link}bw_lists/get_all_blacklist`, {headers: {'board-access-token': this.$store.state.token}})
                 .then((res) => {
                     this.authenticated = true;
 
@@ -80,7 +80,7 @@
                     console.log(`Error: ${err}`)
                 })
                 
-                axios.get(`${this.axios_link}bw_lists/get_all_whitelist`, {headers: {'board-access-token': this.token}})
+                axios.get(`${this.$store.state.axios_link}bw_lists/get_all_whitelist`, {headers: {'board-access-token': this.$store.state.token}})
                 .then((res) => {
                     this.authenticated = true;
 
@@ -119,7 +119,7 @@
                     comm: comm
                 }
 
-                axios.post(`${this.axios_link}bw_lists/create_bw_entry`, post_obj, {headers: {'board-access-token': this.token}}).then((res) => {
+                axios.post(`${this.$store.state.axios_link}bw_lists/create_bw_entry`, post_obj, {headers: {'board-access-token': this.$store.state.token}}).then((res) => {
                     console.log(res)
                     this.cancel(type)
                     this.get_list_data()
@@ -139,7 +139,7 @@
                 }
             },
             async delete_entry(id){
-                axios.delete(`${this.axios_link}bw_lists/delete_entry/${id}`, {headers: {'board-access-token': this.token}}).then((res) => {
+                axios.delete(`${this.$store.state.axios_link}bw_lists/delete_entry/${id}`, {headers: {'board-access-token': this.$store.state.token}}).then((res) => {
                     console.log(res)
                     this.get_list_data()
                 })

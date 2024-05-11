@@ -113,8 +113,8 @@ export default {
   },
   mounted(){
     
-    let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
-    axios.get(`${axios_link}vue/get_thread_data/${this.t_number}`, {headers: {'board-access-token': this.token}})
+    //let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
+    axios.get(`${this.$store.state.axios_link}vue/get_thread_data/${this.t_number}`, {headers: {'board-access-token': this.$store.state.token}})
     .then((res) => {
       this.thread_data = res.data.thread
       this.post_data_raw = res.data.posts

@@ -74,7 +74,7 @@ import ThreadComponent from '@/components/ThreadComponent.vue'
 import router from '@/router'
 import { useRouter, useRoute } from 'vue-router'
 
-import settings from '../assets/frontend-settings.json'
+//import settings from '../assets/frontend-settings.json'
 import axios from 'axios'
 
 export default {
@@ -100,7 +100,7 @@ export default {
 
       autheticated: true,
 
-      token: localStorage.getItem("board-access-token") || ""
+      //token: localStorage.getItem("board-access-token") || ""
     }
   },
   beforeMount(){
@@ -125,9 +125,9 @@ export default {
   },
   methods: {
     getThreadData(){
-        let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
+        //let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
 
-        axios.get(`${axios_link}vue/get_threads/${this.page}`,  {headers: {'board-access-token': this.token, 'display-amount': this.display_amount, 'order-organize': this.organize_index}})
+        axios.get(`${this.$store.state.axios_link}vue/get_threads/${this.page}`,  {headers: {'board-access-token': this.$store.state.token, 'display-amount': this.display_amount, 'order-organize': this.organize_index}})
         .then((res) => {
             this.autheticated = true;
             let keyNumber = 1;
@@ -159,9 +159,9 @@ export default {
         })
     },
     get_page_amount(){
-        let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
+        //let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
 
-        axios.get(`${axios_link}page_amount`,  {headers: {'board-access-token': this.token}})
+        axios.get(`${this.$store.state.axios_link}page_amount`,  {headers: {'board-access-token': this.$store.state.token}})
         .then((res) => {
             this.page_amount = res.data.pages_amount;
         }).catch(err => {

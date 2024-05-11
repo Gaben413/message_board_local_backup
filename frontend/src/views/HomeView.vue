@@ -25,12 +25,12 @@ export default {
     return{
       autheticated: true,
 
-      token: localStorage.getItem("board-access-token") || ""
+      //token: localStorage.getItem("board-access-token") || ""
     }
   },
   beforeMount(){
-    let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
-    axios.get(`${axios_link}is_logged`, {headers: {'board-access-token': this.token}}).then((res) => {
+    //let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
+    axios.get(`${this.$store.state.axios_link}is_logged`, {headers: {'board-access-token': this.$store.state.token}}).then((res) => {
       this.autheticated = true;
     }).catch((error) => {
       console.log(error)
