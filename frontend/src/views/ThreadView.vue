@@ -107,6 +107,7 @@ export default {
     }
   },
   beforeMount(){
+    document.title = `Thread - ${this.t_number}`
     if(this.route.query.com_mode == undefined) return;
 
     this.com_mode = this.route.query.com_mode;
