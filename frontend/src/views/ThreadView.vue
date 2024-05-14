@@ -1,17 +1,6 @@
 <template>
   <div id="main-thread">
-
     <div id="utilities">
-      <!--
-      <div>
-        <select name="" id="">
-          <option value="1">1</option>
-          <option value="2">2</option>
-        </select>
-        <label for="">Sort By:</label>
-      </div>
-      -->
-
       <div>
         <label for="search">Search: </label>
         <input type="text" name="search" @keyup="organize" v-model="search_text">
@@ -91,7 +80,7 @@ export default {
       search_text: "",
       search_total: 0,
 
-      com_mode: 1,
+      com_mode: 2,
 
       border_color: "#008a22",
       body_color: "#90ee90",
@@ -123,10 +112,10 @@ export default {
       this.post_data = this.post_data_raw;
 
       //console.log(res.data.thread)
-      console.log(this.thread_data)
-      console.log(this.post_data)
+      //console.log(this.thread_data)
+      //console.log(this.post_data)
 
-      console.log(this.thread_data)
+      //console.log(this.thread_data)
       
       for(const key in style_sheet){
         if(style_sheet[key]["boards"].includes(this.thread_data['t_board'])){
@@ -142,15 +131,16 @@ export default {
 
         }
       }
-
+      /*
       console.log(this.border_color)
       console.log(this.body_color)
       console.log(this.bottom_color)
       console.log(this.text_color)
       console.log(this.bg_color)
+      */
     })
     
-    console.log(this.t_number)
+    //console.log(this.t_number)
   },
   methods: {
     async download_thread(){
@@ -182,7 +172,7 @@ export default {
 
         target_tag = tags.find(tag => tag === search_array[1]);
         search_content = search_array[2];
-        console.log(target_tag)
+        //console.log(target_tag)
       }else{
         target_tag = "p_com"
       }
@@ -205,7 +195,7 @@ export default {
       else
         this.search_total = this.post_data.length;
 
-      console.log(this.post_data_raw[0]);
+      //console.log(this.post_data_raw[0]);
     },
     organize(){
       router.push({

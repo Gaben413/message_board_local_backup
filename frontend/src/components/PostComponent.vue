@@ -111,15 +111,15 @@ export default{
             //href treatment
             let pt_split_com = (this.data.p_com.trim()).split(r)
 
-            console.log(pt_split_com)
-            console.log(`Replying to: ${(pt_split_com.length-1)/2}`)
+            //console.log(pt_split_com)
+            //console.log(`Replying to: ${(pt_split_com.length-1)/2}`)
 
             pt_split_com.forEach(element => {
                 if(element.includes('href="#'))
                     this.post_reply.push("#" + element.split(/href="#(.*?)"/g)[1])
             });
 
-            console.log(this.post_reply)
+            //console.log(this.post_reply)
             
         }
 
@@ -132,7 +132,7 @@ export default{
         ChangeImageZoom(target_id){
             let target_img = document.getElementById('img_'+target_id)
 
-            console.log(target_img)
+            //console.log(target_img)
 
             target_img.classList.toggle("img-min_p")
         }
