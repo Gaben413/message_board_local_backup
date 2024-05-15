@@ -1,6 +1,6 @@
 <template>
     <div class="footerContainer">
-        <label class="footer-labels">API Status: <span v-if="api_data.api_running">🟢</span><span v-else>🔴</span></label>
+        <label class="footer-labels">API: <span v-if="api_data.api_running">🟢</span><span v-else>🔴</span></label>
         <label class="footer-labels">{{ api_data.total_threads }} <span v-if="api_data.total_threads == 1">Thread</span> <span v-else>Threads</span></label>
         <label class="footer-labels">Space in use: {{ api_data.used_space }}</label>
         <label class="timerLabel footer-labels">Running for: {{ time }}</label>
@@ -94,7 +94,7 @@
         border-top-left-radius: 15px;
 
         width: auto;
-        height: 40px;
+        height: 35px;
     }
     .footerContainer > label{
         overflow-wrap: break-word;

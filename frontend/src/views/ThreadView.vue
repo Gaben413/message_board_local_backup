@@ -45,6 +45,19 @@
       :com_mode="com_mode"
     />
   </div>
+
+  <div id="notification-div" :hidden="!showing_noti" :class="showing_noti ? 'show-notification' : ''">
+    <h3>{{ notification_text }}</h3>
+  </div>
+
+  <div id="utilities-div" :class="show_utils ? 'show-utils' : 'hide-utils'">
+    <button id="tab-button" @click="toggle_tab"><img id="right-arrow-svg" src="../assets/right-arrow.svg" alt=""></button>
+    <div>
+      <button id="scrollbutton" v-on:click="topFunction">Top</button>
+      <button id="scroll-bottom-button" v-on:click="bottomFunction">bottom</button>
+      <button id="fetchbutton" class="system-button" v-on:click="manual_fetch">Manual Fetch</button>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -70,6 +83,18 @@ export default {
   props: ['t_number'],
   data(){
     return{
+      fetching: false,
+
+      show_utils: false,
+      util_posX: '-125px',
+      util_posY: '50px',
+
+      arrow_invert: 1,
+
+      noti_class: "",
+      notification_text: "NOTIFICATION",
+      showing_noti: false,
+
       router: useRouter(),
       route: useRoute(),
       
@@ -102,47 +127,72 @@ export default {
     this.com_mode = this.route.query.com_mode;
   },
   mounted(){
-    
-    //let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
-    axios.get(`${this.$store.state.axios_link}vue/get_thread_data/${this.t_number}`, {headers: {'board-access-token': this.$store.state.token}})
-    .then((res) => {
-      this.thread_data = res.data.thread
-      this.post_data_raw = res.data.posts
-
-      this.post_data = this.post_data_raw;
-
-      //console.log(res.data.thread)
-      //console.log(this.thread_data)
-      //console.log(this.post_data)
-
-      //console.log(this.thread_data)
-      
-      for(const key in style_sheet){
-        if(style_sheet[key]["boards"].includes(this.thread_data['t_board'])){
-          this.border_color = style_sheet[key]["style"]['border_color'];
-          this.body_color = style_sheet[key]["style"]['body_color'];
-          this.bottom_color = style_sheet[key]["style"]['bottom_color'];
-          this.text_color = style_sheet[key]["style"]['text_color'];
-          this.bg_color = style_sheet[key]["style"]['bg_color'];
-
-          this.button_color = style_sheet[key]["style"]['button_color'];
-          this.button_color_hover = style_sheet[key]["style"]['button_color_hover'];
-          this.button_text_color = style_sheet[key]["style"]['button_text_color'];
-
-        }
+    let scroll_top = document.getElementById("scrollbutton");
+    window.onscroll = function() {scrollFunction()};
+    function scrollFunction() {
+      if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        scroll_top.style.display = "block";
+      } else {
+        scroll_top.style.display = "none";
       }
-      /*
-      console.log(this.border_color)
-      console.log(this.body_color)
-      console.log(this.bottom_color)
-      console.log(this.text_color)
-      console.log(this.bg_color)
-      */
-    })
-    
-    //console.log(this.t_number)
+    }
+
+    this.get_thread_data()
   },
   methods: {
+    get_thread_data(){
+      axios.get(`${this.$store.state.axios_link}vue/get_thread_data/${this.t_number}`, {headers: {'board-access-token': this.$store.state.token}})
+      .then((res) => {
+        this.thread_data = res.data.thread
+        this.post_data_raw = res.data.posts
+
+        this.post_data = this.post_data_raw;
+        
+        for(const key in style_sheet){
+          if(style_sheet[key]["boards"].includes(this.thread_data['t_board'])){
+            this.border_color = style_sheet[key]["style"]['border_color'];
+            this.body_color = style_sheet[key]["style"]['body_color'];
+            this.bottom_color = style_sheet[key]["style"]['bottom_color'];
+            this.text_color = style_sheet[key]["style"]['text_color'];
+            this.bg_color = style_sheet[key]["style"]['bg_color'];
+
+            this.button_color = style_sheet[key]["style"]['button_color'];
+            this.button_color_hover = style_sheet[key]["style"]['button_color_hover'];
+            this.button_text_color = style_sheet[key]["style"]['button_text_color'];
+
+          }
+        }
+      })
+    },
+    // When the user clicks on the button, scroll to the top of the document
+    topFunction() {
+      document.body.scrollTop = 0; // For Safari
+      document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    },
+    bottomFunction(){
+      document.body.scrollTop = document.body.scrollHeight; // For Safari
+      document.documentElement.scrollTop = document.body.scrollHeight; // For Chrome, Firefox, IE and Opera
+    },
+    manual_fetch(){
+      if(this.fetching) return;
+
+      this.notification("Fetching Data");
+
+      this.fetching = true;
+
+      //this.token = localStorage.getItem("board-access-token") || "";
+      //let axios_link = `http://${settings['axios_ip']}:${settings['axios_port']}/`;
+      
+      console.log("Now manually Fetching Thread Data");
+
+      axios.get(`${this.$store.state.axios_link}manual_fetch/`, {headers: {'board-access-token': this.$store.state.token}})
+      .then((res) => {
+        this.fetching = false;
+        console.log(res.data)
+        this.notification("Fetch Completed", true);
+        this.get_thread_data()
+      }).catch(err => console.log(`Error: ${err}`));
+    },
     async download_thread(){
       axios.get(`http://${settings['axios_ip']}:${settings['axios_port']}/file/${this.t_number}`, {
         headers: {
@@ -196,6 +246,35 @@ export default {
         this.search_total = this.post_data.length;
 
       //console.log(this.post_data_raw[0]);
+    },
+    async delay(timeDelay){
+      return new Promise(resolve => {
+        setTimeout(resolve, timeDelay)
+      })
+    },
+    toggle_tab(){
+      console.log("TAB");
+
+      this.show_utils = !this.show_utils;
+
+      if(this.show_utils){
+        this.util_posX = 0;
+        this.arrow_invert = -1
+      }else{
+        this.util_posX = '-125px';
+        this.arrow_invert = 1
+        
+      }
+    },
+    async notification(text, override = false){
+
+      this.notification_text = text;
+
+      if(this.showing_noti && !override) return;
+      else if(override) this.showing_noti = false;
+      this.showing_noti = true;
+      await this.delay(3000);
+      this.showing_noti = false;
     },
     organize(){
       router.push({
@@ -266,6 +345,151 @@ h1{
   height: 25px;
 }
 
+#notification-div{
+  position: fixed;
+
+  width: 70%;
+
+  left: 25px;
+  bottom: 25px;
+
+  border-radius: 15px;
+
+  background-color: green;
+
+  opacity: 0%;
+
+}
+#notification-div > h3{
+  color: black;
+}
+
+.show-notification{
+  opacity: 100%;
+
+  animation-duration: 3s;
+  animation-name: fadinout;
+}
+@keyframes fadinout{
+  from{
+    opacity: 0%;
+  }
+  10%{
+    opacity: 100%;
+  }
+  90%{
+    opacity: 100%;
+  }
+  to{
+    opacity: 0%;
+  }
+}
+
+#tab-button{
+  display: none;
+}
+#right-arrow-svg{
+  width: 50px;
+  transform: scaleX(v-bind(arrow_invert));
+}
+
+#fetchbutton {
+
+  position: fixed;
+
+  opacity: 75%;
+
+  bottom: 50px;
+  right: 120px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: green;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 18px;
+
+  font-size: 15px;
+  font-weight: 250;
+}
+#fetchbutton:hover {
+  background-color: rgb(0, 37, 0);
+}
+
+#scrollbutton {
+  display: none;
+  position: fixed;
+
+  opacity: 75%;
+
+  bottom: 50px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: green;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 18px;
+
+  font-size: 15px;
+  font-weight: 250;
+}
+#scrollbutton:hover {
+  background-color: rgb(0, 37, 0);
+}
+#scrollbutton {
+  display: none;
+  position: fixed;
+
+  opacity: 75%;
+
+  bottom: 100px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: green;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 18px;
+
+  font-size: 15px;
+  font-weight: 250;
+}
+#scrollbutton:hover {
+  background-color: rgb(0, 37, 0);
+}
+#scroll-bottom-button {
+  display: block;
+  position: fixed;
+
+  opacity: 75%;
+
+  bottom: 50px;
+  right: 30px;
+  z-index: 99;
+  border: none;
+  outline: none;
+  background-color: green;
+  color: white;
+  cursor: pointer;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 18px;
+
+  font-size: 15px;
+  font-weight: 250;
+}
+#scroll-bottom-button:hover {
+  background-color: rgb(0, 37, 0);
+}
 
 @media only screen and (max-width: 600px){
   #utilities{
@@ -273,6 +497,59 @@ h1{
   }
   #main-thread{
     padding-bottom: 35px;
+  }
+  #notification-div{
+    left: 5px;
+    bottom: 100px;
+  }
+
+  #utilities-div{
+    position: fixed;
+
+    bottom: v-bind(util_posY);
+
+    padding: 0px 5px 0px 20px;
+
+    height: max-content;
+    width: fit-content;
+
+    background-color: rgba(70, 202, 70, 0.788);
+
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+  }
+  .show-utils{
+    right: 0px;
+
+    transition: right 0.5s;
+  }
+  .hide-utils{
+    right: -125px;
+
+    transition: right 0.5s;
+  }
+
+  #tab-button{
+    display: block;
+    position: absolute;
+
+    left: -65px;
+
+    background-color: darkgreen;
+
+    border-style: none;
+    border-radius: 15px;
+  }
+  
+  #fetchbutton{
+    display: block;
+  }
+  #fetchbutton,#scrollbutton,#scroll-bottom-button{
+    position: relative;
+    bottom: inherit;
+    right: inherit;
+
+    margin: 5px auto;
   }
 }
 </style>
