@@ -2,7 +2,7 @@
     <div class="post-container" :id="'p'+data.p_number">
 
         <p id="post-header-text">
-             {{ (data.key + 1) }} - {{ data.p_number }} | {{ data.p_name }} | <a v-for="reply in post_reply" :href="reply" class="reply tooltip">@<span class="tooltiptext">{{ reply }}</span></a>
+             {{ (data.key + 1) }} - {{ data.p_number }} | {{ data.p_name }} | <a v-for="reply in post_reply" :href="reply" class="reply tooltip">{{ reply }}<!--<span class="tooltiptext">{{ reply }}</span>--></a>
         </p>
 
         <div id="post-contents">
@@ -147,7 +147,8 @@ export default{
     background-color: v-bind(body_color);
 
     border-style: solid;
-    border-radius: 10px;
+    border-width: 0px 0px 2px 0px;
+    border-radius: 10px 10px 0px 0px;
     border-color: v-bind(border_color);    
 
     width: fit-content;
@@ -159,7 +160,8 @@ export default{
     color: v-bind(text_color);
 
     margin: 0;
-    padding-left: 15px;
+    padding: 3px 0px 2px 15px;
+
     text-align: left;
 
     background-color: v-bind(border_color);
@@ -195,7 +197,11 @@ export default{
 
 .reply{
     color: rgb(0, 26, 0);
+
     margin: 0px 5px 3px 0px;
+
+    text-decoration: none;
+    font-size: 10px;
 }
 
 .tooltip{

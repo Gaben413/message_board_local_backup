@@ -5,10 +5,6 @@
       <router-link to="/login">Login</router-link>
       <router-link to="/threads/1">Threads</router-link>
       <router-link to="/settings">Settings</router-link>
-      <!--|    
-      <router-link to="/about">About</router-link>
-      <router-link to="/thread">Thread</router-link>
-      -->
     </nav>
   </div>
   
