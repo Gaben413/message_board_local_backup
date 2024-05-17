@@ -139,17 +139,25 @@ async function AddFavourite(data){
     console.log(formatedDate)
     
     const favourite = await Favourite.create({
+        f_name: data['f_name'],
+        f_description: data['f_description'],
         f_date: formatedDate,
-        f_name: 'Favourite 2'
+        user_id: data['user_id']
     })
+
+    return {
+        status: "success",
+        user: data['user_id'],
+        entry: favourite
+    };
 }
 
-async function GetFavourite(primarykey){
+async function GetAllFavourites(user_id){
     const {Favourite} = require('./models')
 
     let output = await Favourite.findAll({
-        where: {
-            f_id: primarykey
+        where:{
+            user_id: user_id
         },
         raw:true
     });
@@ -157,36 +165,79 @@ async function GetFavourite(primarykey){
     return output;
 }
 
-async function GetAllFavourites(){
+async function GetFavouriteEntry(user_id, f_id){
     const {Favourite} = require('./models')
-    let output = await Favourite.findAll({raw:true});
+
+    let output = await Favourite.findOne({
+        where: {
+            user_id: user_id,
+            f_id: f_id
+        },
+        raw:true
+    });
 
     return output;
 }
 
-async function UpdateFavourite(id, new_name){
+async function UpdateFavouriteEntry(user_id, f_id, data){
     const {Favourite} = require('./models')
 
-    await Favourite.update(
+    let response = await Favourite.update(
         {
-            f_name: new_name
+            f_name: data['f_name'],
+            f_description: data['f_description'],
         },
         {
             where: {
-                f_id: id
+                user_id: user_id,
+                f_id: f_id
             }
         }
     );
-    
-    console.log(`Favourite of id: ${id} changed it's name to ${new_name}`)
-}
 
-async function DeleteFavourite(id){
+    if(response == 1)
+        return {
+            status: 'success',
+            user: user_id,
+            f_id: f_id,
+            updated_data: data
+        }
+    else
+        return {
+            status: 'failure'
+        }
+    
+    //console.log(`Favourite of id: ${id} changed it's name to ${new_name}`)
+}
+async function DeleteFavouriteEntry(user_id, f_id){
     const {Favourite} = require('./models')
 
-    await Favourite.destroy({where:{f_id:id}})
+    console.log(`USER: ${user_id} | ID: ${f_id}`)
 
-    console.log(`Deleted Favourite of ID ${id}`)
+    let output = await Favourite.destroy({
+        where:{
+            user_id: user_id,
+            f_id: f_id
+        }
+    })
+
+    console.log(output)
+    if(output == 1)
+        return {
+            status: 'successfully deleted entry',
+            data: {
+                user_id: user_id,
+                f_id: f_id
+            }
+        }
+    else
+        return {
+            status: 'failure to delete entry',
+            data: {
+                user_id: user_id,
+                f_id: f_id
+            }
+        }
 }
 
 // #endregion
@@ -717,6 +768,7 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 
 module.exports = {
     AddUser, GetUser, UsernameExists,
+    AddFavourite, GetAllFavourites, GetFavouriteEntry, UpdateFavouriteEntry, DeleteFavouriteEntry,
     AddTokenBlacklist, GetAllTokenBlacklist, GetTokenBlacklist, AutoDeleteTokenBlacklist,
     AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, IsThreadInList, ThreadExists,
     Add_BW_List_Entry,GetBlacklist,GetWhitelist,UpdateBW_List,Delete_BW_List_Entry,

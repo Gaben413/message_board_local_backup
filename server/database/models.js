@@ -243,7 +243,12 @@ Image.hasOne(Post, {
 User.hasMany(Favourite, {
     foreignKey: 'user_id'
 })
-
+Thread.hasMany(favourite_has_thread, {
+    foreignKey: 't_number'
+})
+Favourite.hasMany(favourite_has_thread, {
+    foreignKey: 'f_id'
+})
 //database.sync()
 
 module.exports = { User, Token_Blacklist, Favourite, Image, Thread, Post, BW_List, favourite_has_thread };

@@ -1,6 +1,7 @@
 require('dotenv').config()
 const {
     AddUser, GetUser, UsernameExists,
+    AddFavourite, GetAllFavourites, GetFavouriteEntry, UpdateFavouriteEntry, DeleteFavouriteEntry,
     AddTokenBlacklist, GetAllTokenBlacklist, GetTokenBlacklist,
     GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread,
     GetAllThreadsVue, GetThreadDataVue, ThreadExists,Delete_BW_List_Entry,
@@ -130,6 +131,159 @@ app.post('/logout', async (req, res) => {
         success: true,
         response: response
     })
+})
+// #endregion
+
+// #region FAVOURITES
+app.post('/favourites/:user/create', async (req, res) => {
+    try{
+        //console.log(req.params['user'])
+        //console.log(req.body)
+
+        let user_data = await GetUser(req.params['user']);
+        console.log(user_data)
+
+        if(user_data != null){
+            let data = {
+                f_name: req.body['f_name'],
+                f_description: req.body['f_description'],
+                user_id: user_data['user_id']
+            }
+    
+            let response = await AddFavourite(data);
+    
+            res.json({
+                status:'success',
+                data: response
+            })
+        }else{
+            res.json({
+                status:'failure',
+                message: 'user not found'
+            })
+        }
+
+    }catch(err){
+        res.json({
+            status:'failure',
+            message: err
+        })
+    }
+    
+})
+app.get('/favourites/:user/get_all_entries', async (req, res) => {
+    try{
+        //console.log(req.params['user'])
+        //console.log(req.body)
+
+        let user_data = await GetUser(req.params['user']);
+
+        if(user_data != null){
+            
+            let response = await GetAllFavourites(user_data['user_id']);
+
+            res.json({
+                status:'success',
+                user: user_data['username'],
+                data: response
+            })
+        }else{
+            res.json({
+                status:'failure',
+                message: 'user not found'
+            })
+        }
+
+    }catch(err){
+        res.json({
+            status:'failure',
+            message: err
+        })
+    }
+
+})
+app.get('/favourites/:user/get_entry/:id', async (req, res) => {
+    try{
+        let user_data = await GetUser(req.params['user']);
+
+        if(user_data != null){
+            
+            let response = await GetFavouriteEntry(user_data['user_id'], req.params['id']);
+
+            res.json({
+                status:'success',
+                user: user_data['username'],
+                data: response
+            })
+        }else{
+            res.json({
+                status:'failure',
+                message: 'user not found'
+            })
+        }
+
+    }catch(err){
+        res.json({
+            status:'failure',
+            message: err
+        })
+    }
+})
+app.put('/favourites/:user/update_entry/:id', async (req, res) => {
+    try{
+        let user_data = await GetUser(req.params['user']);
+
+        if(user_data != null){
+            
+            let response = await UpdateFavouriteEntry(user_data['user_id'], req.params['id'], req.body);
+
+            console.log(req.body)
+
+            res.json({
+                status:'success',
+                user: user_data['username'],
+                data: response
+            })
+        }else{
+            res.json({
+                status:'failure',
+                message: 'user not found'
+            })
+        }
+
+    }catch(err){
+        res.json({
+            status:'failure',
+            message: err
+        })
+    }
+})
+app.delete('/favourites/:user/delete_entry/:id', async (req, res) => {
+    try{
+        let user_data = await GetUser(req.params['user']);
+
+        if(user_data != null){
+            
+            let response = await DeleteFavouriteEntry(user_data['user_id'], req.params['id']);
+
+            res.json({
+                status:'success',
+                user: user_data['username'],
+                data: response
+            })
+        }else{
+            res.json({
+                status:'failure',
+                message: 'user not found'
+            })
+        }
+
+    }catch(err){
+        res.json({
+            status:'failure',
+            message: err
+        })
+    }
 })
 // #endregion
 
