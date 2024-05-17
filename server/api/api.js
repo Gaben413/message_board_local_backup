@@ -1,6 +1,6 @@
 require('dotenv').config()
 const {
-    AddUser, GetUser, UsernameExists,
+    AddUser, GetUser, GetUserByID, UsernameExists,
     AddFavourite, GetAllFavourites, GetFavouriteEntry, UpdateFavouriteEntry, DeleteFavouriteEntry,
     AddThreadToFavourite, GetThreadFromFavourite, DeleteThreadFromFavourite,
     AddTokenBlacklist, GetAllTokenBlacklist, GetTokenBlacklist,
@@ -109,7 +109,9 @@ app.post('/login', async (req, res) => {
 })
 app.get('/is_logged', verifyJWT, async (req, res) => {
     try{
-        return res.json({auth: true, status: "Success"});
+        let user_data = await GetUserByID(req.userId);
+        //console.log(user_data)
+        return res.json({auth: true, status: "Success", user_data: user_data});
     }catch(err){
         return res.json({auth: false, status: "Failure"})
     }

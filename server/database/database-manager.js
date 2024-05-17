@@ -4,7 +4,7 @@ const { Sequelize } = require('sequelize');
 
 const {logBool} = require('../settings');
 
-let dev_mode = true;
+let dev_mode = false;
 
 const DB_URL = dev_mode ? process.env.PG_URL_DEV : process.env.PG_URL
 

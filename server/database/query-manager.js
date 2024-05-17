@@ -42,6 +42,26 @@ async function GetUser(username){
 
     return user;
 }
+async function GetUserByID(user_id){
+    const {User} = require('./models');
+
+    const user = await User.findOne({
+        attributes: [
+            'username',
+            'admin',
+            'verified',
+            'createdAt',
+            'updatedAt'
+        ],
+        where:{
+            user_id: user_id
+        },
+        raw:true
+        
+    });
+
+    return user;
+}
 
 async function UsernameExists(username){
     const {User} = require('./models');
@@ -878,7 +898,7 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 //#endregion
 
 module.exports = {
-    AddUser, GetUser, UsernameExists,
+    AddUser, GetUser, GetUserByID, UsernameExists,
     AddFavourite, GetAllFavourites, GetFavouriteEntry, UpdateFavouriteEntry, DeleteFavouriteEntry,
     AddThreadToFavourite, GetThreadFromFavourite, DeleteThreadFromFavourite,
     AddTokenBlacklist, GetAllTokenBlacklist, GetTokenBlacklist, AutoDeleteTokenBlacklist,

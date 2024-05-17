@@ -117,7 +117,7 @@ export default {
       button_color_hover: "#003600",
       button_text_color: "white",
       
-      token: localStorage.getItem("board-access-token") || ""
+      //token: localStorage.getItem("board-access-token") || ""
     }
   },
   beforeMount(){

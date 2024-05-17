@@ -40,10 +40,14 @@
       }
     },
     beforeMount(){
+      console.log(`TOKEN: ${this.$store.state.token}`);
+
       this.$store.commit('storageSetToken', (localStorage.getItem("board-access-token") || ""))
       //console.log(`Token: ${this.$store.state.token}`)
       this.$store.commit('storageSetAxiosLink', `http://${settings['axios_ip']}:${settings['axios_port']}/`);
       //console.log(this.$store.state.axios_link)
+
+      console.log(`AFTER TOKEN: ${this.$store.state.token}`);
     },
     mounted(){
       /*

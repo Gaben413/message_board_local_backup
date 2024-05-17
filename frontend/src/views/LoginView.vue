@@ -1,7 +1,6 @@
 <template>
-    <h1>Login</h1>
-
     <div v-if="!logged">
+        <h1>Login</h1>
         <h4>USERNAME</h4>
         <input type="text" name="" id="" v-model="username">
         <h4>PASSWORD</h4>
@@ -13,12 +12,13 @@
         -->
     </div>
     <div v-else>
-        <h3>You are already logged</h3>
+        <h1>Welcome {{ display_user_data.username }}</h1>
+
+        <h3>Admin: {{ display_user_data.admin }} | Verified: {{ display_user_data.verified }}</h3>
+        
+        <p>Creation: {{ display_user_data.createdAt }} | Update: {{ display_user_data.updatedAt }}</p>
         <button @click="logout">Logout</button>
     </div>
-    <!--
-    <p>{{ logged }}</p>
-    -->
 </template>
 
 <script>
@@ -33,6 +33,14 @@
                 username: "",
                 password: "",
                 logged: true,
+
+                display_user_data: {
+                    username: "",
+                    admin: false,
+                    verified: false,
+                    createdAt: "",
+                    updatedAt: ""
+                }
                 //axios_link: `http://${settings['axios_ip']}:${settings['axios_port']}/`,
                 //token: localStorage.getItem("board-access-token") || ""
             }
@@ -40,6 +48,7 @@
         mounted(){
             //console.log(`Token: ${this.token}`)
             axios.get(`${this.$store.state.axios_link}is_logged`, {headers: {'board-access-token': this.$store.state.token}}).then(res => {
+                this.display_user_data = res.data.user_data
                 this.logged = true;
             }).catch(err => {
                 this.logged = false;
@@ -57,7 +66,7 @@
                 console.log(this.$store.state.axios_link)
 
                 axios.post(`${this.$store.state.axios_link}login`, login).then(res => {
-                    //localStorage.setItem("board-access-token", res.data.token)
+                    localStorage.setItem("board-access-token", res.data.token)
                     this.$store.commit('storageSetToken', res.data.token);
                     console.log(res.data);
 
@@ -75,7 +84,7 @@
                 console.log(`Logging out token: ${this.$store.state.token}`)
                 axios.post(`${this.$store.state.axios_link}logout`, {body: "Test body"}, {headers: {'board-access-token': this.$store.state.token}}).then(res => {
                     console.log(res);
-                    //localStorage.setItem("board-access-token", "")
+                    localStorage.setItem("board-access-token", "")
                     //this.token = ""
                     this.$store.commit('storageSetToken', "");
                     this.logged = false;
