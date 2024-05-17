@@ -13,6 +13,8 @@ const {root_path, thread_folder, folder_name, api_port} = require('../settings')
 
 let AdmZip = require('adm-zip');
 
+const bcrypt = require('bcrypt');
+
 const express = require('express')
 const jwt = require('jsonwebtoken')
 //const fs = require('fs')
@@ -71,16 +73,37 @@ app.get('/test', verifyJWT, (req, res) => {
 app.post('/login', async (req, res) => {
     console.log("Checking if user exists");
     if(await UsernameExists(req.body['username'])){
+        const password = req.body['password'];
         console.log("Getting user");
         const user = await GetUser(req.body['username']);
 
         console.log("Checkking if credentials are right");
+        /*
         if(user['username'] === req.body['username'] && user['password'] === req.body['password']){
             const token = jwt.sign({userId: 1}, SECRET, {});
             return res.json({auth: true, token});
         }
+        */
+        bcrypt.compare(password, user['password'], async (err, result) => {
+
+            let answer;
+
+            if(result){
+                const token = jwt.sign({userId: user['user_id']}, SECRET, {});
+                console.log(token)
+
+                answer = {auth: true, token}
+            }else{
+                console.log("Password is wrong");
+                answer = {auth: false, message: "Wrong Password"}
+            }
+
+            return res.json(answer);
+
+        })
+    }else{
+        res.status(401).end();
     }
-    res.status(401).end();
 })
 app.get('/is_logged', verifyJWT, async (req, res) => {
     try{
