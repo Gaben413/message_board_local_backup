@@ -2,6 +2,7 @@ require('dotenv').config()
 const {
     AddUser, GetUser, UsernameExists,
     AddFavourite, GetAllFavourites, GetFavouriteEntry, UpdateFavouriteEntry, DeleteFavouriteEntry,
+    AddThreadToFavourite, GetThreadFromFavourite, DeleteThreadFromFavourite,
     AddTokenBlacklist, GetAllTokenBlacklist, GetTokenBlacklist,
     GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread,
     GetAllThreadsVue, GetThreadDataVue, ThreadExists,Delete_BW_List_Entry,
@@ -229,13 +230,13 @@ app.get('/favourites/:user/get_entry/:id', async (req, res) => {
         })
     }
 })
-app.put('/favourites/:user/update_entry/:id', async (req, res) => {
+app.put('/favourites/:user/update_entry', async (req, res) => {
     try{
         let user_data = await GetUser(req.params['user']);
 
         if(user_data != null){
             
-            let response = await UpdateFavouriteEntry(user_data['user_id'], req.params['id'], req.body);
+            let response = await UpdateFavouriteEntry(user_data['user_id'], req.body['f_id'], req.body);
 
             console.log(req.body)
 
@@ -258,13 +259,13 @@ app.put('/favourites/:user/update_entry/:id', async (req, res) => {
         })
     }
 })
-app.delete('/favourites/:user/delete_entry/:id', async (req, res) => {
+app.delete('/favourites/:user/delete_entry', async (req, res) => {
     try{
         let user_data = await GetUser(req.params['user']);
 
         if(user_data != null){
             
-            let response = await DeleteFavouriteEntry(user_data['user_id'], req.params['id']);
+            let response = await DeleteFavouriteEntry(user_data['user_id'], req.body['f_id']);
 
             res.json({
                 status:'success',
@@ -278,6 +279,91 @@ app.delete('/favourites/:user/delete_entry/:id', async (req, res) => {
             })
         }
 
+    }catch(err){
+        res.json({
+            status:'failure',
+            message: err
+        })
+    }
+})
+
+app.post('/favourites/:user/add_thread', async (req, res) => {
+    try{
+        let user_data = await GetUser(req.params['user']);
+
+        if(user_data != null){
+            
+            console.log(req.body)
+            let response = await AddThreadToFavourite(user_data['user_id'], req.body);
+
+            res.json({
+                status:'success',
+                user: user_data['username'],
+                data: response
+            })
+        }else{
+            res.json({
+                status:'failure',
+                message: 'user not found'
+            })
+        }
+
+    }catch(err){
+        res.json({
+            status:'failure',
+            message: err
+        })
+    }
+})
+app.get('/favourites/:user/get_thread_in_favourite/:id', async (req, res) => {
+    try{
+        let user_data = await GetUser(req.params['user']);
+
+        
+        if(user_data != null){
+            
+            let response = await GetThreadFromFavourite(user_data['user_id'], req.params['id'])
+
+            res.json({
+                status:'success',
+                user: user_data['username'],
+                data: response
+            })
+        }else{
+            res.json({
+                status:'failure',
+                message: 'user not found'
+            })
+        }
+        
+    }catch(err){
+        res.json({
+            status:'failure',
+            message: err
+        })
+    }
+})
+app.delete('/favourites/:user/delete_thread_in_favourite/', async (req, res) => {
+    try{
+        let user_data = await GetUser(req.params['user']);
+        //console.log(user_data)
+        
+        if(user_data != null){
+            
+            let response = await DeleteThreadFromFavourite(user_data['user_id'], req.body['f_id'], req.body['t_number'])
+
+            res.json({
+                status:'success',
+                user: user_data['username'],
+                data: response
+            })
+        }else{
+            res.json({
+                status:'failure',
+                message: 'user not found'
+            })
+        }
+        
     }catch(err){
         res.json({
             status:'failure',

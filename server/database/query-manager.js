@@ -240,6 +240,117 @@ async function DeleteFavouriteEntry(user_id, f_id){
         }
 }
 
+async function AddThreadToFavourite(user_id, data){
+    const {Favourite, favourite_has_thread, Thread} = require('./models');
+
+    let ufRelation = await Favourite.findOne({
+        where:{
+            user_id: user_id,
+            f_id: data['f_id']
+        },
+        raw: true
+    })
+
+    console.log(ufRelation);
+
+    if(ufRelation == null)
+        return {
+            status: 'failure',
+            message: 'User does not own favourite entry'
+        }
+
+    let output = await favourite_has_thread.create({
+        f_id: data['f_id'],
+        t_number: data['t_number'],
+    })
+
+    return output;
+}
+async function GetThreadFromFavourite(user_id, f_id){
+    const {Favourite, favourite_has_thread, Thread} = require('./models');
+
+    let ufRelation = await Favourite.findOne({
+        where:{
+            user_id: user_id,
+            f_id: f_id
+        },
+        raw: true
+    })
+
+    if(ufRelation == null)
+        return {
+            status: 'failure',
+            message: 'User does not own favourite entry'
+        }
+
+    let thread_numbers_raw = await favourite_has_thread.findAll({
+        attributes: [
+            't_number'
+        ],
+        where: {
+            f_id: f_id
+        },
+        raw: true
+    })
+
+    let thread_numbers = []
+    thread_numbers_raw.forEach(row => {
+        thread_numbers.push(row['t_number'])
+    })
+
+    let output = await Thread.findAll({
+        where: {
+            t_number: thread_numbers
+        }
+    })
+
+    return output;
+}
+async function DeleteThreadFromFavourite(user_id, f_id, t_number){
+    const {Favourite, favourite_has_thread, Thread} = require('./models');
+
+    let ufRelation = await Favourite.findOne({
+        where:{
+            user_id: user_id,
+            f_id: f_id
+        },
+        raw: true
+    })
+    
+    if(ufRelation == null)
+        return {
+            status: 'failure',
+            message: 'User does not own favourite entry'
+        }
+
+    console.log(`USER ID: ${user_id}\nF ID: ${f_id}\nNUMBER: ${t_number}`);
+
+    let entry_deleted = await favourite_has_thread.destroy({
+        where: {
+            f_id: f_id,
+            t_number: t_number
+        }
+    })
+
+    if(entry_deleted == 1)
+        return {
+            status: 'successfully deleted entry',
+            data: {
+                user_id: user_id,
+                f_id: f_id,
+                t_number: t_number
+            }
+        }
+    else
+        return {
+            status: 'failure to delete entry',
+            data: {
+                user_id: user_id,
+                f_id: f_id,
+                t_number: t_number
+            }
+        }
+}
 // #endregion
 
 // #region Image functions
@@ -769,6 +880,7 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 module.exports = {
     AddUser, GetUser, UsernameExists,
     AddFavourite, GetAllFavourites, GetFavouriteEntry, UpdateFavouriteEntry, DeleteFavouriteEntry,
+    AddThreadToFavourite, GetThreadFromFavourite, DeleteThreadFromFavourite,
     AddTokenBlacklist, GetAllTokenBlacklist, GetTokenBlacklist, AutoDeleteTokenBlacklist,
     AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, IsThreadInList, ThreadExists,
     Add_BW_List_Entry,GetBlacklist,GetWhitelist,UpdateBW_List,Delete_BW_List_Entry,
