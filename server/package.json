@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "start": "node index.js",
-    "createsuperuser": "node create_user.js",
+    "createuser": "node create_user.js",
     "sync": "node database/sync-db.js",
     "sync2": "node database/models.js",
     "fetch": "node fetch/message_board_local_backup.js",
