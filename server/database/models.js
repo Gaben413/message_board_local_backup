@@ -49,13 +49,19 @@ const Favourite = database.define('favourite', {
         autoIncrement: true,
         primaryKey: true
     },
+    f_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    f_description: {
+        type: DataTypes.TEXT
+    },
     f_date: {
         type: DataTypes.DATE,
         allowNull: false
     },
-    f_name: {
-        type: DataTypes.STRING,
-        allowNull: false
+    user_id: {
+        type: DataTypes.INTEGER
     },
 },
 {
@@ -232,6 +238,10 @@ Thread.hasMany(Post, {
 
 Image.hasOne(Post, {
     foreignKey: 'i_tim'
+})
+
+User.hasMany(Favourite, {
+    foreignKey: 'user_id'
 })
 
 //database.sync()
