@@ -357,12 +357,14 @@ h1{
   left: 25px;
   bottom: 25px;
 
+  border-width: 2px;
+  border-style: solid;
+  border-color: black;
   border-radius: 15px;
 
-  background-color: green;
+  background-color: rgba(0, 128, 0, 0.548);
 
   opacity: 0%;
-
 }
 #notification-div > h3{
   color: black;
