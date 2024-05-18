@@ -3,6 +3,7 @@
     <nav>
       <router-link to="/">Home</router-link>
       <router-link to="/login">Login</router-link>
+      <router-link to="/favourites">Favourites</router-link>
       <router-link to="/threads/1">Threads</router-link>
       <router-link to="/settings">Settings</router-link>
     </nav>

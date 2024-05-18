@@ -4,6 +4,7 @@ import ThreadsListView from '@/views/ThreadsListView.vue'
 import ThreadView from '../views/ThreadView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import LoginView from '@/views/LoginView.vue'
+import FavouritesView from '@/views/FavouritesView.vue'
 
 const routes = [
   {
@@ -57,7 +58,16 @@ const routes = [
     meta: {
       title: 'Login'
     }
-  }
+  },
+  {
+    path: '/favourites',
+    name: 'favourites',
+    component: FavouritesView,
+    props: true,
+    meta: {
+      title: 'Favourites'
+    }
+  },
 ]
 
 const router = createRouter({
