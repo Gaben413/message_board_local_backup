@@ -1,5 +1,6 @@
 <template>
-    <h1>{{ display_username }} FAVOURITES</h1>
+    <h1>{{ username }} FAVOURITES</h1>
+    <RouterView />
 </template>
 
 /*

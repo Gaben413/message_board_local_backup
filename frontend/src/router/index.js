@@ -6,6 +6,9 @@ import SettingsView from '@/views/SettingsView.vue'
 import LoginView from '@/views/LoginView.vue'
 import FavouritesView from '@/views/FavouritesView.vue'
 
+import FavouriteList from '@/components/FavouriteList.vue'
+import FavouriteContent from '@/components/FavouriteContent.vue'
+
 const routes = [
   {
     path: '/',
@@ -60,10 +63,14 @@ const routes = [
     }
   },
   {
-    path: '/favourites',
+    path: '/favourites/:username',
     name: 'favourites',
     component: FavouritesView,
     props: true,
+    children: [
+      { path: 'list', component: FavouriteList },
+      { path: 'content/:id', name:'content', props: true, component: FavouriteContent },
+    ],
     meta: {
       title: 'Favourites'
     }

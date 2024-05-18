@@ -3,7 +3,7 @@
     <nav>
       <router-link to="/">Home</router-link>
       <router-link to="/login">Login</router-link>
-      <router-link to="/favourites">Favourites</router-link>
+      <router-link v-if="display_user_data != null" :to="{path: `/favourites/${display_user_data.username}/list`}">Favourites</router-link>
       <router-link to="/threads/1">Threads</router-link>
       <router-link to="/settings">Settings</router-link>
     </nav>
@@ -37,7 +37,10 @@
 
         noti_class: "",
         notification_text: "NOTIFICATION",
-        showing_noti: false
+        showing_noti: false,
+
+        display_user_data: null,
+        logged: false
       }
     },
     beforeMount(){
@@ -49,6 +52,13 @@
       //console.log(this.$store.state.axios_link)
 
       //console.log(`AFTER TOKEN: ${this.$store.state.token}`);
+
+      axios.get(`${this.$store.state.axios_link}is_logged`, {headers: {'board-access-token': this.$store.state.token}}).then(res => {
+        this.display_user_data = res.data.user_data
+        this.logged = true;
+      }).catch(err => {
+        this.logged = false;
+      })
     },
     mounted(){
       /*

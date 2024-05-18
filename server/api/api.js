@@ -138,19 +138,22 @@ app.post('/logout', async (req, res) => {
 // #endregion
 
 // #region FAVOURITES
-app.post('/favourites/:user/create', async (req, res) => {
+app.post('/favourites/:user/create', verifyJWT, async (req, res) => {
     try{
         //console.log(req.params['user'])
         //console.log(req.body)
 
-        let user_data = await GetUser(req.params['user']);
-        console.log(user_data)
+        //console.log(req.body)
+        //console.log(req.userId)
+
+        let user_data = await GetUserByID(req.userId);
+        //console.log(user_data)
 
         if(user_data != null){
             let data = {
-                f_name: req.body['f_name'],
-                f_description: req.body['f_description'],
-                user_id: user_data['user_id']
+                f_name: req.body['entry_name'],
+                f_description: req.body['entry_desc'],
+                user_id: req.userId
             }
     
             let response = await AddFavourite(data);
@@ -174,16 +177,18 @@ app.post('/favourites/:user/create', async (req, res) => {
     }
     
 })
-app.get('/favourites/:user/get_all_entries', async (req, res) => {
+app.get('/favourites/:user/get_all_entries', verifyJWT, async (req, res) => {
     try{
         //console.log(req.params['user'])
         //console.log(req.body)
 
-        let user_data = await GetUser(req.params['user']);
+        console.log(req.userId)
+
+        let user_data = await GetUserByID(req.userId);
 
         if(user_data != null){
             
-            let response = await GetAllFavourites(user_data['user_id']);
+            let response = await GetAllFavourites(req.userId);
 
             res.json({
                 status:'success',
@@ -261,13 +266,21 @@ app.put('/favourites/:user/update_entry', async (req, res) => {
         })
     }
 })
-app.delete('/favourites/:user/delete_entry', async (req, res) => {
+app.delete('/favourites/:user/delete_entry', verifyJWT, async (req, res) => {
     try{
-        let user_data = await GetUser(req.params['user']);
+        /*
+        console.log(req.body)
+        console.log(req.headers)
+        console.log(req.userId)
+        */
+
+        let user_data = await GetUserByID(req.userId);
+
+        console.log(`User Data: ${user_data}`)
 
         if(user_data != null){
             
-            let response = await DeleteFavouriteEntry(user_data['user_id'], req.body['f_id']);
+            let response = await DeleteFavouriteEntry(req.userId, req.body['f_id']);
 
             res.json({
                 status:'success',
@@ -282,6 +295,7 @@ app.delete('/favourites/:user/delete_entry', async (req, res) => {
         }
 
     }catch(err){
+        console.log(err)
         res.json({
             status:'failure',
             message: err
