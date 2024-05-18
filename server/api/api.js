@@ -2,7 +2,7 @@ require('dotenv').config()
 const {
     AddUser, GetUser, GetUserByID, UsernameExists,
     AddFavourite, GetAllFavourites, GetFavouriteEntry, UpdateFavouriteEntry, DeleteFavouriteEntry,
-    AddThreadToFavourite, GetThreadFromFavourite, DeleteThreadFromFavourite,
+    AddThreadToFavourite, GetThreadFromFavourite, GetFavouritewithThread, DeleteThreadFromFavourite,
     AddTokenBlacklist, GetAllTokenBlacklist, GetTokenBlacklist,
     GetAllThreads, GetThread, GetPost, GetAllPosts, GetAllPostsFromThread, GetAllImages, GetImage, GetAllImagesFromThread, GetPostThread,
     GetAllThreadsVue, GetThreadDataVue, ThreadExists,Delete_BW_List_Entry,
@@ -303,14 +303,14 @@ app.delete('/favourites/:user/delete_entry', verifyJWT, async (req, res) => {
     }
 })
 
-app.post('/favourites/:user/add_thread', async (req, res) => {
+app.post('/favourites/:user/add_thread', verifyJWT, async (req, res) => {
     try{
-        let user_data = await GetUser(req.params['user']);
+        let user_data = await GetUserByID(req.userId);
 
         if(user_data != null){
             
             console.log(req.body)
-            let response = await AddThreadToFavourite(user_data['user_id'], req.body);
+            let response = await AddThreadToFavourite(req.userId, req.body);
 
             res.json({
                 status:'success',
@@ -331,9 +331,9 @@ app.post('/favourites/:user/add_thread', async (req, res) => {
         })
     }
 })
-app.get('/favourites/:user/get_thread_in_favourite/:id', async (req, res) => {
+app.get('/favourites/:user/get_thread_in_favourite/:id', verifyJWT, async (req, res) => {
     try{
-        let user_data = await GetUser(req.params['user']);
+        let user_data = await GetUserByID(req.userId);
 
         
         if(user_data != null){
@@ -359,14 +359,42 @@ app.get('/favourites/:user/get_thread_in_favourite/:id', async (req, res) => {
         })
     }
 })
-app.delete('/favourites/:user/delete_thread_in_favourite/', async (req, res) => {
+app.get('/favourites/:user/get_favourites_with_thread/:id', verifyJWT, async (req, res) => {
     try{
-        let user_data = await GetUser(req.params['user']);
+
+        let user_data = await GetUserByID(req.userId);
+        
+        if(user_data != null){
+            
+            let response = await GetFavouritewithThread(req.userId, parseInt(req.params['id']));
+
+            res.json({
+                status:'success',
+                user: user_data['username'],
+                favs: response
+            })
+        }else{
+            res.json({
+                status:'failure',
+                message: 'user not found'
+            })
+        }
+        
+    }catch(err){
+        res.json({
+            status:'failure',
+            message: err
+        })
+    }
+})
+app.delete('/favourites/:user/delete_thread_in_favourite', verifyJWT, async (req, res) => {
+    try{
+        let user_data = await GetUserByID(req.userId);
         //console.log(user_data)
         
         if(user_data != null){
             
-            let response = await DeleteThreadFromFavourite(user_data['user_id'], req.body['f_id'], req.body['t_number'])
+            let response = await DeleteThreadFromFavourite(req.userId, req.body['f_id'], req.body['t_number'])
 
             res.json({
                 status:'success',

@@ -271,7 +271,7 @@ async function AddThreadToFavourite(user_id, data){
         raw: true
     })
 
-    console.log(ufRelation);
+    console.log(`UFR: ${ufRelation}`);
 
     if(ufRelation == null)
         return {
@@ -325,6 +325,51 @@ async function GetThreadFromFavourite(user_id, f_id){
     })
 
     return output;
+}
+async function GetFavouritewithThread(user_id, t_number){
+    const {Favourite, favourite_has_thread, Thread} = require('./models');
+
+    let ufRelation = await Favourite.findAll({
+        where:{
+            user_id: user_id,
+        },
+        raw: true
+    })
+    /*
+    console.log(`\n### ${t_number} ###`)
+    console.log(ufRelation)
+    console.log(ufRelation == null)
+    */
+    if(ufRelation == null){
+        console.log("There was an failure")
+        return {
+            status: 'failure',
+            message: 'User does not own this favourite entry'
+        }
+    }
+
+    let fav_filter = [];
+
+    for (let i = 0; i < ufRelation.length; i++) {
+        fav_filter.push(ufRelation[i]['f_id'])
+    }
+
+    //console.log(`Fav Filter: ${fav_filter}`)
+
+    let thread_numbers_raw = await favourite_has_thread.findAll({
+        attributes: [
+            'f_id'
+        ],
+        where: {
+            f_id: fav_filter,
+            t_number: t_number
+        },
+        raw: true
+    })
+
+    //console.log(thread_numbers_raw)
+
+    return thread_numbers_raw;
 }
 async function DeleteThreadFromFavourite(user_id, f_id, t_number){
     const {Favourite, favourite_has_thread, Thread} = require('./models');
@@ -900,7 +945,7 @@ async function AddThreadToFavourite(thread_id, favourite_id){
 module.exports = {
     AddUser, GetUser, GetUserByID, UsernameExists,
     AddFavourite, GetAllFavourites, GetFavouriteEntry, UpdateFavouriteEntry, DeleteFavouriteEntry,
-    AddThreadToFavourite, GetThreadFromFavourite, DeleteThreadFromFavourite,
+    AddThreadToFavourite, GetThreadFromFavourite, GetFavouritewithThread, DeleteThreadFromFavourite,
     AddTokenBlacklist, GetAllTokenBlacklist, GetTokenBlacklist, AutoDeleteTokenBlacklist,
     AddImage, AddThread, GetAllThreads, GetImage, GetAllImages, GetAllImagesFromThread, GetThread, GetPostThread, UpdateThread, IsThreadInList, ThreadExists,
     Add_BW_List_Entry,GetBlacklist,GetWhitelist,UpdateBW_List,Delete_BW_List_Entry,

@@ -35,7 +35,7 @@
     
     <div class="threads" v-if="display_threads_data.length" id="threads-grid">
 
-      <ThreadComponent v-for="data in display_threads_data" :key="data.key" class="thread-comp" :data="data" />
+      <ThreadComponent v-for="data in display_threads_data" :key="data.key" class="thread-comp" :data="data" :fav_array="fav_array" />
 
     </div>
     <div v-else >
@@ -100,6 +100,8 @@ export default {
 
       autheticated: true,
 
+      fav_array: []
+
       //token: localStorage.getItem("board-access-token") || ""
     }
   },
@@ -115,6 +117,11 @@ export default {
   mounted(){
     this.getThreadData()
     this.get_page_amount()
+
+    axios.get(`${this.$store.state.axios_link}favourites/stock/get_all_entries`, {headers: {'board-access-token': this.$store.state.token}}).then(res => {
+      this.fav_array = res.data.data;
+      //console.log(res.data)
+    })
   },
   updated(){
     console.log("Update")

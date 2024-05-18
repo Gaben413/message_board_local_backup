@@ -1,12 +1,6 @@
 <template>
     <div>
-        <div id="container" @click="to_thread">
-            <!--
-            <div class="item1">
-                <p class="header-text">{{ data.t_number }} | {{ data.t_sub }} - {{ data.t_board }}</p>
-            </div>
-            -->
-
+        <div id="container" @click="to_thread" v-if="!show_fav">
             <p id="header-text">{{ data.t_number }} | {{ data.t_sub }} - {{ data.t_board }}</p>
 
             <div id="content">
@@ -20,8 +14,23 @@
                 <span v-else>On Going</span>
                 - Posts: {{ data.t_replies_amount }}
             </p>
-
         </div>
+
+        <div v-else>
+            <h4>Add to favourites</h4>
+            <select name="" id="" @change="check_fav" v-model="fav_index">
+                <option v-for="fav in fav_array" :value="fav.f_id">{{ fav.f_name }}</option>
+            </select>
+
+            <br>
+
+            <button v-if="!thread_in_fav" @click="add_to_fav">Add</button>
+            <button v-else @click="remove_from_fav">Remove</button>
+
+            <button @click="toggle_fav_div">Cancel</button>
+        </div>
+
+        <button @click="toggle_fav_div" :hidden="show_fav">FAV</button>
 
         <p>{{ display_date }}</p>
     </div>
@@ -30,11 +39,20 @@
 <script>
 import style_sheet from '@/assets/style-sheet.json'
 import router from '@/router'
+
+import axios from 'axios'
+
 export default{
     name: 'ThreadComponent',
-    props: ['data'],
+    props: ['data','fav_array'],
     data(){
         return{
+            show_fav: false,
+            thread_in_fav: false,
+            fav_index: 1,
+
+            fav_list: [0],
+
             display_date: "",
             border_color: "#008a22",
             body_color: "#90ee90",
@@ -43,6 +61,8 @@ export default{
         }
     },
     mounted(){
+        this.check_fav()
+        
         this.update_visual_data()
     },
     updated(){
@@ -89,6 +109,55 @@ export default{
         to_thread(){
             router.push({name: 'thread', params: {t_number: this.data.t_number}})
             console.log(`Moving to Thread Nº ${this.data.t_number}`);
+        },
+        toggle_fav_div(){
+            this.check_fav()
+            this.show_fav = !this.show_fav;
+        },
+        check_fav(){
+            axios.get(`${this.$store.state.axios_link}favourites/stock/get_favourites_with_thread/${this.data.t_number}`, {headers: {'board-access-token': this.$store.state.token}})
+            .then(res => {
+                this.fav_list = []
+                for (let i = 0; i < res.data.favs.length; i++) {
+                    this.fav_list.push(res.data.favs[i]['f_id'])
+                    
+                }
+
+                if(this.fav_list.includes(this.fav_index)){
+                    this.thread_in_fav = true
+                }else{
+                    this.thread_in_fav = false
+                }
+            }).catch(err => {
+                console.error(err)
+            })
+        },
+        remove_from_fav(){
+            let body = {
+                f_id: this.fav_index,
+	            t_number: this.data.t_number
+            }
+            axios.delete(`${this.$store.state.axios_link}favourites/stock/delete_thread_in_favourite`, {headers: {'board-access-token': this.$store.state.token}, data: body})
+                .then(res => {
+                    console.log(res.data)
+                }).catch(err => {
+                    console.error(err)
+                })
+                
+            this.toggle_fav_div()
+        },
+        add_to_fav(){
+            let body = {
+                f_id: this.fav_index,
+	            t_number: this.data.t_number
+            }
+            axios.post(`${this.$store.state.axios_link}favourites/stock/add_thread`, body, {headers: {'board-access-token': this.$store.state.token}})
+            .then(res => {
+                console.log(res.data)
+            }).catch(err => {
+                console.error(err)
+            })
+            this.toggle_fav_div()
         }
     }
 }
