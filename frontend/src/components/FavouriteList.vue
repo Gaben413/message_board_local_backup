@@ -11,11 +11,11 @@
             <textarea name="" id="" cols="60" rows="10" v-model="form_desc"></textarea>
 
             <br>
-            <button @click="submit">Save</button>
-            <button @click="toggle_entry_div">Discard</button>
+            <button class="fav-view-buttons" @click="submit">Save</button>
+            <button class="fav-view-buttons" @click="toggle_entry_div">Discard</button>
         </div>
 
-        <button @click="toggle_entry_div" :hidden="!hide_entry_div">New Entry</button>
+        <button class="fav-view-buttons" @click="toggle_entry_div" :hidden="!hide_entry_div">New Entry</button>
 
         <FavouriteEntryComponent v-for="entry in favourites_entry_array" :entry="entry" @refresh="refresh" />
     </div>
@@ -101,5 +101,25 @@
 }
 .label-headers{
     margin-bottom: 0px;
+}
+
+.fav-view-buttons{
+    padding: 5px 10px;
+    margin:5px;
+
+    background-color: #008a22;
+    color: white;
+    font-size: 13px;
+
+    border-style: none;
+    border-radius: 15px;
+}
+.fav-view-buttons:hover{
+    background-color: #004912;
+}
+.fav-view-buttons:active{
+    background-color: #00290a;
+    font-size: 12px;
+    transform: scale(0.90);
 }
 </style>

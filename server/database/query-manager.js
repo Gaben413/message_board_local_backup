@@ -179,6 +179,7 @@ async function GetAllFavourites(user_id){
         where:{
             user_id: user_id
         },
+        order:[['f_id', 'ASC']],
         raw:true
     });
 

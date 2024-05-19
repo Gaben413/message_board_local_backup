@@ -18,20 +18,20 @@
 
         <div v-else>
             <h4>Add to favourites</h4>
-            <select name="" id="" @change="check_fav" v-model="fav_index">
-                <option v-for="fav in fav_array" :value="fav.f_id">{{ fav.f_name }}</option>
+            <select name="" id="fav-dropbox" @change="check_fav" v-model="fav_index">
+                <option class="fav-select-items" v-for="fav in fav_array" :value="fav.f_id">{{ fav.f_name }}</option>
             </select>
 
             <br>
 
-            <button v-if="!thread_in_fav" @click="add_to_fav">Add</button>
-            <button v-else @click="remove_from_fav">Remove</button>
+            <button class="fav-buttons" v-if="!thread_in_fav" @click="add_to_fav">Add</button>
+            <button class="fav-buttons" v-else @click="remove_from_fav">Remove</button>
 
-            <button @click="toggle_fav_div">Cancel</button>
+            <button class="fav-buttons" @click="toggle_fav_div">Cancel</button>
         </div>
 
-        <button v-if="fav_array != null" @click="toggle_fav_div" :hidden="show_fav">FAV</button>
-        <button v-else @click="remove_from_fav(current_f_id)">REMOVE</button>
+        <button class="fav-buttons" v-if="fav_array != null" @click="toggle_fav_div" :hidden="show_fav">FAV</button>
+        <button class="fav-buttons" v-else @click="remove_from_fav(current_f_id)">REMOVE</button>
 
         <p>{{ display_date }}</p>
     </div>
@@ -221,6 +221,27 @@ export default{
 #content{
     min-height: 150px;
     padding: 5px;
+}
+
+#fav-dropbox{
+    background-color: v-bind(body_color);
+    border-color: v-bind(border_color);
+    border-style: solid;
+    border-radius: 15px;
+}
+.fav-select-items{
+    background-color: v-bind(body_color);
+    color: v-bind(text_color);
+}
+.fav-buttons{
+    padding: 5px 15px;
+    margin: 5px;
+
+    background-color: v-bind(border_color);
+    color: v-bind(text_color);
+
+    border-style: none;
+    border-radius: 15px;
 }
 
 .content-p{

@@ -182,7 +182,7 @@ app.get('/favourites/:user/get_all_entries', verifyJWT, async (req, res) => {
         //console.log(req.params['user'])
         //console.log(req.body)
 
-        console.log(req.userId)
+        //console.log(req.userId)
 
         let user_data = await GetUserByID(req.userId);
 
@@ -210,13 +210,13 @@ app.get('/favourites/:user/get_all_entries', verifyJWT, async (req, res) => {
     }
 
 })
-app.get('/favourites/:user/get_entry/:id', async (req, res) => {
+app.get('/favourites/:user/get_entry/:id', verifyJWT, async (req, res) => {
     try{
-        let user_data = await GetUser(req.params['user']);
+        let user_data = await GetUserByID(req.userId);
 
         if(user_data != null){
             
-            let response = await GetFavouriteEntry(user_data['user_id'], req.params['id']);
+            let response = await GetFavouriteEntry(req.userId, req.params['id']);
 
             res.json({
                 status:'success',
@@ -237,15 +237,16 @@ app.get('/favourites/:user/get_entry/:id', async (req, res) => {
         })
     }
 })
-app.put('/favourites/:user/update_entry', async (req, res) => {
+app.put('/favourites/:user/update_entry', verifyJWT, async (req, res) => {
     try{
-        let user_data = await GetUser(req.params['user']);
+
+        let user_data = await GetUserByID(req.userId);
 
         if(user_data != null){
             
-            let response = await UpdateFavouriteEntry(user_data['user_id'], req.body['f_id'], req.body);
+            let response = await UpdateFavouriteEntry(req.userId, req.body['f_id'], req.body);
 
-            console.log(req.body)
+            //console.log(req.body)
 
             res.json({
                 status:'success',

@@ -1,6 +1,6 @@
 <template>
-    <h1>Favourite Content</h1>
-    <p>{{ id }}</p>
+    <h1>Favourite: "{{ fav_entry_data.f_name }}"</h1>
+    <p>{{ fav_entry_data.f_description }}</p>
 
     <div v-if="display_threads_data.length" id="threads-grid">
         <ThreadComponent class="thread-comp" v-for="data in display_threads_data" :key="data.key" :data="data" :current_f_id="parseInt(id)" />
@@ -20,6 +20,9 @@
         props: ['id'],
         data(){
             return{
+                fav_entry_data: {
+                    
+                },
                 thread_data: [],
                 display_threads_data: []
             }
@@ -42,6 +45,10 @@
                 this.display_threads_data = this.threads_data;
 
                 console.log(res.data.data)
+            })
+
+            axios.get(`${this.$store.state.axios_link}favourites/:user/get_entry/${this.id}`,  {headers: {'board-access-token': this.$store.state.token}}).then(res => {
+                this.fav_entry_data = res.data.data;
             })
         }
     }
