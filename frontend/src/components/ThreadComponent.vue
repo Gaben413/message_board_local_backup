@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :hidden="hide_component">
         <div id="container" @click="to_thread" v-if="!show_fav">
             <p id="header-text">{{ data.t_number }} | {{ data.t_sub }} - {{ data.t_board }}</p>
 
@@ -30,7 +30,8 @@
             <button @click="toggle_fav_div">Cancel</button>
         </div>
 
-        <button @click="toggle_fav_div" :hidden="show_fav">FAV</button>
+        <button v-if="fav_array != null" @click="toggle_fav_div" :hidden="show_fav">FAV</button>
+        <button v-else @click="remove_from_fav(current_f_id)">REMOVE</button>
 
         <p>{{ display_date }}</p>
     </div>
@@ -44,14 +45,16 @@ import axios from 'axios'
 
 export default{
     name: 'ThreadComponent',
-    props: ['data','fav_array'],
+    props: ['data','fav_array', 'current_f_id'],
     data(){
         return{
             show_fav: false,
             thread_in_fav: false,
             fav_index: 1,
 
-            fav_list: [0],
+            fav_list: [],
+
+            hide_component: false,
 
             display_date: "",
             border_color: "#008a22",
@@ -60,10 +63,15 @@ export default{
             text_color: "black"
         }
     },
-    mounted(){
+    beforeMount(){
+        //console.log("Running B-mount")
         this.check_fav()
         
         this.update_visual_data()
+        //console.log("B-Mount Finished")
+    },
+    mounted(){
+        //console.log("mounting")
     },
     updated(){
         this.update_visual_data()
@@ -101,8 +109,9 @@ export default{
                 }
             }
         },
-        remove_anchor(str){            
-            let output = (str.replaceAll(/<a [^>]+>|<\/a>/g, '')).replaceAll('&gt;&gt;', '>>');
+        remove_anchor(input_str){
+            if(input_str == undefined) return input_str;
+            let output = (input_str.replaceAll(/<a [^>]+>|<\/a>/g, '')).replaceAll('&gt;&gt;', '>>');
 
             return output;
         },
@@ -115,6 +124,7 @@ export default{
             this.show_fav = !this.show_fav;
         },
         check_fav(){
+            console.log("Checking")
             axios.get(`${this.$store.state.axios_link}favourites/stock/get_favourites_with_thread/${this.data.t_number}`, {headers: {'board-access-token': this.$store.state.token}})
             .then(res => {
                 this.fav_list = []
@@ -132,19 +142,27 @@ export default{
                 console.error(err)
             })
         },
-        remove_from_fav(){
+        remove_from_fav(override = null){
+            let f_id = (override == null ? this.fav_index : override)
             let body = {
-                f_id: this.fav_index,
+                f_id: f_id,
 	            t_number: this.data.t_number
             }
+
+            console.log(body)
+
             axios.delete(`${this.$store.state.axios_link}favourites/stock/delete_thread_in_favourite`, {headers: {'board-access-token': this.$store.state.token}, data: body})
                 .then(res => {
                     console.log(res.data)
                 }).catch(err => {
                     console.error(err)
                 })
-                
-            this.toggle_fav_div()
+            
+                console.log(`${override == null} | ${override} | ${this.current_f_id}`)
+            if(override == null)
+                this.toggle_fav_div()
+            else
+                this.hide_component = true;
         },
         add_to_fav(){
             let body = {

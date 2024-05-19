@@ -287,7 +287,7 @@ async function AddThreadToFavourite(user_id, data){
     return output;
 }
 async function GetThreadFromFavourite(user_id, f_id){
-    const {Favourite, favourite_has_thread, Thread} = require('./models');
+    const {Favourite, favourite_has_thread, Thread, Post} = require('./models');
 
     let ufRelation = await Favourite.findOne({
         where:{
@@ -318,11 +318,40 @@ async function GetThreadFromFavourite(user_id, f_id){
         thread_numbers.push(row['t_number'])
     })
 
-    let output = await Thread.findAll({
+    let threads = await Thread.findAll({
         where: {
             t_number: thread_numbers
-        }
+        },
+        raw: true
     })
+
+    let output = [];
+
+    for (let i = 0; i < threads.length; i++) {
+        let post = await Post.findAll({
+            attributes: ['i_tim', 'p_com'],
+            where: {
+                t_number: threads[i]['t_number']
+            },
+            order: [['p_date', 'ASC']],
+            raw: true
+        });
+
+        let file_path = `http://${local_api}:${api_port}/db/get_image_file/${threads[i]['t_number']}`;
+
+        output.push({
+            "t_number": threads[i]['t_number'],
+            "t_sub": threads[i]['t_sub'],
+            't_archived': threads[i]['t_archived'],
+            't_board': threads[i]['t_board'],
+            't_date': threads[i]['t_date'],
+            't_link': threads[i]['t_link'],
+            'p_com': post[0]['p_com'],
+            't_replies_amount': threads[i]['t_replies'],
+            'filepath': file_path
+        })
+        
+    }
 
     return output;
 }
@@ -733,17 +762,6 @@ async function GetAllThreadsVue(page = 1, display_amount = 5, order_organize = '
             raw:true
         });
 
-        /*
-        if(post[0]['i_tim'] == null){
-            console.log("Shit")
-        }
-
-        let image = await GetImage(post[0]['i_tim'])
-
-        let filename = image['i_tim'] + image['i_ext']
-        */
-
-        //let file_path = `${settings['settings']['downloads_dir_path'][0]['dir'] + settings['settings']['download_dir_name'] + settings['settings']['folder_name'] + threads[i]['t_number']}/${filename}`
         let file_path = `http://${local_api}:${api_port}/db/get_image_file/${threads[i]['t_number']}`
 
         obj_data = {

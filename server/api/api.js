@@ -335,10 +335,9 @@ app.get('/favourites/:user/get_thread_in_favourite/:id', verifyJWT, async (req, 
     try{
         let user_data = await GetUserByID(req.userId);
 
-        
         if(user_data != null){
             
-            let response = await GetThreadFromFavourite(user_data['user_id'], req.params['id'])
+            let response = await GetThreadFromFavourite(req.userId, req.params['id'])
 
             res.json({
                 status:'success',
