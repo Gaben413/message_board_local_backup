@@ -66,6 +66,25 @@ export default{
 
         //console.log(this.data)
 
+        /*
+            const regex_greentext = '<span class="quote">&gt;'
+            const regex_anchor = /<a href="#(.*?)/;
+
+            let text_array = raw_text.split('<br>');
+
+            console.log(text_array)
+
+            for (let i = 0; i < text_array.length; i++) {
+                if(text_array[i].match(regex_greentext)){
+                    console.log(`ID: ${i} | Green Text`)
+                }else if(text_array[i].match(regex_anchor)){
+                    console.log(`ID: ${i} | Anchor`)
+                }else{
+                    console.log(`ID: ${i} | Regular Text`)
+                }
+            }
+        */
+
         if(this.data.p_com != null){
             //PROCESSED
             let r = /<a(.*?)<\/a>/gs
