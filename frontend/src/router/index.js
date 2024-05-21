@@ -5,6 +5,7 @@ import ThreadView from '../views/ThreadView.vue'
 import SettingsView from '@/views/SettingsView.vue'
 import LoginView from '@/views/LoginView.vue'
 import FavouritesView from '@/views/FavouritesView.vue'
+import StatusView from '@/views/StatusView.vue'
 
 import FavouriteList from '@/components/FavouriteList.vue'
 import FavouriteContent from '@/components/FavouriteContent.vue'
@@ -73,6 +74,15 @@ const routes = [
     ],
     meta: {
       title: 'Favourites'
+    }
+  },
+  {
+    path: '/status',
+    name: 'stauts',
+    component: StatusView,
+    props: true,
+    meta: {
+      title: 'Status'
     }
   },
 ]

@@ -133,7 +133,6 @@ async function DirSize(){
                 let stat_data = fs.statSync(root_path+files[i]+"/"+file_contents[e])
                 data_output += stat_data.size
             }
-            
         }
 
         obj = {
@@ -148,8 +147,52 @@ async function DirSize(){
             "megabytes_raw": (data_output*1e-6),
             "gigabytes_raw": (data_output*1e-9),
         }
-
         resolve(obj)
     })
 }
-module.exports = {downloadImages, DirSize}
+async function IndividualDirSize(){
+    return new Promise(async (resolve, reject)=>{
+        //let root_path = root_path
+        console.log(root_path)
+        let files = fs.readdirSync(root_path)
+
+        let data_output = {
+            fullsize: 0,
+            individual_size: []
+        };
+        
+        for (let i = 0; i < files.length; i++) {
+            let file_contents = fs.readdirSync(root_path+files[i])
+            let thread_size = 0;
+
+            for (let e = 0; e < file_contents.length; e++) {
+                let stat_data = fs.statSync(root_path+files[i]+"/"+file_contents[e])
+                thread_size += stat_data.size
+            }
+
+            data_output.fullsize += thread_size;
+
+            data_output.individual_size.push({
+                filename: files[i],
+                thread_num: parseInt(files[i].replace('Thread_', '')),
+                size: thread_size
+            })
+        }
+        /*
+        obj = {
+            "bytes": data_output+" B",
+            "megabytes": (data_output*1e-6)+" MB",
+            "gigabytes": (data_output*1e-9)+" GB",
+
+            "megabytes_short": (data_output*1e-6).toFixed(2)+" MB",
+            "gigabytes_short": (data_output*1e-9).toFixed(3)+" GB",
+
+            "bytes_raw": data_output,
+            "megabytes_raw": (data_output*1e-6),
+            "gigabytes_raw": (data_output*1e-9),
+        }
+        */
+        resolve(data_output)
+    })
+}
+module.exports = {downloadImages, DirSize, IndividualDirSize}

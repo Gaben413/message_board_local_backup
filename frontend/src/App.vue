@@ -5,6 +5,7 @@
       <router-link to="/login">Login</router-link>
       <router-link v-if="display_user_data != null" :to="{path: `/favourites/${display_user_data.username}/list`}">Favourites</router-link>
       <router-link to="/threads/1">Threads</router-link>
+      <router-link to="/status">Status</router-link>
       <router-link to="/settings">Settings</router-link>
     </nav>
   </div>

@@ -638,6 +638,22 @@ app.get('/status', async (req, res) => {
         res.send(`Error: ${err}`)
     }
 })
+app.get('/status/individual', async (req, res) => {
+    try{
+        let {IndividualDirSize} = require('../fetch/download-manager')
+
+        let threads = await GetAllThreads()
+        let individual_data = await IndividualDirSize()
+
+        res.send({
+            'threads': threads,
+            'individual_data': individual_data
+        })
+    }catch(err){
+        console.log(err)
+        res.send(`Error: ${err}`)
+    }
+})
 
 //Return file
 app.get('/file/:id', verifyJWT, async (req, res) => {

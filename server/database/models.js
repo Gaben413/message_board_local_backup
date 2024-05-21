@@ -107,7 +107,8 @@ const Thread = database.define('thread', {
         defaultValue: false
     },
     t_sub: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: "No Title"
     },
     t_tag: {
         type: DataTypes.STRING
