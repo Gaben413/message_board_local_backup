@@ -3,6 +3,10 @@
 
     <h4>{{ (fullsize*1e-6).toFixed(3) }} M ({{ fullsize }} B)</h4>
 
+    <div id="storage-div">
+        <StorageBarComponent v-for="status in status_data" :status="status" :fullsize="fullsize" />
+    </div>
+
     <div id="status-grid">
         <ThreadStatusComponent v-for="status in status_data" :status="status" :fullsize="fullsize" />
     </div>
@@ -10,10 +14,13 @@
 
 <script>
 import ThreadStatusComponent from "@/components/ThreadStatusComponent.vue";
+import StorageBarComponent from "@/components/StorageBarComponent.vue";
+
 import axios from 'axios';
 export default{
     components:{
-        ThreadStatusComponent
+        ThreadStatusComponent,
+        StorageBarComponent
     },
     data(){
         return{
@@ -51,5 +58,16 @@ export default{
 #status-grid{
     display: grid;
     grid-template-columns: 25% 25% 25% 25%;
+}
+#storage-div{
+    display: flex;
+    flex-direction: row;
+
+    margin: auto;
+
+    background-color: grey;
+
+    height: 50px;
+    width: 50%;
 }
 </style>
