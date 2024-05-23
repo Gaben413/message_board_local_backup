@@ -2,7 +2,7 @@
     <div class="post-container" :id="'p'+data.p_number">
 
         <p id="post-header-text">
-             {{ (data.key + 1) }} - {{ data.p_number }} | {{ data.p_name }} | <a v-for="reply in post_reply" :href="reply" class="reply tooltip">{{ reply }}<!--<span class="tooltiptext">{{ reply }}</span>--></a>
+             {{ (data.key + 1) }} - {{ data.p_number }} | {{ data.p_name }} | <a v-if="com_mode != 3" v-for="reply in post_reply" :href="reply" class="reply">{{ reply }}<!--<span class="tooltiptext">{{ reply }}</span>--></a>
         </p>
 
         <div id="post-contents">
@@ -11,6 +11,19 @@
             <p class="regular-com" v-if="com_mode == 1" v-for="line in comment.split('\n')" id="raw_content">{{ line }}</p>
 
             <p class="regular-com" v-else-if="com_mode == 2" v-for="text in plaintext_com.split('\n')">{{ text }}</p>
+
+            <div v-else-if="com_mode == 3">
+                <div v-for="com in com_obj">
+                    <a v-if="com.type == 'Anchor' && com.split.length == 1" class="anchor-com" :href="com.url">{{ com.contents }}</a>
+                    <p v-else-if="com.type == 'Anchor' && com.split.length > 1" class="regular-com">
+                        <span v-for="row in com.split">
+                            <a v-if="row.anchor" :href="row.url">{{ row.content }}</a>
+                            <span v-else>{{ row.content }}</span>
+                        </span>
+                    </p>
+                    <p v-else :class="com.class">{{ com.contents }}</p>
+                </div>
+            </div>
         </div>
 
         <p id="date-text">{{ display_date }}</p>
@@ -66,28 +79,9 @@ export default{
 
         //console.log(this.data)
 
-        /*
-            const regex_greentext = '<span class="quote">&gt;'
-            const regex_anchor = /<a href="#(.*?)/;
-
-            let text_array = raw_text.split('<br>');
-
-            console.log(text_array)
-
-            for (let i = 0; i < text_array.length; i++) {
-                if(text_array[i].match(regex_greentext)){
-                    console.log(`ID: ${i} | Green Text`)
-                }else if(text_array[i].match(regex_anchor)){
-                    console.log(`ID: ${i} | Anchor`)
-                }else{
-                    console.log(`ID: ${i} | Regular Text`)
-                }
-            }
-        */
-
         if(this.data.p_com != null){
+            /*
             //PROCESSED
-            let r = /<a(.*?)<\/a>/gs
             let r_href = /href="#(.*?)"/g
             let r_quote = /<span class="quote">(.*?)<\/span>/gs
 
@@ -116,7 +110,11 @@ export default{
             }
 
             //this.com_obj = split_com
+            */
 
+            let regex_anchor = /<a(.*?)<\/a>/gs
+            const regex_greentext = '<span class="quote">&gt;'
+            
             //RAW
             this.comment = this.data.p_com.replaceAll("<br>","\n")
 
@@ -128,7 +126,7 @@ export default{
             this.comment = (this.data.p_com).replaceAll("<br>","\n")
 
             //href treatment
-            let pt_split_com = (this.data.p_com.trim()).split(r)
+            let pt_split_com = (this.data.p_com.trim()).split(regex_anchor)
 
             //console.log(pt_split_com)
             //console.log(`Replying to: ${(pt_split_com.length-1)/2}`)
@@ -139,7 +137,76 @@ export default{
             });
 
             //console.log(this.post_reply)
-            
+
+            /*
+            const regex_greentext = '<span class="quote">&gt;'
+            const regex_anchor = /<a href="#(.*?)/;
+
+            let text_array = raw_text.split('<br>');
+
+            console.log(text_array)
+
+            for (let i = 0; i < text_array.length; i++) {
+                if(text_array[i].match(regex_greentext)){
+                    console.log(`ID: ${i} | Green Text`)
+                }else if(text_array[i].match(regex_anchor)){
+                    console.log(`ID: ${i} | Anchor`)
+                }else{
+                    console.log(`ID: ${i} | Regular Text`)
+                }
+            }
+            */
+            let processed_com = this.data.p_com.split("<br>")
+
+            for (let i = 0; i < processed_com.length; i++) {
+                let obj;
+                if(processed_com[i].match(regex_greentext)){
+                    //console.log(`ID: ${i} | Green Text`)
+                    obj = {
+                        id: i,
+                        type: 'Green Text',
+                        class: 'green-text',
+                        contents: (processed_com[i].replaceAll('<span class="quote">&gt;','>')).replaceAll('</span>','')
+                    }
+                }else if(processed_com[i].match(regex_anchor)){
+                    //console.log(`ID: ${i} | Anchor`)
+                    let split_raw = processed_com[i].replaceAll('a>','a>|~|');
+                    split_raw = split_raw.replaceAll('<a','|~|<a');
+                    split_raw = split_raw.split('|~|');
+
+                    let split = [];
+
+                    split_raw.forEach(element => {
+                        if(element != "")
+                            split.push({
+                                content: element.match(regex_anchor) ? `>>${(element.replaceAll(/<a href="#p(.*?)/g, '')).replaceAll(/" class(.*?)<\/a>/g, '')}` : element,
+                                url: `#${(element.split(/href="#(.*?)"/g)[1])}`,
+                                anchor: element.match(regex_anchor) ? true : false
+                            })
+                    })
+
+                    obj = {
+                        id: i,
+                        type: 'Anchor',
+                        url: `#${(processed_com[i].split(/href="#(.*?)"/g)[1])}`,
+                        split: split,
+                        contents: `>>${(processed_com[i].replaceAll(/<a href="#p(.*?)/g, '')).replaceAll(/" class(.*?)<\/a>/g, '')}`
+                    }
+                }else{
+                    //console.log(`ID: ${i} | Regular Text`)
+                    obj = {
+                        id: i,
+                        type: 'Regular Text',
+                        class: 'regular-com',
+                        contents: processed_com[i]
+                    }
+                }
+
+                if(obj.contents != "")
+                    this.com_obj.push(obj)
+            }
+            if(this.data.key == 291)
+                console.log(this.com_obj)
         }
 
         this.border_color = this.colors['border_color'];
@@ -269,5 +336,15 @@ export default{
 }
 .img-max_p{
     max-width: 750px;
+}
+
+.green-text{
+    color: green;
+    text-align: left;
+}
+.anchor-com{
+    display: block;
+    width: 100%;
+    text-align: left;
 }
 </style>

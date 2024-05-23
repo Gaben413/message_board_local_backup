@@ -17,6 +17,7 @@
         <select name="" id="com-dropdown" v-model="com_mode" @change="organize">
           <option value="1">RAW</option>
           <option value="2">Plain Text</option>
+          <option value="3">Processed</option>
         </select>
       </div>
 
